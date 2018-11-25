@@ -20,6 +20,8 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MainPage mainPage;
+
     Button btnOn, btnOff;
     TextView txtArduino, txtString, txtStringLength, sensorView0, sensorView1, sensorView2, sensorView3;
     Handler bluetoothIn;
@@ -41,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainPage = new MainPage(this);
         setContentView(R.layout.activity_main);
+        //setContentView(mainPage);
 
         //Link the buttons and textViews to respective views
         btnOn = (Button) findViewById(R.id.buttonOn);
@@ -67,13 +71,19 @@ public class MainActivity extends AppCompatActivity {
 
                         if (recDataString.charAt(0) == '#')								//if it starts with # we know it is what we are looking for
                         {
-                            String sensor0 = recDataString.substring(1, 7);             //get sensor value from string between indices 1-5
-                            String sensor1 = recDataString.substring(8, 14);            //same again...
-                            String sensor2 = recDataString.substring(15, 21);
+                            String sensor[] = new String[27];
+                            for(int i = 0, j = 1; i < 27 && j < 105; i++, j += 4){
+                                sensor[i] = recDataString.substring(j, j + 2);
+                            }
 
-                            sensorView0.setText(" Sensor 0 Voltage = " + sensor0 + "V");	//update the textviews with sensor values
-                            sensorView1.setText(" Sensor 1 Voltage = " + sensor1 + "V");
-                            sensorView2.setText(" Sensor 2 Voltage = " + sensor2 + "V");
+
+//                            String sensor0 = recDataString.substring(1, 7);             //get sensor value from string between indices 1-5
+//                            String sensor1 = recDataString.substring(8, 14);            //same again...
+//                            String sensor2 = recDataString.substring(15, 21);
+
+//                            sensorView0.setText(" Sensor 0 Voltage = " + sensor0 + "V");	//update the textviews with sensor values
+//                            sensorView1.setText(" Sensor 1 Voltage = " + sensor1 + "V");
+//                            sensorView2.setText(" Sensor 2 Voltage = " + sensor2 + "V");
                         }
                         recDataString.delete(0, recDataString.length()); 					//clear all string data
                         dataInPrint = " ";

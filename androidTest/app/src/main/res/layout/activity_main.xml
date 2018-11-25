@@ -7,17 +7,20 @@
         android:id="@+id/testView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/txtString"
-        android:text=""
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/sensorView3"
+        android:layout_marginTop="20dp"
         android:textSize="15sp" />
 
     <TextView
         android:id="@+id/txtString"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_alignLeft="@+id/testView1"
         android:layout_alignParentBottom="true"
-        android:text=""
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/testView1"
+        android:layout_marginTop="12dp"
         android:textSize="15sp" />
 
     <Button
