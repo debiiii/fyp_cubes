@@ -13,10 +13,20 @@ public class Base {
     Grid grids[] = new Grid[MAXGRIDSNUM];
     int[] ardValInt = new int[MAXGRIDSNUM];
 
-    public void convertArdValue(String[] value){
+    public Base() {
         for(int i = 0; i < MAXGRIDSNUM; i++){
-            ardValInt[i] = Integer.parseInt(value[i]);
-            grids[i].setArdValue(ardValInt[i]);
+            grids[i] = new Grid();
+            ardValInt[i] = 0;
+        }
+    }
+
+    public void update(String[] value){
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            if(value[i] != null){
+                ardValInt[i] = Integer.valueOf(value[i]);
+                grids[i].setArdValue(ardValInt[i]);
+                grids[i].update();
+            }
         }
     }
 

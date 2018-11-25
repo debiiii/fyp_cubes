@@ -14,6 +14,8 @@ public class Grid {
         for(int i = 0; i < MAXCUBESNUM; i++){
             cubePresent[i] = false;
         }
+        ardValue = -1;
+        cubeNum = -1;
     }
 
     public void setArdValue(int ardValue) {
