@@ -45,9 +45,14 @@ public class MainPage extends View {
     Paint white = new Paint();
 
     Bitmap bkg = null;
+    Bitmap[][] cubePic = new Bitmap[MAXGRIDSNUM][MAXHEIGHTNUM];
 
     RectF debugBtnRect;
     Boolean debugVisible;
+
+    Integer[] frontView = new Integer[MAXGRIDSNUM];
+    //Integer[] sideView = new Integer[MAXGRIDSNUM];
+    //Integer[] topView = new Integer[MAXGRIDSNUM];
 
     public MainPage(Context context) {
         super(context);
@@ -90,8 +95,49 @@ public class MainPage extends View {
         }
 
         bkg = BitmapFactory.decodeResource(getResources(), R.drawable.bkg);
+        cubePic[0][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_0_0);
+        cubePic[0][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_0_1);
+        cubePic[0][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_0_2);
+
+        cubePic[1][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_1_0);
+        cubePic[1][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_1_1);
+        cubePic[1][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_1_2);
+
+        cubePic[2][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_2_0);
+        cubePic[2][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_2_1);
+        cubePic[2][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_2_2);
+
+        cubePic[3][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_3_0);
+        cubePic[3][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_3_1);
+        cubePic[3][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_3_2);
+
+        cubePic[4][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_4_0);
+        cubePic[4][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_4_1);
+        cubePic[4][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_4_2);
+
+        cubePic[5][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_5_0);
+        cubePic[5][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_5_1);
+        cubePic[5][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_5_2);
+
+        cubePic[6][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_6_0);
+        cubePic[6][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_6_1);
+        cubePic[6][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_6_2);
+
+        cubePic[7][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_7_0);
+        cubePic[7][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_7_1);
+        cubePic[7][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_7_2);
+
+        cubePic[8][0] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_8_0);
+        cubePic[8][1] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_8_1);
+        cubePic[8][2] = BitmapFactory.decodeResource(getResources(), R.drawable.cube_8_2);
+
+
         debugBtnRect = new RectF(940, 1700, 1040, 1800);
         debugVisible = false;
+
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            frontView[i] = 0;
+        }
 
     }
 
@@ -115,10 +161,14 @@ public class MainPage extends View {
         bases[1].update(ardBase1String);
         bases[2].update(ardBase2String);
         
-        calFinal();
+        updateCubesFinal();
+        updateView();
+
+        drawCubes(canvas);
+        drawView(canvas);
 
         if(debugVisible){
-            debug(canvas);
+            drawDebug(canvas);
         }
 
     }
@@ -131,7 +181,7 @@ public class MainPage extends View {
         }
     }
 
-    private void calFinal() {
+    private void updateCubesFinal() {
 
         /*-------------grid0-------------*/
 //        //0,0
@@ -449,7 +499,81 @@ public class MainPage extends View {
 
     }
 
-    private void debug(Canvas canvas) {
+    private void updateView(){
+
+        //update front view
+        for(int i = 2, j = 0; i >= 0 && j < 9; i--, j+=3){
+            if(isCubePresentFinal[6][i]){
+                frontView[j] = 1;
+            }
+            else if(isCubePresentFinal[3][i]){
+                frontView[j] = 1;
+            }
+            else if(isCubePresentFinal[0][i]){
+                frontView[j] = 1;
+            }
+            else{
+                frontView[j] = 0;
+            }
+
+            if(isCubePresentFinal[7][i]){
+                frontView[j + 1] = 1;
+            }
+            else if(isCubePresentFinal[4][i]){
+                frontView[j + 1] = 1;
+            }
+            else if(isCubePresentFinal[1][i]){
+                frontView[j + 1] = 1;
+            }
+            else{
+                frontView[j + 1] = 0;
+            }
+
+            if(isCubePresentFinal[8][i]){
+                frontView[j + 2] = 1;
+            }
+            else if(isCubePresentFinal[5][i]){
+                frontView[j + 2] = 1;
+            }
+            else if(isCubePresentFinal[2][i]){
+                frontView[j + 2] = 1;
+            }
+            else{
+                frontView[j + 2] = 0;
+            }
+        }
+    }
+
+    private void drawCubes(Canvas canvas) {
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            for(int j = 0; j < MAXHEIGHTNUM; j++) {
+                if (isCubePresentFinal[i][j]) {
+                    canvas.drawBitmap(cubePic[i][j], 0, 100, null);
+                }
+            }
+        }
+
+    }
+
+    private void drawView(Canvas canvas) {
+        canvas.drawText("Front view: ", 100, 1240, gray);
+        int row = 0;
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                if(frontView[row + j] == 1){
+                    canvas.drawRect( 100 + j * 100, 1260 + i * 100, 100 + j * 100 + 100, 1260 + i * 100 + 100, red);
+                }
+                else{
+                    canvas.drawRect(100 + j * 100, 1260 + i * 100, 100 + j * 100 + 100, 1260 + i * 100 + 100, gray);
+                }
+                if(j == 2){
+                    row += 3;
+                }
+            }
+        }
+    }
+
+    private void drawDebug(Canvas canvas) {
 
         canvas.drawRect(0, 0, 450, 1980, white);
 
