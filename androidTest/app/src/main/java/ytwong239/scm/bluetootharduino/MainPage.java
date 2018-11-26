@@ -43,6 +43,7 @@ public class MainPage extends View {
     Paint gray = new Paint();
     Paint blue = new Paint();
     Paint white = new Paint();
+    Paint whiteStroke = new Paint();
 
     Bitmap bkg = null;
     Bitmap[][] cubePic = new Bitmap[MAXGRIDSNUM][MAXHEIGHTNUM];
@@ -51,8 +52,8 @@ public class MainPage extends View {
     Boolean debugVisible;
 
     Integer[] frontView = new Integer[MAXGRIDSNUM];
-    //Integer[] sideView = new Integer[MAXGRIDSNUM];
-    //Integer[] topView = new Integer[MAXGRIDSNUM];
+    Integer[] sideView = new Integer[MAXGRIDSNUM];
+    Integer[] topView = new Integer[MAXGRIDSNUM];
 
     public MainPage(Context context) {
         super(context);
@@ -74,14 +75,19 @@ public class MainPage extends View {
         red.setColor(Color.RED);
         red.setTextSize(40);
 
-        gray.setColor(Color.DKGRAY);
+        gray.setColor(Color.rgb(38,38,38));
         gray.setTextSize(40);
 
-        blue.setColor(Color.BLUE);
+        blue.setColor(Color.rgb(141,188,255));
         blue.setTextSize(40);
 
         white.setColor(Color.WHITE);
         white.setTextSize(40);
+
+        whiteStroke.setStyle(Paint.Style.STROKE);
+        whiteStroke.setColor(Color.WHITE);
+        whiteStroke.setStrokeWidth(10);
+
 
         for(int i = 0; i < MAXBASESNUM; i++){
             bases[i] = new Base();
@@ -137,6 +143,8 @@ public class MainPage extends View {
 
         for(int i = 0; i < MAXGRIDSNUM; i++){
             frontView[i] = 0;
+            sideView[i] = 0;
+            topView[i] = 0;
         }
 
     }
@@ -542,6 +550,64 @@ public class MainPage extends View {
                 frontView[j + 2] = 0;
             }
         }
+
+        //update side view
+        for(int i = 2, j = 0; i >= 0 && j < 9; i--, j+=3){
+            if(isCubePresentFinal[0][i]){
+                sideView[j] = 1;
+            }
+            else if(isCubePresentFinal[1][i]){
+                sideView[j] = 1;
+            }
+            else if(isCubePresentFinal[2][i]){
+                sideView[j] = 1;
+            }
+            else{
+                sideView[j] = 0;
+            }
+
+            if(isCubePresentFinal[3][i]){
+                sideView[j + 1] = 1;
+            }
+            else if(isCubePresentFinal[4][i]){
+                sideView[j + 1] = 1;
+            }
+            else if(isCubePresentFinal[5][i]){
+                sideView[j + 1] = 1;
+            }
+            else{
+                sideView[j + 1] = 0;
+            }
+
+            if(isCubePresentFinal[6][i]){
+                sideView[j + 2] = 1;
+            }
+            else if(isCubePresentFinal[7][i]){
+                sideView[j + 2] = 1;
+            }
+            else if(isCubePresentFinal[8][i]){
+                sideView[j + 2] = 1;
+            }
+            else{
+                sideView[j + 2] = 0;
+            }
+        }
+
+        //update top view
+        for(int i = 0; i < 9; i++){
+            if(isCubePresentFinal[i][2]){
+                topView[i] = 1;
+            }
+            else if(isCubePresentFinal[i][1]){
+                topView[i] = 1;
+            }
+            else if(isCubePresentFinal[i][0]){
+                topView[i] = 1;
+            }
+            else{
+                topView[i] = 0;
+            }
+        }
     }
 
     private void drawCubes(Canvas canvas) {
@@ -557,15 +623,38 @@ public class MainPage extends View {
 
     private void drawView(Canvas canvas) {
         canvas.drawText("Front view: ", 100, 1240, gray);
+        canvas.drawText("Side view: ", 400, 1240, gray);
+        canvas.drawText("Top view: ", 700, 1240, gray);
         int row = 0;
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
                 if(frontView[row + j] == 1){
-                    canvas.drawRect( 100 + j * 100, 1260 + i * 100, 100 + j * 100 + 100, 1260 + i * 100 + 100, red);
+                    canvas.drawRect( 100 + j * 80, 1260 + i * 80, 100 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect( 100 + j * 80, 1260 + i * 80, 100 + j * 80 + 80, 1260 + i * 80 + 80, blue);
                 }
                 else{
-                    canvas.drawRect(100 + j * 100, 1260 + i * 100, 100 + j * 100 + 100, 1260 + i * 100 + 100, gray);
+                    canvas.drawRect( 100 + j * 80, 1260 + i * 80, 100 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect(100 + j * 80, 1260 + i * 80, 100 + j * 80 + 80, 1260 + i * 80 + 80, gray);
                 }
+
+                if(sideView[row + j] == 1){
+                    canvas.drawRect( 400 + j * 80, 1260 + i * 80, 400 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect( 400 + j * 80, 1260 + i * 80, 400 + j * 80 + 80, 1260 + i * 80 + 80, blue);
+                }
+                else{
+                    canvas.drawRect( 400 + j * 80, 1260 + i * 80, 400 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect(400 + j * 80, 1260 + i * 80, 400 + j * 80 + 80, 1260 + i * 80 + 80, gray);
+                }
+
+                if(topView[row + j] == 1){
+                    canvas.drawRect( 700 + j * 80, 1260 + i * 80, 700 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect( 700 + j * 80, 1260 + i * 80, 700 + j * 80 + 80, 1260 + i * 80 + 80, blue);
+                }
+                else{
+                    canvas.drawRect( 700 + j * 80, 1260 + i * 80, 700 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect(700 + j * 80, 1260 + i * 80, 700 + j * 80 + 80, 1260 + i * 80 + 80, gray);
+                }
+
                 if(j == 2){
                     row += 3;
                 }
@@ -605,8 +694,12 @@ public class MainPage extends View {
         float y = event.getY();
 
         if(debugBtnRect.contains(x,y)){
-            debugVisible = !debugVisible;
+            debugVisible = true;
         }
+        else{
+            debugVisible = false;
+        }
+
 
 
         invalidate();
