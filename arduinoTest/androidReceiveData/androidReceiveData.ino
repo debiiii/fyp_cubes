@@ -106,7 +106,7 @@ void readSensors(){
   PORTD = B10100000;
   sensorValue2[10] = analogRead(sensePin2);
 
-  delay(1000);
+  delay(100);
 }
 
 void sendAndroidValues(){
@@ -153,6 +153,5 @@ void sendAndroidValues(){
   }
   Serial.print('~');
   Serial.println();
-  delay(10);
 }
 
