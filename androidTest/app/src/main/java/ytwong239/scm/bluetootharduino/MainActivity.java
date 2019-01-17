@@ -1,3 +1,14 @@
+// SM4602 Pre-production & Prototype
+// Assignment 6 - Phase I Final Demonstration, Presentation, Critique and Final Report
+// Group 3
+// Wong Yan Ting 54388100, Fu Hiu Mei 54402448
+//
+//
+// Code are extracted and modified from
+// Harry's Developer Blog
+// Anrdroid Send/Receive Data With Arduino Via Bluetooth – Part 1, 2
+// https://wingoodharry.wordpress.com/2014/04/07/anrdroid-sendreceive-data-with-arduino-via-bluetooth-part-1/
+
 package ytwong239.scm.bluetootharduino;
 
 import android.annotation.SuppressLint;
