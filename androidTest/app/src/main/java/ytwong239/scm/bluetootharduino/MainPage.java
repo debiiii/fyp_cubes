@@ -1,3 +1,8 @@
+// SM4602 Pre-production & Prototype
+// Assignment 6 - Phase I Final Demonstration, Presentation, Critique and Final Report
+// Group 3
+// Wong Yan Ting 54388100, Fu Hiu Mei 54402448
+
 package ytwong239.scm.bluetootharduino;
 
 import android.content.Context;
@@ -22,6 +27,7 @@ import android.view.View;
  */
 
 public class MainPage extends View {
+
     static final int MAXBASESNUM = 3;
     static final int MAXGRIDSNUM = 9;
     static final int MAXCUBESNUM = MAXBASESNUM * MAXGRIDSNUM;
@@ -37,6 +43,7 @@ public class MainPage extends View {
     String[] ardBase1String = new String[MAXGRIDSNUM];
     String[] ardBase2String = new String[MAXGRIDSNUM];
 
+    //for the final isCubePresent according to the 3 bases info
     Boolean[][] isCubePresentFinal = new Boolean [MAXGRIDSNUM][MAXHEIGHTNUM];
 
     Paint red = new Paint();
@@ -51,6 +58,7 @@ public class MainPage extends View {
     RectF debugBtnRect;
     Boolean debugVisible;
 
+    //for the orthographic views
     Integer[] frontView = new Integer[MAXGRIDSNUM];
     Integer[] sideView = new Integer[MAXGRIDSNUM];
     Integer[] topView = new Integer[MAXGRIDSNUM];
@@ -149,6 +157,7 @@ public class MainPage extends View {
 
     }
 
+    //getting the long string from MainActivity
     public void updateArdAllString(String[] val){
         for(int i = 0; i < MAXCUBESNUM; i++){
             ardAllString[i] = val[i];
@@ -168,7 +177,7 @@ public class MainPage extends View {
         bases[0].update(ardBase0String);
         bases[1].update(ardBase1String);
         bases[2].update(ardBase2String);
-        
+
         updateCubesFinal();
         updateView();
 
@@ -181,6 +190,7 @@ public class MainPage extends View {
 
     }
 
+    //convert the long string to 3 strings for bases
     private void convertArdForBase(){
         for(int i = 0; i < MAXGRIDSNUM; i++){
             ardBase0String[i] = ardAllString[i];
@@ -189,6 +199,7 @@ public class MainPage extends View {
         }
     }
 
+    //update the isCubePresentFinal according to the 3 bases info
     private void updateCubesFinal() {
 
         /*-------------grid0-------------*/
@@ -507,6 +518,7 @@ public class MainPage extends View {
 
     }
 
+    //update the orthographic views
     private void updateView(){
 
         //update front view
