@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context="ytwong239.scm.cubic.BluetoothActivity">
 
+    <ImageButton
+        android:id="@+id/okBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="236dp"
+        android:layout_marginStart="132dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/allowbluetoothokbtn" />
 </android.support.constraint.ConstraintLayout>

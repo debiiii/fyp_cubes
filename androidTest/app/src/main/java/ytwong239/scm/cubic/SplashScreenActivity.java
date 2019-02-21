@@ -40,6 +40,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        finish();
         Log.d(TAG, "onDestroy");
     }
 
