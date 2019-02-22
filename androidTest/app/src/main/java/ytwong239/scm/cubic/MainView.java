@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -18,10 +20,11 @@ import android.view.View;
 public class MainView extends View {
 
     private final static int MENUPAGE = 0;
-    private final static int PRACTICEPAGE = 1;
-    private final static int BATTLEPAGE = 2;
-    private final static int HOWTOPAGE = 3;
-    private final static int INFOPAGE = 4;
+    private final static int PRACTICEGAMEPAGE = 1;
+    private final static int BATTLENUMPAGE = 2;
+    private final static int BATTLEGAMEPAGE = 3;
+    private final static int HOWTOPAGE = 4;
+    private final static int INFOPAGE = 5;
     private int currPage = 0;
 
 
@@ -35,6 +38,14 @@ public class MainView extends View {
     private Bitmap battleModePic;
     private Rect battleModeSrc;
     private Rect battleModePos;
+
+    private Bitmap battleModeNumPic;
+    private Rect battleModeNumSrc;
+    private Rect battleModeNumPos;
+    private Rect player2Pos;
+    private Rect player3Pos;
+    private Rect player4Pos;
+    private int playerNum = 0;
 
     private Bitmap settingPic;
     private Rect settingSrc;
@@ -73,6 +84,9 @@ public class MainView extends View {
         battleModePic = BitmapFactory.decodeResource(getResources(), R.drawable.battlemode, opts);
         battleModeSrc = new Rect(0,0, battleModePic.getWidth(), battleModePic.getHeight());
 
+        battleModeNumPic = BitmapFactory.decodeResource(getResources(), R.drawable.battlemodenum, opts);
+        battleModeNumSrc = new Rect(0,0, battleModeNumPic.getWidth(), battleModeNumPic.getHeight());
+
         settingPic = BitmapFactory.decodeResource(getResources(), R.drawable.setting, opts);
         settingSrc = new Rect(0,0, settingPic.getWidth(), settingPic.getHeight());
     }
@@ -99,6 +113,39 @@ public class MainView extends View {
         bottom = top + height;
         battleModePos = new Rect(left, top, right, bottom);
 
+        width = w / 3;
+        height = (battleModeNumPic.getHeight() * width) / battleModeNumPic.getWidth();
+        left = w / 2 + w / 20;
+        top = h / 2 - height / 2;
+        right = left + width;
+        bottom = top + height;
+        battleModeNumPos = new Rect(left, top, right, bottom);
+
+        width = (battleModeNumPos.width() - 160) / 3;
+        height = (battleModeNumPos.height() - 100)/ 5;
+        left = battleModeNumPos.left + 55;
+        top = battleModeNumPos.bottom - height - 50;
+        right = left + width;
+        bottom = top + height;
+        player2Pos = new Rect(left, top, right, bottom);
+
+        width = (battleModeNumPos.width() - 160) / 3;
+        height = (battleModeNumPos.height() - 100)/ 5;
+        left = player2Pos.right + 25;
+        top = battleModeNumPos.bottom - height - 50;
+        right = left + width;
+        bottom = top + height;
+        player3Pos = new Rect(left, top, right, bottom);
+
+        width = (battleModeNumPos.width() - 160) / 3;
+        height = (battleModeNumPos.height() - 100)/ 5;
+        left = player3Pos.right + 25;
+        top = battleModeNumPos.bottom - height - 50;
+        right = left + width;
+        bottom = top + height;
+        player4Pos = new Rect(left, top, right, bottom);
+
+
         width = w / 12;
         height = (settingPic.getHeight() * width) / settingPic.getWidth();
         left = w - width - 30;
@@ -117,9 +164,12 @@ public class MainView extends View {
             case MENUPAGE:
                 drawMenuPage(canvas);
                 break;
-            case PRACTICEPAGE:
+            case PRACTICEGAMEPAGE:
                 break;
-            case BATTLEPAGE:
+            case BATTLENUMPAGE:
+                drawBattleNumPage(canvas);
+                break;
+            case BATTLEGAMEPAGE:
                 break;
             case HOWTOPAGE:
                 break;
@@ -134,6 +184,21 @@ public class MainView extends View {
     private void drawMenuPage(Canvas canvas){
         canvas.drawBitmap(practiceModePic, practiceModeSrc, practiceModePos, null);
         canvas.drawBitmap(battleModePic, battleModeSrc, battleModePos, null);
+    }
+
+    private void drawBattleNumPage(Canvas canvas){
+        canvas.drawBitmap(practiceModePic, practiceModeSrc, practiceModePos, null);
+        canvas.drawBitmap(battleModeNumPic, battleModeNumSrc, battleModeNumPos, null);
+
+//        Paint p = new Paint();
+//        p.setColor(Color.BLUE);
+//        canvas.drawRect(player2Pos,p);
+//        Paint p2 = new Paint();
+//        p2.setColor(Color.GREEN);
+//        canvas.drawRect(player3Pos,p2);
+//        Paint p3 = new Paint();
+//        p3.setColor(Color.RED);
+//        canvas.drawRect(player4Pos,p3);
     }
 
 
@@ -151,12 +216,29 @@ public class MainView extends View {
                             currPage = HOWTOPAGE;
                         }
                         else if(battleModePos.contains(x, y)){
-                            currPage = BATTLEPAGE;
+                            currPage = BATTLENUMPAGE;
                         }
                         break;
-                    case PRACTICEPAGE:
+                    case PRACTICEGAMEPAGE:
                         break;
-                    case BATTLEPAGE:
+                    case BATTLENUMPAGE:
+                        if(practiceModePos.contains(x, y)){
+                            currPage = HOWTOPAGE;
+                        }
+                        else if(player2Pos.contains(x, y)){
+                            playerNum = 2;
+                            currPage = BATTLEGAMEPAGE;
+                        }
+                        else if(player3Pos.contains(x, y)){
+                            playerNum = 3;
+                            currPage = BATTLEGAMEPAGE;
+                        }
+                        else if(player4Pos.contains(x, y)){
+                            playerNum = 4;
+                            currPage = BATTLEGAMEPAGE;
+                        }
+                        break;
+                    case BATTLEGAMEPAGE:
                         break;
                     case HOWTOPAGE:
                         break;
@@ -188,6 +270,10 @@ public class MainView extends View {
         if(battleModePic != null && !battleModePic.isRecycled()){
             battleModePic.recycle();
             battleModePic = null;
+        }
+        if(battleModeNumPic != null && !battleModeNumPic.isRecycled()){
+            battleModeNumPic.recycle();
+            battleModeNumPic = null;
         }
         if(settingPic != null && !settingPic.isRecycled()){
             settingPic.recycle();
