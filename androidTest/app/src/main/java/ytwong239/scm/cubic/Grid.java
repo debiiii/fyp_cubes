@@ -1,10 +1,11 @@
 package ytwong239.scm.cubic;
 
 /**
- * Created by DebbieWong on 21/2/2019.
+ * Created by DebbieWong on 22/2/2019.
  */
 
 public class Grid {
+
     static final int MAXCUBESNUM = 3;
     int ardValue;
     int cubeNum;
@@ -80,4 +81,3 @@ public class Grid {
     }
 
 }
-

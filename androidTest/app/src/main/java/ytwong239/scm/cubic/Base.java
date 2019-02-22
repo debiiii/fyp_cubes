@@ -1,7 +1,7 @@
 package ytwong239.scm.cubic;
 
 /**
- * Created by DebbieWong on 21/2/2019.
+ * Created by DebbieWong on 22/2/2019.
  */
 
 public class Base {
@@ -35,6 +35,5 @@ public class Base {
             ardValInt[i] = 0;
         }
     }
-
 
 }

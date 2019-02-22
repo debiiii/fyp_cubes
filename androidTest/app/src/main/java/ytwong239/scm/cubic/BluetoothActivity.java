@@ -41,7 +41,6 @@ public class BluetoothActivity extends AppCompatActivity {
     private final int HANDLERSTATE = 0;
     private StringBuilder stringBuilder = new StringBuilder();
 
-    private MainPage mainPage;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -52,8 +51,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
-        mainPage = new MainPage(this);
-        setContentView(mainPage);
+        //setContentView();
 
         bluetoothHandler = new Handler(){
             public void handleMessage(android.os.Message msg) {
@@ -71,9 +69,10 @@ public class BluetoothActivity extends AppCompatActivity {
                                 //substring(0,2) will only get 0, 1
                                 //not including 2!!!!
                                 sensor[i] = stringBuilder.substring(j, j + 3);
+                                //Log.d("df", sensor[i]);
                             }
 
-                            mainPage.updateArdAllString(sensor);
+                            //mainPage.updateArdAllString(sensor);
 
                         }
                         stringBuilder.delete(0, stringBuilder.length());
