@@ -101,6 +101,10 @@ public class MainView extends View {
     private Rect dot2Pos;
     private Rect dot3Pos;
 
+    private Bitmap q1Pic;
+    private Bitmap form3dmodelPic;
+    private Rect questionSrc;
+    private Rect questionPos;
 
     private Bitmap Pic;
     private Rect Src;
@@ -182,6 +186,11 @@ public class MainView extends View {
 
         dotOrangePic = BitmapFactory.decodeResource(getResources(), R.drawable.dotorange, opts);
         dotOrangeSrc = new Rect(0,0, dotOrangePic.getWidth(), dotOrangePic.getHeight());
+
+        q1Pic = BitmapFactory.decodeResource(getResources(), R.drawable.q1, opts);
+        form3dmodelPic= BitmapFactory.decodeResource(getResources(), R.drawable.form3dmodel, opts);
+        questionSrc = new Rect(0,0, q1Pic.getWidth(), q1Pic.getHeight());
+
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -354,6 +363,14 @@ public class MainView extends View {
         right = left + width;
         bottom = top + height;
         dot3Pos = new Rect(left, top, right, bottom);
+
+        width = w / 2 + w / 4;
+        height = (q1Pic.getHeight() * width) / q1Pic.getWidth();
+        left = w / 2 - width / 2;
+        top = settingPos.top + settingPos.height() / 2;
+        right = left + width;
+        bottom = top + height;
+        questionPos = new Rect(left, top, right, bottom);
     }
 
     @Override
@@ -454,9 +471,8 @@ public class MainView extends View {
     }
 
     private void drawPracticeGamePage(Canvas canvas){
-        Paint p = new Paint(Color.BLACK);
-        p.setTextSize(100);
-        canvas.drawText("Practice", 100, 100, p);
+        canvas.drawBitmap(q1Pic, questionSrc, questionPos, null);
+        canvas.drawBitmap(form3dmodelPic, questionSrc, questionPos, null);
     }
 
     private void drawBattleGamePage(Canvas canvas){
@@ -593,12 +609,6 @@ public class MainView extends View {
                             currPage = HOWTOPAGE2;
                         }
                         break;
-                }
-                if(lastX - x > 100){
-                    Log.d("ddf", "previous");
-                }
-                if(x - lastX > 100){
-                    Log.d("ddf", "next");
                 }
                 break;
         }
