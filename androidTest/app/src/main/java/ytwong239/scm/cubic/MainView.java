@@ -1,6 +1,7 @@
 package ytwong239.scm.cubic;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,11 +9,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.Locale;
 
 /**
  * Created by DebbieWong on 22/2/2019.
@@ -28,7 +32,7 @@ public class MainView extends View {
     private final static int HOWTOPAGE2 = 5;
     private final static int HOWTOPAGE3 = 6;
     private final static int INFOPAGE = 7;
-    private int currPage = MENUPAGE;
+    private int currPage = PRACTICEGAMEPAGE;
 
     private int canvasW;
     private int canvasH;
@@ -101,10 +105,39 @@ public class MainView extends View {
     private Rect dot2Pos;
     private Rect dot3Pos;
 
-    private Bitmap q1Pic;
+    private Bitmap q0TitlePic;
     private Bitmap form3dmodelPic;
-    private Rect questionSrc;
-    private Rect questionPos;
+    private Rect qTitleSrc;
+    private Rect qTitlePos;
+
+    private Rect qFrontViewPos;
+    private Rect qSideViewPos;
+    private Rect qTopViewPos;
+
+    private Bitmap qTopPic;
+    private Rect qTopSrc;
+    private Rect qTopPos;
+
+    private Bitmap qSidePic;
+    private Rect qSideSrc;
+    private Rect qSidePos;
+
+    private Bitmap qFrontPic;
+    private Rect qFrontSrc;
+    private Rect qFrontPos;
+
+    private Bitmap timeBarPic;
+    private Rect timeBarSrc;
+    private Rect timeBarPos;
+    private int timeTxtX, timeTxtY;
+
+    private Bitmap answerPic;
+    private Rect answerSrc;
+    private Rect answerPos;
+
+    private Bitmap modelPic;
+    private Rect modelSrc;
+    private Rect modelPos;
 
     private Bitmap Pic;
     private Rect Src;
@@ -112,26 +145,66 @@ public class MainView extends View {
 
     int lastX = 0;
 
+    GameManager gameManager = new GameManager();
+
+    Paint whiteStroke = new Paint();
+    Paint lightOrange = new Paint();
+    Paint darkOrange = new Paint();
+    Paint white = new Paint();
+    Paint font = new Paint();
+
+    Typeface aldrich;
 
     public MainView(Context context) {
         super(context);
+
+        AssetManager am = context.getApplicationContext().getAssets();
+        aldrich = Typeface.createFromAsset(am,
+                String.format(Locale.US, "font/%s", "aldrich.ttf"));
+
         init();
         initBitmap();
     }
 
     public MainView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        AssetManager am = context.getApplicationContext().getAssets();
+        aldrich = Typeface.createFromAsset(am,
+                String.format(Locale.US, "font/%s", "aldrich.ttf"));
+
         init();
         initBitmap();
     }
 
     public MainView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        AssetManager am = context.getApplicationContext().getAssets();
+        aldrich = Typeface.createFromAsset(am,
+                String.format(Locale.US, "font/%s", "aldrich.ttf"));
+
+
         init();
         initBitmap();
     }
 
     private void init(){
+
+        lightOrange.setColor(Color.rgb(255,197,128));
+
+        darkOrange.setColor(Color.rgb(238,139,79));
+
+        whiteStroke.setStyle(Paint.Style.STROKE);
+        whiteStroke.setColor(Color.WHITE);
+        whiteStroke.setStrokeWidth(10);
+
+        white.setColor(Color.WHITE);
+
+        font.setTypeface(aldrich);
+        font.setColor(Color.WHITE);
+        font.setTextSize(70);
+        font.setTextAlign(Paint.Align.RIGHT);
 
     }
 
@@ -187,10 +260,27 @@ public class MainView extends View {
         dotOrangePic = BitmapFactory.decodeResource(getResources(), R.drawable.dotorange, opts);
         dotOrangeSrc = new Rect(0,0, dotOrangePic.getWidth(), dotOrangePic.getHeight());
 
-        q1Pic = BitmapFactory.decodeResource(getResources(), R.drawable.q1, opts);
+        q0TitlePic = BitmapFactory.decodeResource(getResources(), R.drawable.q0title, opts);
         form3dmodelPic= BitmapFactory.decodeResource(getResources(), R.drawable.form3dmodel, opts);
-        questionSrc = new Rect(0,0, q1Pic.getWidth(), q1Pic.getHeight());
+        qTitleSrc = new Rect(0,0, q0TitlePic.getWidth(), q0TitlePic.getHeight());
 
+        qTopPic = BitmapFactory.decodeResource(getResources(), R.drawable.top, opts);
+        qTopSrc = new Rect(0,0, qTopPic.getWidth(), qTopPic.getHeight());
+
+        qFrontPic = BitmapFactory.decodeResource(getResources(), R.drawable.front, opts);
+        qFrontSrc = new Rect(0,0, qFrontPic.getWidth(), qFrontPic.getHeight());
+
+        qSidePic = BitmapFactory.decodeResource(getResources(), R.drawable.side, opts);
+        qSideSrc = new Rect(0,0, qSidePic.getWidth(), qSidePic.getHeight());
+
+        timeBarPic = BitmapFactory.decodeResource(getResources(), R.drawable.timebar, opts);
+        timeBarSrc = new Rect(0,0, timeBarPic.getWidth(), timeBarPic.getHeight());
+
+        answerPic = BitmapFactory.decodeResource(getResources(), R.drawable.answer, opts);
+        answerSrc = new Rect(0,0, answerPic.getWidth(), answerPic.getHeight());
+
+        modelPic = BitmapFactory.decodeResource(getResources(), R.drawable.model, opts);
+        modelSrc = new Rect(0,0, modelPic.getWidth(), modelPic.getHeight());
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -365,12 +455,87 @@ public class MainView extends View {
         dot3Pos = new Rect(left, top, right, bottom);
 
         width = w / 2 + w / 4;
-        height = (q1Pic.getHeight() * width) / q1Pic.getWidth();
+        height = (q0TitlePic.getHeight() * width) / q0TitlePic.getWidth();
         left = w / 2 - width / 2;
         top = settingPos.top + settingPos.height() / 2;
         right = left + width;
         bottom = top + height;
-        questionPos = new Rect(left, top, right, bottom);
+        qTitlePos = new Rect(left, top, right, bottom);
+
+        width = w / 15;
+        height = width;
+        left = qTitlePos.left + 5;
+        top = h / 2 - height / 2 - height - w / 40;
+        right = left + width;
+        bottom = top + height;
+        qTopViewPos = new Rect(left, top, right, bottom);
+
+        width = w / 15;
+        height = width;
+        left = w / 2 - width / 2 - width;
+        top = h / 2 - height / 2 - height - w / 40;
+        right = left + width;
+        bottom = top + height;
+        qSideViewPos = new Rect(left, top, right, bottom);
+
+        width = w / 15;
+        height = width;
+        left = qTitlePos.right - width * 3 - 5;
+        top = h / 2 - height / 2 - height - w / 40;
+        right = left + width;
+        bottom = top + height;
+        qFrontViewPos = new Rect(left, top, right, bottom);
+
+        height = h / 35;
+        width = (qTopPic.getWidth() * height) / qTopPic.getHeight();
+        left = qTopViewPos.left + qTopViewPos.width() + qTopViewPos.width() / 2 - width / 2;
+        top = qTopViewPos.top - w / 30;
+        right = left + width;
+        bottom = top + height;
+        qTopPos = new Rect(left, top, right, bottom);
+
+        height = h / 35;
+        width = (qSidePic.getWidth() * height) / qSidePic.getHeight();
+        left = qSideViewPos.left + qSideViewPos.width() + qSideViewPos.width() / 2 - width / 2;
+        top = qSideViewPos.top - w / 30;
+        right = left + width;
+        bottom = top + height;
+        qSidePos = new Rect(left, top, right, bottom);
+
+        height = h / 35;
+        width = (qFrontPic.getWidth() * height) / qFrontPic.getHeight();
+        left = qFrontViewPos.left + qFrontViewPos.width() + qFrontViewPos.width() / 2 - width / 2;
+        top = qFrontViewPos.top - w / 30;
+        right = left + width;
+        bottom = top + height;
+        qFrontPos = new Rect(left, top, right, bottom);
+
+        width = w / 2 + w / 6;
+        height = (timeBarPic.getHeight() * width) / timeBarPic.getWidth();
+        left = qTitlePos.left;
+        top = qFrontViewPos.bottom + qFrontViewPos.height() * 2 + h / 9;
+        right = left + width;
+        bottom = top + height;
+        timeBarPos = new Rect(left, top, right, bottom);
+        timeTxtX = qTitlePos.right;
+        timeTxtY = timeBarPos.top + timeBarPos.height() + 10;
+
+        height = h / 7;
+        width = (answerPic.getWidth() * height) / answerPic.getHeight();
+        left = w / 2 - width / 2;
+        top = h - height - 50;
+        right = left + width;
+        bottom = top + height;
+        answerPos = new Rect(left, top, right, bottom);
+
+        height = h / 35;
+        width = (modelPic.getWidth() * height) / modelPic.getHeight();
+        left = 112221;
+        top = 11222;
+        right = left + width;
+        bottom = top + height;
+        modelPos = new Rect(left, top, right, bottom);
+
     }
 
     @Override
@@ -471,8 +636,53 @@ public class MainView extends View {
     }
 
     private void drawPracticeGamePage(Canvas canvas){
-        canvas.drawBitmap(q1Pic, questionSrc, questionPos, null);
-        canvas.drawBitmap(form3dmodelPic, questionSrc, questionPos, null);
+        canvas.drawBitmap(q0TitlePic, qTitleSrc, qTitlePos, null);
+        canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
+
+        canvas.drawBitmap(qTopPic, qTopSrc, qTopPos, null);
+        canvas.drawBitmap(qSidePic, qSideSrc, qSidePos, null);
+        canvas.drawBitmap(qFrontPic, qFrontSrc, qFrontPos, null);
+
+        canvas.drawText("30", timeTxtX, timeTxtY, font);
+        canvas.drawBitmap(timeBarPic, timeBarSrc, timeBarPos, null);
+
+        canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+
+        int row = 0;
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                if(gameManager.getQFrontView(row + j) == 1){
+                    canvas.drawRect( 100 + j * 80, 1260 + i * 80, 100 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect( 100 + j * 80, 1260 + i * 80, 100 + j * 80 + 80, 1260 + i * 80 + 80, darkOrange);
+                }
+                else{
+                    canvas.drawRect( qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width() , whiteStroke);
+                    canvas.drawRect(qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width(), lightOrange);
+                }
+
+                if(gameManager.getQSideView(row + j) == 1){
+                    canvas.drawRect( 400 + j * 80, 1260 + i * 80, 400 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect( 400 + j * 80, 1260 + i * 80, 400 + j * 80 + 80, 1260 + i * 80 + 80, darkOrange);
+                }
+                else{
+                    canvas.drawRect( qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width() , whiteStroke);
+                    canvas.drawRect(qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width(), lightOrange);
+                }
+
+                if(gameManager.getQTopView(row + j) == 1){
+                    canvas.drawRect( 700 + j * 80, 1260 + i * 80, 700 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
+                    canvas.drawRect( 700 + j * 80, 1260 + i * 80, 700 + j * 80 + 80, 1260 + i * 80 + 80, darkOrange);
+                }
+                else{
+                    canvas.drawRect( qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width() , whiteStroke);
+                    canvas.drawRect(qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width(), lightOrange);
+                }
+
+                if(j == 2){
+                    row += 3;
+                }
+            }
+        }
     }
 
     private void drawBattleGamePage(Canvas canvas){
@@ -686,5 +896,34 @@ public class MainView extends View {
             dotOrangePic.recycle();
             dotOrangePic = null;
         }
+        if(q0TitlePic != null && !q0TitlePic.isRecycled()){
+            q0TitlePic.recycle();
+            q0TitlePic = null;
+        }
+        if(form3dmodelPic != null && !form3dmodelPic.isRecycled()){
+            form3dmodelPic.recycle();
+            form3dmodelPic = null;
+        }
+        if(qTopPic != null && !qTopPic.isRecycled()){
+            qTopPic.recycle();
+            qTopPic = null;
+        }
+        if(qSidePic != null && !qSidePic.isRecycled()){
+            qSidePic.recycle();
+            qSidePic = null;
+        }
+        if(qFrontPic != null && !qFrontPic.isRecycled()){
+            qFrontPic.recycle();
+            qFrontPic = null;
+        }
+        if(timeBarPic != null && !timeBarPic.isRecycled()){
+            timeBarPic.recycle();
+            timeBarPic = null;
+        }
+        if(answerPic != null && !answerPic.isRecycled()){
+            answerPic.recycle();
+            answerPic = null;
+        }
+
     }
 }
