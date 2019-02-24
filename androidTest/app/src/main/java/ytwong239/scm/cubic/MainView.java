@@ -139,6 +139,10 @@ public class MainView extends View {
     private Rect modelSrc;
     private Rect modelPos;
 
+    private Bitmap q0ModelPic;
+    private Rect qModelSrc;
+    private Rect qModelPos;
+
     private Bitmap Pic;
     private Rect Src;
     private Rect Pos;
@@ -146,6 +150,7 @@ public class MainView extends View {
     int lastX = 0;
 
     GameManager gameManager = new GameManager();
+    QuestionBank questionBank = new QuestionBank();
 
     Paint whiteStroke = new Paint();
     Paint lightOrange = new Paint();
@@ -281,6 +286,9 @@ public class MainView extends View {
 
         modelPic = BitmapFactory.decodeResource(getResources(), R.drawable.model, opts);
         modelSrc = new Rect(0,0, modelPic.getWidth(), modelPic.getHeight());
+
+        q0ModelPic = BitmapFactory.decodeResource(getResources(), R.drawable.question0_3d, opts);
+        qModelSrc = new Rect(0,0, q0ModelPic.getWidth(), q0ModelPic.getHeight());
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -528,10 +536,18 @@ public class MainView extends View {
         bottom = top + height;
         answerPos = new Rect(left, top, right, bottom);
 
+        width = w / 5;
+        height = (q0ModelPic.getHeight() * width) / q0ModelPic.getWidth();
+        left = w / 2 - width / 2;
+        top = h / 2 - height / 2 - w / 40;
+        right = left + width;
+        bottom = top + height;
+        qModelPos = new Rect(left, top, right, bottom);
+
         height = h / 35;
         width = (modelPic.getWidth() * height) / modelPic.getHeight();
-        left = 112221;
-        top = 11222;
+        left = w / 2 - width / 2;
+        top = qModelPos.top - w / 30;
         right = left + width;
         bottom = top + height;
         modelPos = new Rect(left, top, right, bottom);
@@ -651,27 +667,27 @@ public class MainView extends View {
         int row = 0;
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
-                if(gameManager.getQFrontView(row + j) == 1){
-                    canvas.drawRect( 100 + j * 80, 1260 + i * 80, 100 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
-                    canvas.drawRect( 100 + j * 80, 1260 + i * 80, 100 + j * 80 + 80, 1260 + i * 80 + 80, darkOrange);
+                if(questionBank.getFrontView(row + j) == 1){
+                    canvas.drawRect( qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width() , whiteStroke);
+                    canvas.drawRect(qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width(), darkOrange);
                 }
                 else{
                     canvas.drawRect( qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width() , whiteStroke);
                     canvas.drawRect(qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width(), lightOrange);
                 }
 
-                if(gameManager.getQSideView(row + j) == 1){
-                    canvas.drawRect( 400 + j * 80, 1260 + i * 80, 400 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
-                    canvas.drawRect( 400 + j * 80, 1260 + i * 80, 400 + j * 80 + 80, 1260 + i * 80 + 80, darkOrange);
+                if(questionBank.getSideView(row + j) == 1){
+                    canvas.drawRect( qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width() , whiteStroke);
+                    canvas.drawRect(qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width(), darkOrange);
                 }
                 else{
                     canvas.drawRect( qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width() , whiteStroke);
                     canvas.drawRect(qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width(), lightOrange);
                 }
 
-                if(gameManager.getQTopView(row + j) == 1){
-                    canvas.drawRect( 700 + j * 80, 1260 + i * 80, 700 + j * 80 + 80, 1260 + i * 80 + 80, whiteStroke);
-                    canvas.drawRect( 700 + j * 80, 1260 + i * 80, 700 + j * 80 + 80, 1260 + i * 80 + 80, darkOrange);
+                if(questionBank.getTopView(row + j) == 1){
+                    canvas.drawRect( qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width() , whiteStroke);
+                    canvas.drawRect(qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width(), darkOrange);
                 }
                 else{
                     canvas.drawRect( qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width() , whiteStroke);
@@ -683,6 +699,10 @@ public class MainView extends View {
                 }
             }
         }
+
+        //canvas.drawBitmap(q0ModelPic, qModelSrc, qModelPos, null);
+        //canvas.drawBitmap(modelPic, modelSrc, modelPos, null);
+
     }
 
     private void drawBattleGamePage(Canvas canvas){

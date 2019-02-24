@@ -11,28 +11,14 @@ public class GameManager {
     private static final int MAXCUBESNUM = MAXBASESNUM * MAXGRIDSNUM;
     private static final int MAXHEIGHTNUM = 3;
 
-    Integer[] qFrontView = new Integer[MAXGRIDSNUM];
-    Integer[] qSideView = new Integer[MAXGRIDSNUM];
-    Integer[] qTopView = new Integer[MAXGRIDSNUM];
+    private static final int MAXQUESTIONSNUM = 6;
+
+    private QuestionBank questionBank = new QuestionBank();
+    private Question[] questions = new Question[MAXQUESTIONSNUM];
 
     public GameManager(){
-        for(int i = 0; i < MAXGRIDSNUM; i++){
-            qFrontView[i] = 0;
-            qSideView[i] = 0;
-            qTopView[i] = 0;
-        }
+
     }
 
-    public int getQFrontView(int grid){
-        return qFrontView[grid];
-    }
-
-    public int getQSideView(int grid){
-        return qSideView[grid];
-    }
-
-    public int getQTopView(int grid){
-        return qTopView[grid];
-    }
 
 }
