@@ -143,22 +143,66 @@ public class Question {
                 topView[i] = 0;
             }
         }
+
+        //update isCubePresentFront
+        for(int i = 0; i < 9; i++){
+            if(frontView[i] == 1){
+                isCubePresentFront[i] = true;
+            }
+            else {
+                isCubePresentFront[i] = false;
+            }
+        }
+
+        //update isCubePresentSide
+        for(int i = 0; i < 9; i++){
+            if(sideView[i] == 1){
+                isCubePresentSide[i] = true;
+            }
+            else {
+                isCubePresentSide[i] = false;
+            }
+        }
+
+        //update isCubePresentTop
+        for(int i = 0; i < 9; i++){
+            if(topView[i] == 1){
+                isCubePresentTop[i] = true;
+            }
+            else {
+                isCubePresentTop[i] = false;
+            }
+        }
     }
+
 
     public int getFrontView(int grid){
         return frontView[grid];
-    }
-
-    public int getTopView(int grid){
-        return topView[grid];
     }
 
     public int getSideView(int grid){
         return sideView[grid];
     }
 
+    public int getTopView(int grid){
+        return topView[grid];
+    }
 
+    public boolean getIsCubePresentFront(int grid){
+        return isCubePresentFront[grid];
+    }
 
+    public boolean getIsCubePresentSide(int grid){
+        return isCubePresentSide[grid];
+    }
+
+    public boolean getIsCubePresentTop(int grid){
+        return isCubePresentTop[grid];
+    }
+
+    public boolean getIsCubePresent(int grid, int height){
+        return isCubePresent[grid][height];
+    }
 
 
 

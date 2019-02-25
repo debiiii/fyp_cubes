@@ -41,6 +41,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private final int HANDLERSTATE = 0;
     private StringBuilder stringBuilder = new StringBuilder();
 
+    MainView mainView;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -51,7 +52,8 @@ public class BluetoothActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
-        //setContentView();
+        mainView = new MainView(this);
+        setContentView(mainView);
 
         bluetoothHandler = new Handler(){
             public void handleMessage(android.os.Message msg) {
