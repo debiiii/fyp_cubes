@@ -32,7 +32,7 @@ public class MainView extends View {
     private final static int HOWTOPAGE2 = 5;
     private final static int HOWTOPAGE3 = 6;
     private final static int INFOPAGE = 7;
-    private int currPage = PRACTICEGAMEPAGE;
+    private int currPage = MENUPAGE;
 
     private static final int MAXQUESTNUM = 6;
 
@@ -46,6 +46,11 @@ public class MainView extends View {
     private static final int BUILDTOPVIEW = 3;
     private static final int SPTYPE3 = 4;
     private static final int SPTYPE4 = 5;
+
+    static final int MAXBASESNUM = 3;
+    static final int MAXGRIDSNUM = 9;
+    static final int MAXCUBESNUM = MAXBASESNUM * MAXGRIDSNUM;
+    static final int MAXHEIGHTNUM = 3;
 
     private int canvasW;
     private int canvasH;
@@ -204,6 +209,7 @@ public class MainView extends View {
 
     GameManager gameManager = new GameManager();
     QuestionBank questionBank = new QuestionBank();
+    Arduino arduino = new Arduino();
 
     Paint whiteStroke = new Paint();
     Paint lightOrange = new Paint();
@@ -212,6 +218,8 @@ public class MainView extends View {
     Paint font = new Paint();
 
     Typeface aldrich;
+
+    Boolean debugVisible = false;
 
     public MainView(Context context) {
         super(context);
@@ -258,6 +266,7 @@ public class MainView extends View {
         whiteStroke.setStrokeWidth(10);
 
         white.setColor(Color.WHITE);
+        white.setTextSize(40);
 
         font.setTypeface(aldrich);
         font.setColor(Color.WHITE);
@@ -269,6 +278,8 @@ public class MainView extends View {
     private void initBitmap(){
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inSampleSize = 2;
+        BitmapFactory.Options opts2 = new BitmapFactory.Options();
+        opts2.inSampleSize = 4;
 
         practiceModePic = BitmapFactory.decodeResource(getResources(), R.drawable.practicemode, opts);
         practiceModeSrc = new Rect(0,0, practiceModePic.getWidth(), practiceModePic.getHeight());
@@ -349,24 +360,24 @@ public class MainView extends View {
         modelPic = BitmapFactory.decodeResource(getResources(), R.drawable.model, opts);
         modelSrc = new Rect(0,0, modelPic.getWidth(), modelPic.getHeight());
 
-        qModelPic[0] = BitmapFactory.decodeResource(getResources(), R.drawable.question0_3d, opts);
-        qModelPic[1] = BitmapFactory.decodeResource(getResources(), R.drawable.question1_3d, opts);
-        qModelPic[2] = BitmapFactory.decodeResource(getResources(), R.drawable.question2_3d, opts);
-        qModelPic[3] = BitmapFactory.decodeResource(getResources(), R.drawable.question3_3d, opts);
-        qModelPic[4] = BitmapFactory.decodeResource(getResources(), R.drawable.question4_3d, opts);
-        qModelPic[5] = BitmapFactory.decodeResource(getResources(), R.drawable.question5_3d, opts);
+        qModelPic[0] = BitmapFactory.decodeResource(getResources(), R.drawable.question0_3d, opts2);
+        qModelPic[1] = BitmapFactory.decodeResource(getResources(), R.drawable.question1_3d, opts2);
+        qModelPic[2] = BitmapFactory.decodeResource(getResources(), R.drawable.question2_3d, opts2);
+        qModelPic[3] = BitmapFactory.decodeResource(getResources(), R.drawable.question3_3d, opts2);
+        qModelPic[4] = BitmapFactory.decodeResource(getResources(), R.drawable.question4_3d, opts2);
+        qModelPic[5] = BitmapFactory.decodeResource(getResources(), R.drawable.question5_3d, opts2);
         qModelSrc = new Rect(0,0, qModelPic[0].getWidth(), qModelPic[0].getHeight());
 
-        qSpType4Pic_base[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_base, opts);
-        qSpType4Pic_corr0[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct1, opts);
-        qSpType4Pic_corr1[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct2, opts);
-        qSpType4Pic_corr2[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct3, opts);
-        qSpType4Pic_incorr[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_wrong, opts);
-        qSpType4Pic_base[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_base, opts);
-        qSpType4Pic_corr0[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct1, opts);
-        qSpType4Pic_corr1[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct2, opts);
-        qSpType4Pic_corr2[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct3, opts);
-        qSpType4Pic_incorr[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_wrong, opts);
+        qSpType4Pic_base[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_base, opts2);
+        qSpType4Pic_corr0[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct1, opts2);
+        qSpType4Pic_corr1[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct2, opts2);
+        qSpType4Pic_corr2[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct3, opts2);
+        qSpType4Pic_incorr[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_wrong, opts2);
+        qSpType4Pic_base[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_base, opts2);
+        qSpType4Pic_corr0[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct1, opts2);
+        qSpType4Pic_corr1[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct2, opts2);
+        qSpType4Pic_corr2[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct3, opts2);
+        qSpType4Pic_incorr[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_wrong, opts2);
         spType4Src= new Rect(0,0, qSpType4Pic_base[0].getWidth(), qSpType4Pic_base[0].getHeight());
 
         spType4QPic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype4question, opts);
@@ -787,6 +798,16 @@ public class MainView extends View {
         }
 
         canvas.drawBitmap(settingPic, settingSrc, settingPos, null);
+
+        if(debugVisible){
+            drawDebug(canvas);
+        }
+
+
+        forArduino();
+
+        questionBank.currQuestBankNum = gameManager.currQuestBankNum;
+
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -891,8 +912,6 @@ public class MainView extends View {
         //answer btn
         canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
 
-        Log.d("MAINVIEW", String.valueOf(gameManager.getCurrQNum()));
-
 
     }
 
@@ -946,7 +965,9 @@ public class MainView extends View {
         canvas.drawBitmap(modelPic, modelSrc, modelPos, null);
 
         //3d model
-        canvas.drawBitmap(qModelPic[gameManager.getCurrQNum()], qModelSrc, qModelPos, null);
+        canvas.drawBitmap(qModelPic[gameManager.currQuestBankNumNoSp], qModelSrc, qModelPos, null);
+        //Log.d("drawModel", String.valueOf(questionBank.currQuestBankNum));
+
     }
 
     private void drawSpType3(Canvas canvas){
@@ -980,6 +1001,58 @@ public class MainView extends View {
 
     }
 
+    private void drawDebug(Canvas canvas) {
+        Paint red = new Paint();
+        red.setColor(Color.RED);
+        red.setTextSize(40);
+        Paint gray = new Paint();
+        gray.setColor(Color.DKGRAY);
+        gray.setTextSize(40);
+        Paint blue = new Paint();
+        blue.setColor(Color.BLUE);
+        blue.setTextSize(40);
+
+        canvas.drawRect(0, 0, canvasW, (canvasH / 5 )* 3, white);
+
+        int x1 = 10;
+        int x2 = canvasW / 3;
+        int x3 = x2 * 2;
+
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            canvas.drawText("b" + i + ": " + arduino.getArdBase0String(i), 10, 50 + i * 70, red);
+        }
+
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            for(int j = 0; j < MAXHEIGHTNUM; j++){
+                canvas.drawText(String.valueOf(arduino.bases[0].grids[i].isCubePresent(j)), 150 + j * 100, 50 + i * 70, red);
+                canvas.drawText(String.valueOf(arduino.bases[1].grids[i].isCubePresent(j)), x2 + 140 + j * 100, 50 + i * 70, gray);
+                canvas.drawText(String.valueOf(arduino.bases[2].grids[i].isCubePresent(j)), x3 + 140 + j * 100, 50 + i * 70, blue);
+            }
+        }
+
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            canvas.drawText("b" + i + ": " + arduino.getArdBase1String(i), x2, 50 + i * 70, gray);
+        }
+
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            canvas.drawText("b" + i + ": " + arduino.getArdBase2String(i), x3, 50 + i * 70, blue);
+        }
+
+    }
+
+    //getting the long string from BluetoothActivity
+    public void updateArdAllString(String[] val){
+        for(int i = 0; i < MAXCUBESNUM; i++){
+            arduino.setArdAllString(val);
+        }
+        invalidate();
+    }
+
+    private void forArduino(){
+        arduino.run();
+        invalidate();
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -1001,7 +1074,14 @@ public class MainView extends View {
                         break;
                     case PRACTICEGAMEPAGE:
                         if(answerPos.contains(x, y )){
-                            gameManager.nextQ();
+                            if(gameManager.getCurrQNum() < 5){
+                                gameManager.nextQ();
+                                //gameManager.compare();
+                            }
+                            else{
+                                gameManager.restart();
+                                currPage = MENUPAGE;
+                            }
                         }
                         break;
                     case BATTLENUMPAGE:
@@ -1082,13 +1162,16 @@ public class MainView extends View {
 
                 }
 
-
                 if(settingPos.contains(x, y)){
                     Log.d("adfd", "setting");
                 }
 
                 //swipe
                 lastX = x;
+
+                if(x > 0 && x < 200 && y > 0 && y < 200){
+                    debugVisible = !debugVisible;
+                }
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -1112,9 +1195,9 @@ public class MainView extends View {
                         }
                         break;
                 }
+
                 break;
         }
-
 
         invalidate();
         return true;

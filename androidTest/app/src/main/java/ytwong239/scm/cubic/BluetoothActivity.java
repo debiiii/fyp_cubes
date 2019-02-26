@@ -42,6 +42,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private StringBuilder stringBuilder = new StringBuilder();
 
     MainView mainView;
+    Arduino arduino = new Arduino();
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -74,7 +75,7 @@ public class BluetoothActivity extends AppCompatActivity {
                                 //Log.d("df", sensor[i]);
                             }
 
-                            //mainPage.updateArdAllString(sensor);
+                            mainView.updateArdAllString(sensor);
 
                         }
                         stringBuilder.delete(0, stringBuilder.length());

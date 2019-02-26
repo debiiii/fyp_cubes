@@ -1,15 +1,17 @@
 package ytwong239.scm.cubic;
 
+import android.util.Log;
+
 /**
  * Created by DebbieWong on 24/2/2019.
  */
 
 public class QuestionBank {
 
-    private static final int MAXQUESTBANKSNUM = 10;
+    private static final int MAXQUESTBANKSNUM = 11;
     private Question questions[] = new Question[MAXQUESTBANKSNUM];
 
-    private int currQuestBankNum = 0;
+    public int currQuestBankNum;
 
     public QuestionBank(){
         for(int i = 0; i < MAXQUESTBANKSNUM; i++){
@@ -93,14 +95,24 @@ public class QuestionBank {
         questions[9].setQuestionVal(8, 0);
         questions[9].setQuestionVal(8, 1);
         questions[9].setQuestionVal(8, 2);
+
+        questions[10].setQuestionVal(1, 0);
+        questions[10].setQuestionVal(1, 1);
+        questions[10].updateView();
+
     }
 
     public void setCurrQuestBankNum(int num){
         currQuestBankNum = num;
+        Log.d("setCurrQuestBankNum", String.valueOf(currQuestBankNum));
     }
 
     public int getFrontView(int grid){
         return questions[currQuestBankNum].getFrontView(grid);
+    }
+
+    public void temp(){
+        Log.d("temp", String.valueOf(currQuestBankNum));
     }
 
     public int getSideView(int grid){

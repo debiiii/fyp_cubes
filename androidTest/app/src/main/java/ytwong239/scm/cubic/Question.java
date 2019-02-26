@@ -11,9 +11,9 @@ public class Question {
     private static final int MAXCUBESNUM = MAXBASESNUM * MAXGRIDSNUM;
     private static final int MAXHEIGHTNUM = 3;
 
-    private Integer[] frontView = new Integer[MAXGRIDSNUM];
-    private Integer[] sideView = new Integer[MAXGRIDSNUM];
-    private Integer[] topView = new Integer[MAXGRIDSNUM];
+    protected Integer[] frontView = new Integer[MAXGRIDSNUM];
+    protected Integer[] sideView = new Integer[MAXGRIDSNUM];
+    protected Integer[] topView = new Integer[MAXGRIDSNUM];
 
     private Boolean[][] isCubePresent = new Boolean [MAXGRIDSNUM][MAXHEIGHTNUM];
     private Boolean[] isCubePresentFront = new Boolean [MAXGRIDSNUM];
