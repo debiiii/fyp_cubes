@@ -34,6 +34,19 @@ public class MainView extends View {
     private final static int INFOPAGE = 7;
     private int currPage = PRACTICEGAMEPAGE;
 
+    private static final int MAXQUESTNUM = 6;
+
+    private final static int MAXVIEWQUESTNUM = 6;
+    private final static int MAXSPTYPE3NUM = 2;
+    private final static int MAXSPTYPE4NUM = 2;
+
+    private static final int BUILD3DMODEL = 0;
+    private static final int BUILDFRONTVIEW = 1;
+    private static final int BUILDSIDEVIEW = 2;
+    private static final int BUILDTOPVIEW = 3;
+    private static final int SPTYPE3 = 4;
+    private static final int SPTYPE4 = 5;
+
     private int canvasW;
     private int canvasH;
 
@@ -105,8 +118,12 @@ public class MainView extends View {
     private Rect dot2Pos;
     private Rect dot3Pos;
 
-    private Bitmap q0TitlePic;
+    private Bitmap[] qTitlePic = new Bitmap[MAXQUESTNUM];
     private Bitmap form3dmodelPic;
+    private Bitmap formFrontViewPic;
+    private Bitmap formSideViewPic;
+    private Bitmap formTopViewPic;
+    private Bitmap formAnsPic;
     private Rect qTitleSrc;
     private Rect qTitlePos;
 
@@ -139,9 +156,45 @@ public class MainView extends View {
     private Rect modelSrc;
     private Rect modelPos;
 
-    private Bitmap q0ModelPic;
+    private Bitmap[] qModelPic = new Bitmap[MAXVIEWQUESTNUM];
     private Rect qModelSrc;
     private Rect qModelPos;
+
+    private Bitmap[] qSpType4Pic_base = new Bitmap[MAXSPTYPE4NUM];
+    private Bitmap[] qSpType4Pic_corr0 = new Bitmap[MAXSPTYPE4NUM];
+    private Bitmap[] qSpType4Pic_corr1 = new Bitmap[MAXSPTYPE4NUM];
+    private Bitmap[] qSpType4Pic_corr2 = new Bitmap[MAXSPTYPE4NUM];
+    private Bitmap[] qSpType4Pic_incorr = new Bitmap[MAXSPTYPE4NUM];
+    private Rect spType4Src;
+    private Rect spType4Pos_base;
+    private Rect spType4Pos0;
+    private Rect spType4Pos1;
+    private Rect spType4Pos2;
+    private Rect spType4Pos3;
+
+    private Bitmap spType4QPic;
+    private Rect spType4QSrc;
+    private Rect spType4QPos;
+
+    private Bitmap spType3Q0Pic;
+    private Rect spType3Q0Src;
+    private Rect spType3Q0Pos;
+
+    private Bitmap spType3Q1Pic;
+    private Rect spType3Q1Src;
+    private Rect spType3Q1Pos;
+
+    private Bitmap spType3Q2Pic;
+    private Rect spType3Q2Src;
+    private Rect spType3Q2Pos;
+
+    private Bitmap[] qSpType3Pic_base0 = new Bitmap[MAXSPTYPE3NUM];
+    private Bitmap[] qSpType3Pic_base1 = new Bitmap[MAXSPTYPE3NUM];
+    private Bitmap[] qSpType3Pic_quest = new Bitmap[MAXSPTYPE3NUM];
+    private Rect spType3Src;
+    private Rect spType3Pos_base0;
+    private Rect spType3Pos_base1;
+    private Rect spType3Pos_quest;
 
     private Bitmap Pic;
     private Rect Src;
@@ -265,9 +318,18 @@ public class MainView extends View {
         dotOrangePic = BitmapFactory.decodeResource(getResources(), R.drawable.dotorange, opts);
         dotOrangeSrc = new Rect(0,0, dotOrangePic.getWidth(), dotOrangePic.getHeight());
 
-        q0TitlePic = BitmapFactory.decodeResource(getResources(), R.drawable.q0title, opts);
+        qTitlePic[0] = BitmapFactory.decodeResource(getResources(), R.drawable.q0title, opts);
+        qTitlePic[1] = BitmapFactory.decodeResource(getResources(), R.drawable.q1title, opts);
+        qTitlePic[2] = BitmapFactory.decodeResource(getResources(), R.drawable.q2title, opts);
+        qTitlePic[3] = BitmapFactory.decodeResource(getResources(), R.drawable.q3title, opts);
+        qTitlePic[4] = BitmapFactory.decodeResource(getResources(), R.drawable.q4title, opts);
+        qTitlePic[5] = BitmapFactory.decodeResource(getResources(), R.drawable.q5title, opts);
         form3dmodelPic= BitmapFactory.decodeResource(getResources(), R.drawable.form3dmodel, opts);
-        qTitleSrc = new Rect(0,0, q0TitlePic.getWidth(), q0TitlePic.getHeight());
+        formFrontViewPic= BitmapFactory.decodeResource(getResources(), R.drawable.frontview, opts);
+        formSideViewPic= BitmapFactory.decodeResource(getResources(), R.drawable.sideview, opts);
+        formTopViewPic= BitmapFactory.decodeResource(getResources(), R.drawable.topview, opts);
+        formAnsPic= BitmapFactory.decodeResource(getResources(), R.drawable.formans, opts);
+        qTitleSrc = new Rect(0,0, qTitlePic[0].getWidth(), qTitlePic[0].getHeight());
 
         qTopPic = BitmapFactory.decodeResource(getResources(), R.drawable.top, opts);
         qTopSrc = new Rect(0,0, qTopPic.getWidth(), qTopPic.getHeight());
@@ -287,8 +349,45 @@ public class MainView extends View {
         modelPic = BitmapFactory.decodeResource(getResources(), R.drawable.model, opts);
         modelSrc = new Rect(0,0, modelPic.getWidth(), modelPic.getHeight());
 
-        q0ModelPic = BitmapFactory.decodeResource(getResources(), R.drawable.question0_3d, opts);
-        qModelSrc = new Rect(0,0, q0ModelPic.getWidth(), q0ModelPic.getHeight());
+        qModelPic[0] = BitmapFactory.decodeResource(getResources(), R.drawable.question0_3d, opts);
+        qModelPic[1] = BitmapFactory.decodeResource(getResources(), R.drawable.question1_3d, opts);
+        qModelPic[2] = BitmapFactory.decodeResource(getResources(), R.drawable.question2_3d, opts);
+        qModelPic[3] = BitmapFactory.decodeResource(getResources(), R.drawable.question3_3d, opts);
+        qModelPic[4] = BitmapFactory.decodeResource(getResources(), R.drawable.question4_3d, opts);
+        qModelPic[5] = BitmapFactory.decodeResource(getResources(), R.drawable.question5_3d, opts);
+        qModelSrc = new Rect(0,0, qModelPic[0].getWidth(), qModelPic[0].getHeight());
+
+        qSpType4Pic_base[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_base, opts);
+        qSpType4Pic_corr0[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct1, opts);
+        qSpType4Pic_corr1[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct2, opts);
+        qSpType4Pic_corr2[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct3, opts);
+        qSpType4Pic_incorr[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_wrong, opts);
+        qSpType4Pic_base[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_base, opts);
+        qSpType4Pic_corr0[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct1, opts);
+        qSpType4Pic_corr1[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct2, opts);
+        qSpType4Pic_corr2[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct3, opts);
+        qSpType4Pic_incorr[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_wrong, opts);
+        spType4Src= new Rect(0,0, qSpType4Pic_base[0].getWidth(), qSpType4Pic_base[0].getHeight());
+
+        spType4QPic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype4question, opts);
+        spType4QSrc = new Rect(0,0, spType4QPic.getWidth(), spType4QPic.getHeight());
+
+        spType3Q0Pic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype3question0, opts);
+        spType3Q0Src = new Rect(0,0, spType3Q0Pic.getWidth(), spType3Q0Pic.getHeight());
+
+        spType3Q1Pic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype3question1, opts);
+        spType3Q1Src = new Rect(0,0, spType3Q1Pic.getWidth(), spType3Q1Pic.getHeight());
+
+        spType3Q2Pic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype3question2, opts);
+        spType3Q2Src = new Rect(0,0, spType3Q2Pic.getWidth(), spType3Q2Pic.getHeight());
+
+        qSpType3Pic_base0[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp2_base_0, opts);
+        qSpType3Pic_base1[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp2_base_1, opts);
+        qSpType3Pic_quest[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp2_quest, opts);
+        qSpType3Pic_base0[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp3_base0, opts);
+        qSpType3Pic_base1[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp3_base1, opts);
+        qSpType3Pic_quest[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp3_quest, opts);
+        spType3Src = new Rect(0,0, qSpType3Pic_base0[0].getWidth(), qSpType3Pic_base0[0].getHeight());
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -463,7 +562,7 @@ public class MainView extends View {
         dot3Pos = new Rect(left, top, right, bottom);
 
         width = w / 2 + w / 4;
-        height = (q0TitlePic.getHeight() * width) / q0TitlePic.getWidth();
+        height = (qTitlePic[0].getHeight() * width) / qTitlePic[0].getWidth();
         left = w / 2 - width / 2;
         top = settingPos.top + settingPos.height() / 2;
         right = left + width;
@@ -537,7 +636,7 @@ public class MainView extends View {
         answerPos = new Rect(left, top, right, bottom);
 
         width = w / 5;
-        height = (q0ModelPic.getHeight() * width) / q0ModelPic.getWidth();
+        height = (qModelPic[0].getHeight() * width) / qModelPic[0].getWidth();
         left = w / 2 - width / 2;
         top = h / 2 - height / 2 - w / 40;
         right = left + width;
@@ -551,6 +650,107 @@ public class MainView extends View {
         right = left + width;
         bottom = top + height;
         modelPos = new Rect(left, top, right, bottom);
+
+        width = w / 5;
+        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        left = qTitlePos.left;
+        top = h / 2 - height / 2 - w / 40;
+        right = left + width;
+        bottom = top + height;
+        spType4Pos_base = new Rect(left, top, right, bottom);
+
+        int space = qTitlePos.right - spType4Pos_base.right;
+        int gap = w / 50;
+
+        width = (space - gap * 4) / 4;
+        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        left = spType4Pos_base.right + gap;
+        right = left + width;
+        bottom = spType4Pos_base.bottom;
+        top = bottom - height;
+        spType4Pos0 = new Rect(left, top, right, bottom);
+
+        width = (space - gap * 4) / 4;
+        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        left = spType4Pos_base.right + gap * 2 + width;
+        right = left + width;
+        bottom = spType4Pos_base.bottom;
+        top = bottom - height;
+        spType4Pos1 = new Rect(left, top, right, bottom);
+
+        width = (space - gap * 4) / 4;
+        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        left = spType4Pos_base.right + gap * 3 + width * 2;
+        right = left + width;
+        bottom = spType4Pos_base.bottom;
+        top = bottom - height;
+        spType4Pos2 = new Rect(left, top, right, bottom);
+
+        width = (space - gap * 4) / 4;
+        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        left = spType4Pos_base.right + gap * 4 + width * 3;
+        right = left + width;
+        bottom = spType4Pos_base.bottom;
+        top = bottom - height;
+        spType4Pos3 = new Rect(left, top, right, bottom);
+
+        space = spType4Pos3.right - spType4Pos0.left;
+
+        width = w / 2;
+        height = (spType4QPic.getHeight() * width) / spType4QPic.getWidth();
+        left = (spType4Pos0.left + space / 2) - width / 2;
+        top = spType4Pos_base.top;
+        right = left + width;
+        bottom = top + height;
+        spType4QPos = new Rect(left, top, right, bottom);
+
+        height = h / 22;
+        width = (spType3Q0Pic.getWidth() * height) / spType3Q0Pic.getHeight();
+        left = w / 2 - width / 2;
+        top = h / 2 - height / 2 - w / 13;
+        right = left + width;
+        bottom = top + height;
+        spType3Q0Pos = new Rect(left, top, right, bottom);
+
+        width = w / 7;
+        height = (qSpType3Pic_base0[0].getHeight() * width) / qSpType3Pic_base0[0].getWidth();
+        left = spType3Q0Pos.left - w / 40 - width;
+        top = h / 2 - height / 2 - w / 13;
+        right = left + width;
+        bottom = top + height;
+        spType3Pos_base0 = new Rect(left, top, right, bottom);
+
+        width = w / 7;
+        height = (qSpType3Pic_base1[0].getHeight() * width) / qSpType3Pic_base1[0].getWidth();
+        left = spType3Q0Pos.right + w / 40;
+        top = h / 2 - height / 2 - w / 13;
+        right = left + width;
+        bottom = top + height;
+        spType3Pos_base1 = new Rect(left, top, right, bottom);
+
+        width = w / 7;
+        height = (qSpType3Pic_quest[0].getHeight() * width) / qSpType3Pic_quest[0].getWidth();
+        left = w / 2 - width / 2;
+        top = spType3Q0Pos.bottom + w / 35;
+        right = left + width;
+        bottom = top + height;
+        spType3Pos_quest = new Rect(left, top, right, bottom);
+
+        width = w / 4;
+        height = (spType3Q1Pic.getHeight() * width) / spType3Q1Pic.getWidth();
+        left = spType3Pos_quest.left - w / 40 - width;
+        top = (spType3Pos_quest.top + spType3Pos_quest.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        spType3Q1Pos = new Rect(left, top, right, bottom);
+
+        height = h / 22;
+        width = (spType3Q2Pic.getWidth() * height) / spType3Q2Pic.getHeight();
+        left = spType3Pos_quest.right + w / 40;
+        top = (spType3Pos_quest.top + spType3Pos_quest.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        spType3Q2Pos = new Rect(left, top, right, bottom);
 
     }
 
@@ -652,18 +852,57 @@ public class MainView extends View {
     }
 
     private void drawPracticeGamePage(Canvas canvas){
-        canvas.drawBitmap(q0TitlePic, qTitleSrc, qTitlePos, null);
-        canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
 
+        //question title
+        canvas.drawBitmap(qTitlePic[gameManager.getCurrQNum()], qTitleSrc, qTitlePos, null);
+
+        switch (gameManager.getCurrQMode()){
+            case BUILD3DMODEL:
+                canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
+                drawViews(canvas);
+                break;
+            case BUILDFRONTVIEW:
+                canvas.drawBitmap(formFrontViewPic, qTitleSrc, qTitlePos, null);
+                drawModel(canvas);
+                break;
+            case BUILDSIDEVIEW:
+                canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
+                drawModel(canvas);
+                break;
+            case BUILDTOPVIEW:
+                canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
+                drawModel(canvas);
+                break;
+            case SPTYPE3:
+                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
+                drawSpType3(canvas);
+                break;
+            case SPTYPE4:
+                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
+                drawSpType4(canvas);
+                break;
+
+        }
+
+        //timer
+        canvas.drawText("30", timeTxtX, timeTxtY, font);
+        canvas.drawBitmap(timeBarPic, timeBarSrc, timeBarPos, null);
+
+        //answer btn
+        canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+
+        Log.d("MAINVIEW", String.valueOf(gameManager.getCurrQNum()));
+
+
+    }
+
+    private void drawViews(Canvas canvas){
+        //top, side, front word
         canvas.drawBitmap(qTopPic, qTopSrc, qTopPos, null);
         canvas.drawBitmap(qSidePic, qSideSrc, qSidePos, null);
         canvas.drawBitmap(qFrontPic, qFrontSrc, qFrontPos, null);
 
-        canvas.drawText("30", timeTxtX, timeTxtY, font);
-        canvas.drawBitmap(timeBarPic, timeBarSrc, timeBarPos, null);
-
-        canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
-
+        //rectangle front side top view
         int row = 0;
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
@@ -700,15 +939,45 @@ public class MainView extends View {
             }
         }
 
-        //canvas.drawBitmap(q0ModelPic, qModelSrc, qModelPos, null);
-        //canvas.drawBitmap(modelPic, modelSrc, modelPos, null);
+    }
 
+    private void drawModel(Canvas canvas){
+        //model word
+        canvas.drawBitmap(modelPic, modelSrc, modelPos, null);
+
+        //3d model
+        canvas.drawBitmap(qModelPic[gameManager.getCurrQNum()], qModelSrc, qModelPos, null);
+    }
+
+    private void drawSpType3(Canvas canvas){
+        //sp type 3 word
+        canvas.drawBitmap(spType3Q0Pic, spType3Q0Src, spType3Q0Pos, null);
+        canvas.drawBitmap(spType3Q1Pic, spType3Q1Src, spType3Q1Pos, null);
+        canvas.drawBitmap(spType3Q2Pic, spType3Q2Src, spType3Q2Pos, null);
+
+        //sp type 3 pic
+        canvas.drawBitmap(qSpType3Pic_base0[gameManager.getCurrQSpType3Num()], spType3Src, spType3Pos_base0, null);
+        canvas.drawBitmap(qSpType3Pic_base1[gameManager.getCurrQSpType3Num()], spType3Src, spType3Pos_base1, null);
+        canvas.drawBitmap(qSpType3Pic_quest[gameManager.getCurrQSpType3Num()], spType3Src, spType3Pos_quest, null);
+    }
+
+    private void drawSpType4(Canvas canvas){
+        //sp type 4 question
+        canvas.drawBitmap(spType4QPic, spType4QSrc, spType4QPos, null);
+
+        //sp type 4 pic
+        canvas.drawBitmap(qSpType4Pic_base[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos_base, null);
+        canvas.drawBitmap(qSpType4Pic_corr0[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos0, null);
+        canvas.drawBitmap(qSpType4Pic_corr1[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos1, null);
+        canvas.drawBitmap(qSpType4Pic_corr2[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos2, null);
+        canvas.drawBitmap(qSpType4Pic_incorr[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos3, null);
     }
 
     private void drawBattleGamePage(Canvas canvas){
         Paint p = new Paint(Color.BLACK);
         p.setTextSize(100);
         canvas.drawText("Battle", 100, 100, p);
+
     }
 
 
@@ -731,6 +1000,9 @@ public class MainView extends View {
                         }
                         break;
                     case PRACTICEGAMEPAGE:
+                        if(answerPos.contains(x, y )){
+                            gameManager.nextQ();
+                        }
                         break;
                     case BATTLENUMPAGE:
                         if(practiceModePos.contains(x, y)){
@@ -916,9 +1188,11 @@ public class MainView extends View {
             dotOrangePic.recycle();
             dotOrangePic = null;
         }
-        if(q0TitlePic != null && !q0TitlePic.isRecycled()){
-            q0TitlePic.recycle();
-            q0TitlePic = null;
+        for(int i = 0; i < MAXQUESTNUM; i++){
+            if(qTitlePic[i] != null && !qTitlePic[i].isRecycled()){
+                qTitlePic[i].recycle();
+                qTitlePic[i] = null;
+            }
         }
         if(form3dmodelPic != null && !form3dmodelPic.isRecycled()){
             form3dmodelPic.recycle();
@@ -944,6 +1218,70 @@ public class MainView extends View {
             answerPic.recycle();
             answerPic = null;
         }
+        if(modelPic != null && !modelPic.isRecycled()){
+            modelPic.recycle();
+            modelPic = null;
+        }
+        for(int i = 0; i < MAXVIEWQUESTNUM; i++){
+            if(qModelPic[i] != null && !qModelPic[i].isRecycled()){
+                qModelPic[i].recycle();
+                qModelPic[i] = null;
+            }
+        }
+        for(int i = 0; i < MAXSPTYPE4NUM; i++){
+            if(qSpType4Pic_base[i] != null && !qSpType4Pic_base[i].isRecycled()){
+                qSpType4Pic_base[i].recycle();
+                qSpType4Pic_base[i] = null;
+            }
+            if(qSpType4Pic_corr0[i] != null && !qSpType4Pic_corr0[i].isRecycled()){
+                qSpType4Pic_corr0[i].recycle();
+                qSpType4Pic_corr0[i] = null;
+            }
+            if(qSpType4Pic_corr1[i] != null && !qSpType4Pic_corr1[i].isRecycled()){
+                qSpType4Pic_corr1[i].recycle();
+                qSpType4Pic_corr1[i] = null;
+            }
+            if(qSpType4Pic_corr2[i] != null && !qSpType4Pic_corr2[i].isRecycled()){
+                qSpType4Pic_corr2[i].recycle();
+                qSpType4Pic_corr2[i] = null;
+            }
+            if(qSpType4Pic_incorr[i] != null && !qSpType4Pic_incorr[i].isRecycled()){
+                qSpType4Pic_incorr[i].recycle();
+                qSpType4Pic_incorr[i] = null;
+            }
+        }
+        if(spType4QPic != null && !spType4QPic.isRecycled()){
+            spType4QPic.recycle();
+            spType4QPic = null;
+        }
+        if(spType3Q0Pic != null && !spType3Q0Pic.isRecycled()){
+            spType3Q0Pic.recycle();
+            spType3Q0Pic = null;
+        }
+        if(spType3Q1Pic != null && !spType3Q1Pic.isRecycled()){
+            spType3Q1Pic.recycle();
+            spType3Q1Pic = null;
+        }
+        if(spType3Q2Pic != null && !spType3Q2Pic.isRecycled()){
+            spType3Q2Pic.recycle();
+            spType3Q2Pic = null;
+        }
+        for(int i = 0; i < MAXSPTYPE3NUM; i++){
+            if(qSpType3Pic_base0[i] != null && !qSpType3Pic_base0[i].isRecycled()){
+                qSpType3Pic_base0[i].recycle();
+                qSpType3Pic_base0[i] = null;
+            }
+            if(qSpType3Pic_base1[i] != null && !qSpType3Pic_base1[i].isRecycled()){
+                qSpType3Pic_base1[i].recycle();
+                qSpType3Pic_base1[i] = null;
+            }
+            if(qSpType3Pic_quest[i] != null && !qSpType3Pic_quest[i].isRecycled()){
+                qSpType3Pic_quest[i].recycle();
+                qSpType3Pic_quest[i] = null;
+            }
+        }
+
+
 
     }
 }
