@@ -1,26 +1,22 @@
 package ytwong239.scm.cubic;
 
 /**
- * Created by DebbieWong on 24/2/2019.
+ * Created by DebbieWong on 7/3/2019.
  */
 
-public class Question {
-
+public class Question2D3D {
     private static final int MAXBASESNUM = 3;
     private static final int MAXGRIDSNUM = 9;
     private static final int MAXCUBESNUM = MAXBASESNUM * MAXGRIDSNUM;
     private static final int MAXHEIGHTNUM = 3;
 
-    protected Integer[] frontView = new Integer[MAXGRIDSNUM];
-    protected Integer[] sideView = new Integer[MAXGRIDSNUM];
-    protected Integer[] topView = new Integer[MAXGRIDSNUM];
+    private Integer[] frontView = new Integer[MAXGRIDSNUM];
+    private Integer[] sideView = new Integer[MAXGRIDSNUM];
+    private Integer[] topView = new Integer[MAXGRIDSNUM];
 
     private Boolean[][] isCubePresent = new Boolean [MAXGRIDSNUM][MAXHEIGHTNUM];
-    private Boolean[] isCubePresentFront = new Boolean [MAXGRIDSNUM];
-    private Boolean[] isCubePresentSide = new Boolean [MAXGRIDSNUM];
-    private Boolean[] isCubePresentTop = new Boolean [MAXGRIDSNUM];
 
-    public Question(){
+    public Question2D3D(){
 
         for(int i = 0; i < MAXGRIDSNUM; i++){
             for(int j = 0; j < MAXHEIGHTNUM; j++){
@@ -32,15 +28,11 @@ public class Question {
             frontView[i] = 0;
             sideView[i] = 0;
             topView[i] = 0;
-            isCubePresentFront[i] = false;
-            isCubePresentSide[i] = false;
-            isCubePresentTop[i] = false;
         }
-
     }
 
     public void setQuestionVal(int grid, int height){
-        isCubePresent[grid][height] = true;
+        this.isCubePresent[grid][height] = true;
     }
 
     public void updateView(){
@@ -144,37 +136,7 @@ public class Question {
             }
         }
 
-        //update isCubePresentFront
-        for(int i = 0; i < 9; i++){
-            if(frontView[i] == 1){
-                isCubePresentFront[i] = true;
-            }
-            else {
-                isCubePresentFront[i] = false;
-            }
-        }
-
-        //update isCubePresentSide
-        for(int i = 0; i < 9; i++){
-            if(sideView[i] == 1){
-                isCubePresentSide[i] = true;
-            }
-            else {
-                isCubePresentSide[i] = false;
-            }
-        }
-
-        //update isCubePresentTop
-        for(int i = 0; i < 9; i++){
-            if(topView[i] == 1){
-                isCubePresentTop[i] = true;
-            }
-            else {
-                isCubePresentTop[i] = false;
-            }
-        }
     }
-
 
     public int getFrontView(int grid){
         return frontView[grid];
@@ -188,22 +150,7 @@ public class Question {
         return topView[grid];
     }
 
-    public boolean getIsCubePresentFront(int grid){
-        return isCubePresentFront[grid];
-    }
-
-    public boolean getIsCubePresentSide(int grid){
-        return isCubePresentSide[grid];
-    }
-
-    public boolean getIsCubePresentTop(int grid){
-        return isCubePresentTop[grid];
-    }
-
     public boolean getIsCubePresent(int grid, int height){
         return isCubePresent[grid][height];
     }
-
-
-
 }

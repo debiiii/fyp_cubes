@@ -2,13 +2,11 @@ package ytwong239.scm.cubic;
 
 import android.util.Log;
 
-import java.lang.ref.PhantomReference;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 /**
- * Created by DebbieWong on 24/2/2019.
+ * Created by DebbieWong on 7/3/2019.
  */
 
 public class GameManager {
@@ -18,199 +16,120 @@ public class GameManager {
     private static final int MAXCUBESNUM = MAXBASESNUM * MAXGRIDSNUM;
     private static final int MAXHEIGHTNUM = 3;
 
-    private static final int MAXQUESTBANKSNUM = 11;
-    private static final int MAXQUESTNUM = 6;
-
-    private final static int MAXVIEWQUESTNUM = 6;
-    private final static int MAXSPTYPE3NUM = 2;
-    private final static int MAXSPTYPE4NUM = 2;
-
-    private static final int BUILD3DMODEL = 0;
-    private static final int BUILDFRONTVIEW = 1;
-    private static final int BUILDSIDEVIEW = 2;
-    private static final int BUILDTOPVIEW = 3;
+    private static final int DRAWFRONTVIEW = 0;
+    private static final int DRAWSIDEVIEW = 1;
+    private static final int DRAWTOPVIEW = 2;
+    private static final int BUILD3DMODEL = 3;
     private static final int SPTYPE3 = 4;
     private static final int SPTYPE4 = 5;
-    private int currQMode = -1;
-    private int currQNum = 0;
-    private int currQSpType3Num = -1;
-    private int currQSpType4Num = -1;
 
-    private int randomQBankNum = 0;
-    private int randomQMode = 0;
+    private int currQuestMode = -1;
+    private int currQuestNum = 0;
 
-    private QuestionBank questionBank = new QuestionBank();
+    private QuestionBank2D3D questionBank2D3D = new QuestionBank2D3D();
+    private QuestionBankSPType3 questionBankSPType3 = new QuestionBankSPType3();
+    private QuestionBankSPType4 questionBankSPType4 = new QuestionBankSPType4();
     private Arduino arduino = new Arduino();
 
-    //------------
+    private ArrayList<Integer> ran2D3DQuest = new ArrayList<Integer>();
+    private ArrayList<Integer> ran3Views = new ArrayList<Integer>();
+    private ArrayList<Integer> ranSpType3 = new ArrayList<Integer>();
+    private ArrayList<Integer> ranSpType4 = new ArrayList<Integer>();
 
-    ArrayList<Integer> ranViewQuest = new ArrayList<Integer>();
-    ArrayList<Integer> ran3Views = new ArrayList<Integer>();
-    ArrayList<Integer> ranSpType3 = new ArrayList<Integer>();
-    ArrayList<Integer> ranSpType4 = new ArrayList<Integer>();
+    private Integer[] playerFrontView = new Integer[MAXGRIDSNUM];
+    private Integer[] playerSideView = new Integer[MAXGRIDSNUM];
+    private Integer[] playerTopView = new Integer[MAXGRIDSNUM];
 
+    public GameManager(){
 
-    //-------------
-
-    public int currQuestBankNum;
-    public int currQuestBankNumNoSp;
-
-    public GameManager() {
-
-        for (int i = 0; i < MAXVIEWQUESTNUM; i++) {
-            ranViewQuest.add(i);
-        }
-        Collections.shuffle(ranViewQuest);
-        for (int i = 0; i < MAXVIEWQUESTNUM; i++) {
-            Log.d("dfdfd", i + "  " + ranViewQuest.get(i));
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            playerFrontView[i] = 0;
+            playerSideView[i] = 0;
+            playerTopView[i] = 0;
         }
 
-        for (int i = 1; i < 4; i++) {
+        for(int i = 0; i < questionBank2D3D.getQuestion2D3DSLength(); i++){
+            ran2D3DQuest.add(i);
+        }
+        Collections.shuffle(ran2D3DQuest);
+
+        for (int i = 0; i < 3; i++) {
             ran3Views.add(i);
         }
         Collections.shuffle(ran3Views);
 
-        for (int i = 0; i < MAXSPTYPE3NUM; i++) {
+        for (int i = 0; i < questionBankSPType3.getQuestionSPType3sLength(); i++) {
             ranSpType3.add(i);
         }
         Collections.shuffle(ranSpType3);
 
-        for (int i = 0; i < MAXSPTYPE4NUM; i++) {
+        for (int i = 0; i < questionBankSPType4.getQuestionSPType4sLength(); i++) {
             ranSpType4.add(i);
         }
         Collections.shuffle(ranSpType4);
 
-        rand();
-
+        randQuest();
     }
 
-    private void veryRandomButRepeat(){
-        randomQBankNum = new Random().nextInt(MAXQUESTBANKSNUM);
-        questionBank.setCurrQuestBankNum(randomQBankNum);
-
-        if(randomQBankNum < MAXVIEWQUESTNUM){
-            randomQMode = new Random().nextInt(4);
-            switch (randomQMode){
-                case 0:
-                    currQMode = BUILD3DMODEL;
-                    break;
-                case 1:
-                    currQMode = BUILDFRONTVIEW;
-                    break;
-                case 2:
-                    currQMode = BUILDSIDEVIEW;
-                    break;
-                case 3:
-                    currQMode = BUILDTOPVIEW;
-                    break;
-
-            }
-        }
-        else if(randomQBankNum < MAXVIEWQUESTNUM + MAXSPTYPE3NUM){
-            currQMode = SPTYPE3;
-            currQSpType3Num = randomQBankNum - MAXVIEWQUESTNUM;
-        }
-        else if(randomQBankNum < MAXVIEWQUESTNUM + MAXSPTYPE3NUM + MAXSPTYPE4NUM){
-            currQMode = SPTYPE4;
-            currQSpType4Num = randomQBankNum - (MAXVIEWQUESTNUM + MAXSPTYPE3NUM);
-        }
+    public void setPlayerFrontView(int grid){
+        this.playerFrontView[grid] = 1;
     }
 
-    private void error(){
-        for(int i = 0; i < MAXVIEWQUESTNUM; i++){
-            ranViewQuest.add(i);
-        }
-        Collections.shuffle(ranViewQuest);
-        for(int i = 0; i < MAXVIEWQUESTNUM; i++){
-            Log.d("dfdfd", i + "  " + ranViewQuest.get(i));
-        }
+    public void setPlayerSideView(int grid){
+        this.playerSideView[grid] = 1;
+    }
 
-        for(int i = 1; i < 4; i++){
-            ran3Views.add(i);
-        }
-        Collections.shuffle(ran3Views);
+    public void setPlayerTopView(int grid){
+        this.playerTopView[grid] = 1;
+    }
 
-        for(int i = 0; i < MAXSPTYPE3NUM; i++){
-            ranSpType3.add(i);
-        }
-        Collections.shuffle(ranSpType3);
+    public void clearPlayerFrontView(int grid){
+        this.playerFrontView[grid] = 0;
+    }
 
-        for(int i = 0; i < MAXSPTYPE4NUM; i++){
-            ranSpType4.add(i);
-        }
-        Collections.shuffle(ranSpType4);
+    public void clearPlayerSideView(int grid){
+        this.playerSideView[grid] = 0;
+    }
 
+    public void clearPlayerTopView(int grid){
+        this.playerTopView[grid] = 0;
+    }
 
-        switch (currQNum){
+    private void randQuest(){
+
+        switch (currQuestNum){
             case 0:
-                currQMode = ran3Views.get(0);
-                questionBank.setCurrQuestBankNum(ranViewQuest.get(0));
+                //random front/side/top
+                currQuestMode = ran3Views.get(0);
+                QuestionBank2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(0));
+                Log.d("ran2D3DQuest", "q0  " +  ran2D3DQuest.get(0));
                 break;
             case 1:
-                currQMode = BUILD3DMODEL;
-                questionBank.setCurrQuestBankNum(ranViewQuest.get(1));
+                currQuestMode = BUILD3DMODEL;
+                QuestionBank2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(1));
+                Log.d("ran2D3DQuest", "q1  " +  ran2D3DQuest.get(1));
                 break;
             case 2:
-                currQMode = SPTYPE3;
-                currQSpType3Num = ranSpType3.get(0);
-                questionBank.setCurrQuestBankNum(ranSpType3.get(0) + MAXVIEWQUESTNUM);
+                currQuestMode = SPTYPE3;
+                QuestionBankSPType3.setCurrQuestBankSPType3Num(ranSpType3.get(0));
+                Log.d("ranSpType3", "q2  " +  ranSpType3.get(0));
                 break;
             case 3:
-                currQMode = ran3Views.get(1);
-                questionBank.setCurrQuestBankNum(ranViewQuest.get(3));
+                //random front/side/top
+                currQuestMode = ran3Views.get(1);
+                QuestionBank2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(3));
+                Log.d("ran2D3DQuest", "q3  " +  ran2D3DQuest.get(3));
                 break;
             case 4:
-                currQMode = BUILD3DMODEL;
-                questionBank.setCurrQuestBankNum(ranViewQuest.get(4));
+                currQuestMode = BUILD3DMODEL;
+                QuestionBank2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(4));
+                Log.d("ran2D3DQuest", "q4  " +  ran2D3DQuest.get(4));
                 break;
             case 5:
-                currQMode = SPTYPE4;
-                currQSpType4Num = ranSpType4.get(1);
-                questionBank.setCurrQuestBankNum(ranSpType4.get(1) + MAXVIEWQUESTNUM + MAXSPTYPE3NUM);
+                currQuestMode = SPTYPE4;
+                QuestionBankSPType4.setCurrQuestBankSPType4Num(ranSpType4.get(1));
+                Log.d("ranSpType4", "q5  " +  ranSpType4.get(1));
                 break;
-
-        }
-    }
-
-    private void rand(){
-        switch (currQNum){
-            case 0:
-                currQMode = ran3Views.get(0);
-                //questionBank.setCurrQuestBankNum(ranViewQuest.get(0));
-                currQuestBankNum = ranViewQuest.get(0);
-                currQuestBankNumNoSp = ranViewQuest.get(0);
-                break;
-            case 1:
-                currQMode = BUILD3DMODEL;
-                //questionBank.setCurrQuestBankNum(ranViewQuest.get(1));
-                currQuestBankNum = ranViewQuest.get(1);
-                currQuestBankNumNoSp = ranViewQuest.get(0);
-                break;
-            case 2:
-                currQMode = SPTYPE3;
-                currQSpType3Num = ranSpType3.get(0);
-                //questionBank.setCurrQuestBankNum(ranSpType3.get(0) + MAXVIEWQUESTNUM);
-                currQuestBankNum = ranSpType3.get(0) + MAXVIEWQUESTNUM;
-                break;
-            case 3:
-                currQMode = ran3Views.get(1);
-                //questionBank.setCurrQuestBankNum(ranViewQuest.get(3));
-                currQuestBankNum = ranViewQuest.get(3);
-                currQuestBankNumNoSp = ranViewQuest.get(3);
-                break;
-            case 4:
-                currQMode = BUILD3DMODEL;
-                //questionBank.setCurrQuestBankNum(ranViewQuest.get(4));
-                currQuestBankNum = ranViewQuest.get(4);
-                currQuestBankNumNoSp = ranViewQuest.get(4);
-                break;
-            case 5:
-                currQMode = SPTYPE4;
-                currQSpType4Num = ranSpType4.get(1);
-                //questionBank.setCurrQuestBankNum(ranSpType4.get(1) + MAXVIEWQUESTNUM + MAXSPTYPE3NUM);
-                currQuestBankNum = ranSpType4.get(1) + MAXVIEWQUESTNUM + MAXSPTYPE3NUM;
-                break;
-
         }
 
     }
@@ -218,11 +137,50 @@ public class GameManager {
     public void compare(){
         int match = 0;
 
-        switch (currQMode){
+        switch (currQuestMode){
+            case DRAWFRONTVIEW:
+                for(int i = 0; i < MAXGRIDSNUM; i++){
+                    if(questionBank2D3D.getFrontView(i) != playerFrontView[i]){
+                        break;
+                    }
+                    else{
+                        match++;
+                    }
+                }
+                if(match == MAXGRIDSNUM){
+                    nextQ();
+                }
+                break;
+            case DRAWSIDEVIEW:
+                for(int i = 0; i < MAXGRIDSNUM; i++){
+                    if(questionBank2D3D.getSideView(i) != playerSideView[i]){
+                        break;
+                    }
+                    else{
+                        match++;
+                    }
+                }
+                if(match == MAXGRIDSNUM){
+                    nextQ();
+                }
+                break;
+            case DRAWTOPVIEW:
+                for(int i = 0; i < MAXGRIDSNUM; i++){
+                    if(questionBank2D3D.getTopView(i) != playerTopView[i]){
+                        break;
+                    }
+                    else{
+                        match++;
+                    }
+                }
+                if(match == MAXGRIDSNUM){
+                    nextQ();
+                }
+                break;
             case BUILD3DMODEL:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
-                        if(questionBank.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
+                        if(questionBank2D3D.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
                             break;
                         }
                         else{
@@ -234,66 +192,25 @@ public class GameManager {
                     nextQ();
                 }
                 break;
-
-            case BUILDFRONTVIEW:
-                for(int i = 0; i < MAXGRIDSNUM; i++){
-                    if(questionBank.getIsCubePresentFront(i) == arduino.getIsCubePresent(i,0)){
-                        break;
-                    }
-                    else{
-                        match++;
-                    }
-                }
-                if(match == MAXGRIDSNUM){
-                    nextQ();
-                }
-                break;
-
-            case BUILDSIDEVIEW:
-                for(int i = 0; i < MAXGRIDSNUM; i++){
-                    if(questionBank.getIsCubePresentSide(i) == arduino.getIsCubePresent(i,0)){
-                        break;
-                    }
-                    else{
-                        match++;
-                    }
-                }
-                if(match == MAXGRIDSNUM){
-                    nextQ();
-                }
-                break;
-
-            case BUILDTOPVIEW:
-                for(int i = 0; i < MAXGRIDSNUM; i++){
-                    if(questionBank.getIsCubePresentTop(i) == arduino.getIsCubePresent(i,0)){
-                        break;
-                    }
-                    else{
-                        match++;
-                    }
-                }
-                if(match == MAXGRIDSNUM){
-                    nextQ();
-                }
-                break;
-
             case SPTYPE3:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
-                        if(questionBank.getIsCubePresent(i, j) == arduino.getIsCubePresent(i,j)){
+                        if(questionBankSPType3.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
                             break;
                         }
                         else{
-                            nextQ();
+                            match++;
                         }
                     }
                 }
+                if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
+                    nextQ();
+                }
                 break;
-
             case SPTYPE4:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
-                        if(questionBank.getIsCubePresent(i, j) == arduino.getIsCubePresent(i,j)){
+                        if(questionBankSPType4.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
                             break;
                         }
                         else{
@@ -308,69 +225,40 @@ public class GameManager {
         }
     }
 
-
     public void nextQ(){
+        currQuestNum++;
+        randQuest();
 
-        currQNum++;
-
-        rand();
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            playerFrontView[i] = 0;
+            playerSideView[i] = 0;
+            playerTopView[i] = 0;
+        }
 
     }
 
     public void restart(){
-        for(int i = 0; i < MAXVIEWQUESTNUM; i++){
-            ranViewQuest.add(i);
-        }
-        Collections.shuffle(ranViewQuest);
-        for(int i = 0; i < MAXVIEWQUESTNUM; i++){
-            Log.d("dfdfd", i + "  " + ranViewQuest.get(i));
-        }
-
-        for(int i = 1; i < 4; i++){
-            ran3Views.add(i);
-        }
+        Collections.shuffle(ran2D3DQuest);
         Collections.shuffle(ran3Views);
-
-        for(int i = 0; i < MAXSPTYPE3NUM; i++){
-            ranSpType3.add(i);
-        }
         Collections.shuffle(ranSpType3);
-
-        for(int i = 0; i < MAXSPTYPE4NUM; i++){
-            ranSpType4.add(i);
-        }
         Collections.shuffle(ranSpType4);
 
-        currQNum = 0;
+        currQuestNum = 0;
 
-        rand();
+        randQuest();
 
-
-
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            playerFrontView[i] = 0;
+            playerSideView[i] = 0;
+            playerTopView[i] = 0;
+        }
     }
 
-    public int getCurrQNum(){
-        return currQNum;
+    public int getCurrQuestNum(){
+        return currQuestNum;
     }
 
-    public int getCurrQMode(){
-        return currQMode;
+    public int getCurrQuestMode(){
+        return currQuestMode;
     }
-
-    public int getCurrQSpType3Num(){
-        return currQSpType3Num;
-    }
-
-    public int getCurrQSpType4Num(){
-        return currQSpType4Num;
-    }
-
-
-    
-
-
-
-
-
-
 }

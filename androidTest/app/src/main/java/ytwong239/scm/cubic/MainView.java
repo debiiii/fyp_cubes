@@ -10,11 +10,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import java.util.Locale;
 
@@ -36,14 +39,14 @@ public class MainView extends View {
 
     private static final int MAXQUESTNUM = 6;
 
-    private final static int MAXVIEWQUESTNUM = 6;
+    private final static int MAXVIEWQUESTNUM = 7;
     private final static int MAXSPTYPE3NUM = 2;
     private final static int MAXSPTYPE4NUM = 2;
 
-    private static final int BUILD3DMODEL = 0;
-    private static final int BUILDFRONTVIEW = 1;
-    private static final int BUILDSIDEVIEW = 2;
-    private static final int BUILDTOPVIEW = 3;
+    private static final int DRAWFRONTVIEW = 0;
+    private static final int DRAWSIDEVIEW = 1;
+    private static final int DRAWTOPVIEW = 2;
+    private static final int BUILD3DMODEL = 3;
     private static final int SPTYPE3 = 4;
     private static final int SPTYPE4 = 5;
 
@@ -165,6 +168,11 @@ public class MainView extends View {
     private Rect qModelSrc;
     private Rect qModelPos;
 
+    private Rect drawViewPos;
+    private Rect drawViewFrontPos;
+    private Rect drawViewSidePos;
+    private Rect drawViewTopPos;
+
     private Bitmap[] qSpType4Pic_base = new Bitmap[MAXSPTYPE4NUM];
     private Bitmap[] qSpType4Pic_corr0 = new Bitmap[MAXSPTYPE4NUM];
     private Bitmap[] qSpType4Pic_corr1 = new Bitmap[MAXSPTYPE4NUM];
@@ -208,7 +216,9 @@ public class MainView extends View {
     int lastX = 0;
 
     GameManager gameManager = new GameManager();
-    QuestionBank questionBank = new QuestionBank();
+    QuestionBank2D3D questionBank2D3D = new QuestionBank2D3D();
+    QuestionBankSPType3 questionBankSPType3 = new QuestionBankSPType3();
+    QuestionBankSPType4 questionBankSPType4 = new QuestionBankSPType4();
     Arduino arduino = new Arduino();
 
     Paint whiteStroke = new Paint();
@@ -216,10 +226,15 @@ public class MainView extends View {
     Paint darkOrange = new Paint();
     Paint white = new Paint();
     Paint font = new Paint();
+    Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
 
     Typeface aldrich;
 
     Boolean debugVisible = false;
+
+    private Rect[] drawViewPos2 = new Rect[MAXGRIDSNUM];
+    private boolean[] drawViewTouch = new boolean[MAXGRIDSNUM];
+    private int drawViewTouchCount = 0;
 
     public MainView(Context context) {
         super(context);
@@ -272,6 +287,13 @@ public class MainView extends View {
         font.setColor(Color.WHITE);
         font.setTextSize(70);
         font.setTextAlign(Paint.Align.RIGHT);
+
+        for(int i = 0; i < drawViewPos2.length; i++){
+            drawViewPos2[i] = new Rect(0,0,0,0);
+            drawViewPaint[i] = new Paint();
+            drawViewPaint[i].setColor(lightOrange.getColor());
+            drawViewTouch[i] = false;
+        }
 
     }
 
@@ -366,6 +388,7 @@ public class MainView extends View {
         qModelPic[3] = BitmapFactory.decodeResource(getResources(), R.drawable.question3_3d, opts2);
         qModelPic[4] = BitmapFactory.decodeResource(getResources(), R.drawable.question4_3d, opts2);
         qModelPic[5] = BitmapFactory.decodeResource(getResources(), R.drawable.question5_3d, opts2);
+        qModelPic[6] = BitmapFactory.decodeResource(getResources(), R.drawable.question6_3d, opts2);
         qModelSrc = new Rect(0,0, qModelPic[0].getWidth(), qModelPic[0].getHeight());
 
         qSpType4Pic_base[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_base, opts2);
@@ -646,9 +669,11 @@ public class MainView extends View {
         bottom = top + height;
         answerPos = new Rect(left, top, right, bottom);
 
+        int gap = w / 15;
+
         width = w / 5;
         height = (qModelPic[0].getHeight() * width) / qModelPic[0].getWidth();
-        left = w / 2 - width / 2;
+        left = w / 2 - gap - width;
         top = h / 2 - height / 2 - w / 40;
         right = left + width;
         bottom = top + height;
@@ -656,11 +681,59 @@ public class MainView extends View {
 
         height = h / 35;
         width = (modelPic.getWidth() * height) / modelPic.getHeight();
-        left = w / 2 - width / 2;
+        left = qModelPos.left + qModelPos.width() / 2 - width / 2;
         top = qModelPos.top - w / 30;
         right = left + width;
         bottom = top + height;
         modelPos = new Rect(left, top, right, bottom);
+
+        width = w / 15;
+        height = width;
+        left = w / 2 + gap + 5;
+        top = h / 2 - height / 2 - height - w / 40;
+        right = left + width;
+        bottom = top + height;
+        drawViewPos = new Rect(left, top, right, bottom);
+
+        int row = 0;
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+
+
+                drawViewPos2[row + j].left = drawViewPos.left + j * drawViewPos.width();
+                drawViewPos2[row + j].top = drawViewPos.top + i * drawViewPos.width();
+                drawViewPos2[row + j].right = drawViewPos.right + j * drawViewPos.width();
+                drawViewPos2[row + j].bottom = drawViewPos.bottom + i * drawViewPos.width();
+
+                if(j == 2){
+                    row += 3;
+                }
+            }
+        }
+
+        height = h / 35;
+        width = (qFrontPic.getWidth() * height) / qFrontPic.getHeight();
+        left = drawViewPos.left + drawViewPos.width() + drawViewPos.width() / 2 - width / 2;
+        top = drawViewPos.top - w / 30;
+        right = left + width;
+        bottom = top + height;
+        drawViewFrontPos = new Rect(left, top, right, bottom);
+
+        height = h / 35;
+        width = (qSidePic.getWidth() * height) / qSidePic.getHeight();
+        left = drawViewPos.left + drawViewPos.width() + drawViewPos.width() / 2 - width / 2;
+        top = drawViewPos.top - w / 30;
+        right = left + width;
+        bottom = top + height;
+        drawViewSidePos = new Rect(left, top, right, bottom);
+
+        height = h / 35;
+        width = (qTopPic.getWidth() * height) / qTopPic.getHeight();
+        left = drawViewPos.left + drawViewPos.width() + drawViewPos.width() / 2 - width / 2;
+        top = drawViewPos.top - w / 30;
+        right = left + width;
+        bottom = top + height;
+        drawViewTopPos = new Rect(left, top, right, bottom);
 
         width = w / 5;
         height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
@@ -671,7 +744,7 @@ public class MainView extends View {
         spType4Pos_base = new Rect(left, top, right, bottom);
 
         int space = qTitlePos.right - spType4Pos_base.right;
-        int gap = w / 50;
+        gap = w / 50;
 
         width = (space - gap * 4) / 4;
         height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
@@ -806,7 +879,11 @@ public class MainView extends View {
 
         forArduino();
 
-        questionBank.currQuestBankNum = gameManager.currQuestBankNum;
+        canvas.drawText("q2D: " + questionBank2D3D.getCurrQuestBank2D3DNum(), 10, 800, white);
+        canvas.drawText("q3: " + questionBankSPType3.getCurrQuestBankSPType3Num(), 10, 900, white);
+        canvas.drawText("q4: " + questionBankSPType4.getCurrQuestBankSPType4Num(), 10, 1000, white);
+
+        Log.d("dfs", String.valueOf(drawViewTouchCount));
 
     }
 
@@ -875,24 +952,24 @@ public class MainView extends View {
     private void drawPracticeGamePage(Canvas canvas){
 
         //question title
-        canvas.drawBitmap(qTitlePic[gameManager.getCurrQNum()], qTitleSrc, qTitlePos, null);
+        canvas.drawBitmap(qTitlePic[gameManager.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
 
-        switch (gameManager.getCurrQMode()){
-            case BUILD3DMODEL:
-                canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
-                drawViews(canvas);
-                break;
-            case BUILDFRONTVIEW:
+        switch (gameManager.getCurrQuestMode()){
+            case DRAWFRONTVIEW:
                 canvas.drawBitmap(formFrontViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
                 break;
-            case BUILDSIDEVIEW:
+            case DRAWSIDEVIEW:
                 canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
                 break;
-            case BUILDTOPVIEW:
+            case DRAWTOPVIEW:
                 canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
+                break;
+            case BUILD3DMODEL:
+                canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
+                drawViews(canvas);
                 break;
             case SPTYPE3:
                 canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
@@ -925,7 +1002,7 @@ public class MainView extends View {
         int row = 0;
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
-                if(questionBank.getFrontView(row + j) == 1){
+                if(questionBank2D3D.getFrontView(row + j) == 1){
                     canvas.drawRect( qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width() , whiteStroke);
                     canvas.drawRect(qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width(), darkOrange);
                 }
@@ -934,7 +1011,7 @@ public class MainView extends View {
                     canvas.drawRect(qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width(), lightOrange);
                 }
 
-                if(questionBank.getSideView(row + j) == 1){
+                if(questionBank2D3D.getSideView(row + j) == 1){
                     canvas.drawRect( qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width() , whiteStroke);
                     canvas.drawRect(qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width(), darkOrange);
                 }
@@ -943,7 +1020,7 @@ public class MainView extends View {
                     canvas.drawRect(qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width(), lightOrange);
                 }
 
-                if(questionBank.getTopView(row + j) == 1){
+                if(questionBank2D3D.getTopView(row + j) == 1){
                     canvas.drawRect( qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width() , whiteStroke);
                     canvas.drawRect(qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width(), darkOrange);
                 }
@@ -961,12 +1038,70 @@ public class MainView extends View {
     }
 
     private void drawModel(Canvas canvas){
+
         //model word
         canvas.drawBitmap(modelPic, modelSrc, modelPos, null);
 
         //3d model
-        canvas.drawBitmap(qModelPic[gameManager.currQuestBankNumNoSp], qModelSrc, qModelPos, null);
-        //Log.d("drawModel", String.valueOf(questionBank.currQuestBankNum));
+        canvas.drawBitmap(qModelPic[questionBank2D3D.getCurrQuestBank2D3DNum()], qModelSrc, qModelPos, null);
+
+        //draw view word label
+        switch (gameManager.getCurrQuestMode()){
+            case DRAWFRONTVIEW:
+                canvas.drawBitmap(qFrontPic, qFrontSrc, drawViewFrontPos, null);
+                break;
+            case DRAWSIDEVIEW:
+                canvas.drawBitmap(qSidePic, qSideSrc, drawViewSidePos, null);
+                break;
+            case DRAWTOPVIEW:
+                canvas.drawBitmap(qTopPic, qTopSrc, drawViewTopPos, null);
+                break;
+        }
+
+        if(drawViewTouchCount > 5){
+            for(int i = 0; i < drawViewPos2.length; i++){
+                drawViewTouch[i] = false;
+            }
+        }
+
+        //draw view rectangle
+        for(int i = 0; i < drawViewPos2.length; i++){
+
+            if(drawViewTouch[i]){
+                drawViewPaint[i].setColor(darkOrange.getColor());
+                switch (gameManager.getCurrQuestMode()){
+                    case DRAWFRONTVIEW:
+                        gameManager.setPlayerFrontView(i);
+                        break;
+                    case DRAWSIDEVIEW:
+                        gameManager.setPlayerSideView(i);
+                        break;
+                    case DRAWTOPVIEW:
+                        gameManager.setPlayerTopView(i);
+                        break;
+                }
+            }
+            else{
+                drawViewPaint[i].setColor(lightOrange.getColor());
+                switch (gameManager.getCurrQuestMode()){
+                    case DRAWFRONTVIEW:
+                        gameManager.clearPlayerFrontView(i);
+                        break;
+                    case DRAWSIDEVIEW:
+                        gameManager.clearPlayerSideView(i);
+                        break;
+                    case DRAWTOPVIEW:
+                        gameManager.clearPlayerTopView(i);
+                        break;
+                }
+            }
+
+            canvas.drawRect(drawViewPos2[i].left, drawViewPos2[i].top, drawViewPos2[i].right,  drawViewPos2[i].bottom, whiteStroke);
+            canvas.drawRect(drawViewPos2[i].left, drawViewPos2[i].top, drawViewPos2[i].right,  drawViewPos2[i].bottom, drawViewPaint[i]);
+        }
+
+
+
 
     }
 
@@ -977,9 +1112,9 @@ public class MainView extends View {
         canvas.drawBitmap(spType3Q2Pic, spType3Q2Src, spType3Q2Pos, null);
 
         //sp type 3 pic
-        canvas.drawBitmap(qSpType3Pic_base0[gameManager.getCurrQSpType3Num()], spType3Src, spType3Pos_base0, null);
-        canvas.drawBitmap(qSpType3Pic_base1[gameManager.getCurrQSpType3Num()], spType3Src, spType3Pos_base1, null);
-        canvas.drawBitmap(qSpType3Pic_quest[gameManager.getCurrQSpType3Num()], spType3Src, spType3Pos_quest, null);
+        canvas.drawBitmap(qSpType3Pic_base0[questionBankSPType3.getCurrQuestBankSPType3Num()], spType3Src, spType3Pos_base0, null);
+        canvas.drawBitmap(qSpType3Pic_base1[questionBankSPType3.getCurrQuestBankSPType3Num()], spType3Src, spType3Pos_base1, null);
+        canvas.drawBitmap(qSpType3Pic_quest[questionBankSPType3.getCurrQuestBankSPType3Num()], spType3Src, spType3Pos_quest, null);
     }
 
     private void drawSpType4(Canvas canvas){
@@ -987,11 +1122,11 @@ public class MainView extends View {
         canvas.drawBitmap(spType4QPic, spType4QSrc, spType4QPos, null);
 
         //sp type 4 pic
-        canvas.drawBitmap(qSpType4Pic_base[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos_base, null);
-        canvas.drawBitmap(qSpType4Pic_corr0[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos0, null);
-        canvas.drawBitmap(qSpType4Pic_corr1[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos1, null);
-        canvas.drawBitmap(qSpType4Pic_corr2[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos2, null);
-        canvas.drawBitmap(qSpType4Pic_incorr[gameManager.getCurrQSpType4Num()], spType4Src, spType4Pos3, null);
+        canvas.drawBitmap(qSpType4Pic_base[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos_base, null);
+        canvas.drawBitmap(qSpType4Pic_corr0[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos0, null);
+        canvas.drawBitmap(qSpType4Pic_corr1[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos1, null);
+        canvas.drawBitmap(qSpType4Pic_corr2[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos2, null);
+        canvas.drawBitmap(qSpType4Pic_incorr[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos3, null);
     }
 
     private void drawBattleGamePage(Canvas canvas){
@@ -1074,15 +1209,55 @@ public class MainView extends View {
                         break;
                     case PRACTICEGAMEPAGE:
                         if(answerPos.contains(x, y )){
-                            if(gameManager.getCurrQNum() < 5){
+                            if(gameManager.getCurrQuestNum() < MAXQUESTNUM - 1){
+                                //gameManager.nextQ();
+                                gameManager.compare();
+                                for(int i = 0; i < drawViewPos2.length; i++){
+                                    drawViewTouch[i] = false;
+                                }
+                                Log.d("touch", "touch");
+                            }
+//                            else{
+//                            for(int i = 0; i < drawViewPos2.length; i++){
+//                                drawViewTouch[i] = false;
+//                            }
+//                                gameManager.restart();
+//                                currPage = MENUPAGE;
+//                            }
+                        }
+
+                        if(gameManager.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                gameManager.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                gameManager.getCurrQuestMode() == DRAWTOPVIEW){
+                            for(int i = 0; i < drawViewPos2.length; i++){
+                                if(drawViewPos2[i].contains(x, y)){
+                                    drawViewTouchCount = 0;
+                                    drawViewTouch[i] = !drawViewTouch[i];
+                                }
+                            }
+                        }
+
+                        //------debug use-------
+                        int xpos = canvasW - 200;
+                        int ypos = canvasH - 200;
+                        if(x < canvasW && x > xpos && y > ypos && y < canvasH){
+                            if(gameManager.getCurrQuestNum() < MAXQUESTNUM - 1){
                                 gameManager.nextQ();
-                                //gameManager.compare();
+                                for(int i = 0; i < drawViewPos2.length; i++){
+                                    drawViewTouch[i] = false;
+                                }
                             }
                             else{
+                                for(int i = 0; i < drawViewPos2.length; i++){
+                                    drawViewTouch[i] = false;
+                                }
                                 gameManager.restart();
                                 currPage = MENUPAGE;
                             }
                         }
+                        //-----------------------
+
+
                         break;
                     case BATTLENUMPAGE:
                         if(practiceModePos.contains(x, y)){
@@ -1172,6 +1347,26 @@ public class MainView extends View {
                 if(x > 0 && x < 200 && y > 0 && y < 200){
                     debugVisible = !debugVisible;
                 }
+
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                switch (currPage){
+                    case PRACTICEGAMEPAGE:
+                        if(gameManager.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                gameManager.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                gameManager.getCurrQuestMode() == DRAWTOPVIEW){
+                            for(int i = 0; i < drawViewPos2.length; i++){
+                                if(drawViewPos2[i].contains(x, y)){
+                                    drawViewTouchCount++;
+                                }
+                            }
+                        }
+                        break;
+                }
+
+
+
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -1192,6 +1387,18 @@ public class MainView extends View {
                     case HOWTOPAGE3:
                         if(x - lastX > 100){
                             currPage = HOWTOPAGE2;
+                        }
+                        break;
+
+                    case PRACTICEGAMEPAGE:
+                        if(gameManager.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                gameManager.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                gameManager.getCurrQuestMode() == DRAWTOPVIEW){
+                            for(int i = 0; i < drawViewPos2.length; i++){
+                                if(drawViewPos2[i].contains(x, y)){
+                                    //drawViewTouchCount = 0;
+                                }
+                            }
                         }
                         break;
                 }
