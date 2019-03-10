@@ -1,5 +1,6 @@
 package ytwong239.scm.cubic;
 
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public class GameManager {
     private Integer[] playerFrontView = new Integer[MAXGRIDSNUM];
     private Integer[] playerSideView = new Integer[MAXGRIDSNUM];
     private Integer[] playerTopView = new Integer[MAXGRIDSNUM];
+
+    private float totalTime30s = 30000;
+    private float timeLeft30s = 0;
+    private boolean resetTimer = false;
 
     public GameManager(){
 
@@ -131,6 +136,7 @@ public class GameManager {
                 Log.d("ranSpType4", "q5  " +  ranSpType4.get(1));
                 break;
         }
+
 
     }
 
@@ -226,6 +232,10 @@ public class GameManager {
     }
 
     public void nextQ(){
+
+        countDownTimer30s.cancel();
+        resetTimer = true;
+
         currQuestNum++;
         randQuest();
 
@@ -235,9 +245,13 @@ public class GameManager {
             playerTopView[i] = 0;
         }
 
+        countDownTimer30s.start();
+
     }
 
     public void restart(){
+        countDownTimer30s.cancel();
+
         Collections.shuffle(ran2D3DQuest);
         Collections.shuffle(ran3Views);
         Collections.shuffle(ranSpType3);
@@ -260,5 +274,32 @@ public class GameManager {
 
     public int getCurrQuestMode(){
         return currQuestMode;
+    }
+
+    CountDownTimer countDownTimer30s = new CountDownTimer((long)totalTime30s, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            timeLeft30s = millisUntilFinished;
+            Log.d("dfd", String.valueOf(millisUntilFinished));
+            resetTimer = false;
+        }
+
+        @Override
+        public void onFinish() {
+            timeLeft30s = 0;
+            countDownTimer30s.cancel();
+        }
+    };
+
+    public float getTimeLeft30s(){
+        return timeLeft30s;
+    }
+
+    public float getTotalTime30s(){
+        return totalTime30s;
+    }
+
+    public boolean getResetTimer(){
+        return resetTimer;
     }
 }

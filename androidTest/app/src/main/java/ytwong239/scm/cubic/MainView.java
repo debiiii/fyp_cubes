@@ -155,6 +155,13 @@ public class MainView extends View {
     private Rect timeBarSrc;
     private Rect timeBarPos;
     private int timeTxtX, timeTxtY;
+    private int timeCirX1, timeCirY1, timeCirX2, timeCirY2, timeCirR;
+    private Rect timeRectPos;
+    private int timeFullWidth;
+    private int timeCurrWidth;
+    private int timeRemapWidth;
+    private boolean timeSetDone = false;
+
 
     private Bitmap answerPic;
     private Rect answerSrc;
@@ -658,8 +665,24 @@ public class MainView extends View {
         right = left + width;
         bottom = top + height;
         timeBarPos = new Rect(left, top, right, bottom);
+
+        timeCirR = 15;
+        width = qTitlePos.width() - w / 10;
+        timeFullWidth = width;
+        timeCurrWidth = timeFullWidth;
+        height = timeCirR * 2;
+        left = qTitlePos.left + timeCirR;
+        top = qFrontViewPos.bottom + qFrontViewPos.height() * 2 + h / 10;
+        right = left + width;
+        bottom = top + height;
+        timeRectPos = new Rect(left, top, right, bottom);
+        timeCirX1 = timeRectPos.left;
+        timeCirY1 = timeRectPos.top + timeCirR;
+        timeCirX2 = timeRectPos.right;
+        timeCirY2 = timeRectPos.top + timeCirR;
         timeTxtX = qTitlePos.right;
-        timeTxtY = timeBarPos.top + timeBarPos.height() + 10;
+        timeTxtY = timeRectPos.top + timeRectPos.height();
+
 
         height = h / 7;
         width = (answerPic.getWidth() * height) / answerPic.getHeight();
@@ -698,13 +721,10 @@ public class MainView extends View {
         int row = 0;
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
-
-
                 drawViewPos2[row + j].left = drawViewPos.left + j * drawViewPos.width();
                 drawViewPos2[row + j].top = drawViewPos.top + i * drawViewPos.width();
                 drawViewPos2[row + j].right = drawViewPos.right + j * drawViewPos.width();
                 drawViewPos2[row + j].bottom = drawViewPos.bottom + i * drawViewPos.width();
-
                 if(j == 2){
                     row += 3;
                 }
@@ -879,12 +899,6 @@ public class MainView extends View {
 
         forArduino();
 
-        canvas.drawText("q2D: " + questionBank2D3D.getCurrQuestBank2D3DNum(), 10, 800, white);
-        canvas.drawText("q3: " + questionBankSPType3.getCurrQuestBankSPType3Num(), 10, 900, white);
-        canvas.drawText("q4: " + questionBankSPType4.getCurrQuestBankSPType4Num(), 10, 1000, white);
-
-        Log.d("dfs", String.valueOf(drawViewTouchCount));
-
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -983,13 +997,47 @@ public class MainView extends View {
         }
 
         //timer
-        canvas.drawText("30", timeTxtX, timeTxtY, font);
-        canvas.drawBitmap(timeBarPic, timeBarSrc, timeBarPos, null);
+        if(!timeSetDone){
+            gameManager.countDownTimer30s.start();
+            timeSetDone = true;
+        }
+
+        canvas.drawText(String.valueOf((int)gameManager.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
+        //canvas.drawBitmap(timeBarPic, timeBarSrc, timeBarPos, null);
+
+        timeRemapWidth = (int)remap(gameManager.getTimeLeft30s(), gameManager.getTotalTime30s(), 0, timeFullWidth, 0);
+
+        if(timeCurrWidth > timeRemapWidth){
+            timeCurrWidth--;
+        }
+        else if(timeCurrWidth == timeRemapWidth){
+            timeCurrWidth = timeRemapWidth;
+        }
+
+        if(timeCirX2 <= timeRectPos.left){
+            timeCirX1 = timeCirX2;
+            timeCirR -= 5;
+            timeRectPos.right = 0;
+        }else{
+            timeRectPos.right = timeRectPos.left + timeCurrWidth;
+            timeCirX2 = timeRectPos.right;
+        }
+
+        if(gameManager.getResetTimer()){
+            resetTimer();
+        }
+
+        canvas.drawCircle(timeCirX1, timeCirY1, timeCirR, white);
+        canvas.drawCircle(timeCirX2, timeCirY2, timeCirR, white);
+        canvas.drawRect(timeRectPos, white);
 
         //answer btn
         canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
 
+    }
 
+    private float remap(float value, float from1, float to1, float from2, float to2){
+        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
 
     private void drawViews(Canvas canvas){
@@ -1058,13 +1106,14 @@ public class MainView extends View {
                 break;
         }
 
+        //clear the player draw view when user hold the button
         if(drawViewTouchCount > 5){
             for(int i = 0; i < drawViewPos2.length; i++){
                 drawViewTouch[i] = false;
             }
         }
 
-        //draw view rectangle
+        //player draw view rectangle
         for(int i = 0; i < drawViewPos2.length; i++){
 
             if(drawViewTouch[i]){
@@ -1188,6 +1237,21 @@ public class MainView extends View {
         invalidate();
     }
 
+    private void resetDrawView(){
+        for(int i = 0; i < drawViewPos2.length; i++){
+            drawViewTouch[i] = false;
+        }
+    }
+
+    private void resetTimer(){
+        timeCurrWidth = timeFullWidth;
+        timeRemapWidth = timeFullWidth;
+        timeCirR = 15;
+        timeRectPos.right = timeRectPos.left + timeCurrWidth;
+        timeCirX2 = timeRectPos.right;
+        timeSetDone = false;
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -1210,17 +1274,12 @@ public class MainView extends View {
                     case PRACTICEGAMEPAGE:
                         if(answerPos.contains(x, y )){
                             if(gameManager.getCurrQuestNum() < MAXQUESTNUM - 1){
-                                //gameManager.nextQ();
                                 gameManager.compare();
-                                for(int i = 0; i < drawViewPos2.length; i++){
-                                    drawViewTouch[i] = false;
-                                }
-                                Log.d("touch", "touch");
+                                resetDrawView();
                             }
 //                            else{
-//                            for(int i = 0; i < drawViewPos2.length; i++){
-//                                drawViewTouch[i] = false;
-//                            }
+//                                resetDrawView();
+//                                resetTimer();
 //                                gameManager.restart();
 //                                currPage = MENUPAGE;
 //                            }
@@ -1243,14 +1302,12 @@ public class MainView extends View {
                         if(x < canvasW && x > xpos && y > ypos && y < canvasH){
                             if(gameManager.getCurrQuestNum() < MAXQUESTNUM - 1){
                                 gameManager.nextQ();
-                                for(int i = 0; i < drawViewPos2.length; i++){
-                                    drawViewTouch[i] = false;
-                                }
+                                resetDrawView();
+                                resetTimer();
                             }
                             else{
-                                for(int i = 0; i < drawViewPos2.length; i++){
-                                    drawViewTouch[i] = false;
-                                }
+                                resetDrawView();
+                                resetTimer();
                                 gameManager.restart();
                                 currPage = MENUPAGE;
                             }
@@ -1390,17 +1447,6 @@ public class MainView extends View {
                         }
                         break;
 
-                    case PRACTICEGAMEPAGE:
-                        if(gameManager.getCurrQuestMode() == DRAWFRONTVIEW ||
-                                gameManager.getCurrQuestMode() == DRAWSIDEVIEW ||
-                                gameManager.getCurrQuestMode() == DRAWTOPVIEW){
-                            for(int i = 0; i < drawViewPos2.length; i++){
-                                if(drawViewPos2[i].contains(x, y)){
-                                    //drawViewTouchCount = 0;
-                                }
-                            }
-                        }
-                        break;
                 }
 
                 break;

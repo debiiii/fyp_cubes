@@ -123,17 +123,13 @@ public class SplashScreenView extends View {
 
         switch (event.getActionMasked()){
             case MotionEvent.ACTION_DOWN:
-                if(pressPos.contains((int)x, (int)y)){
+                if(x > 0 && x < canvasW && y > 0 && y < canvasH){
                     Intent intent = new Intent(getContext(), TurnOnBluetoothActivity.class);
                     getContext().startActivity(intent);
-                    Log.d("dfd", "dfds");
                 }
                 break;
 
         }
-
-//        Log.d("dfdsf", String.valueOf(x));
-//        Log.d("dfdsf", String.valueOf(y));
 
         invalidate();
         return true;
