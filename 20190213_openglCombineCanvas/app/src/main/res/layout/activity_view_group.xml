@@ -18,4 +18,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></ytwong239.scm.bluetootharduino.OpenglTestSurfaceView>
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="305dp"
+        android:layout_height="151dp"
+        android:layout_marginTop="210dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/answer" />
+
 </android.support.constraint.ConstraintLayout>

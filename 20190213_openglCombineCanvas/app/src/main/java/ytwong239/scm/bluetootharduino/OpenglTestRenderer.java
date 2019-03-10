@@ -230,22 +230,22 @@ public class OpenglTestRenderer implements GLSurfaceView.Renderer{
         Matrix.translateM(mFinalMVPMatrixs[8][2], 0, 0.2f, 0.4f, 0.2f);
 
 
-        for(int i = 0; i < MAXGRIDSNUM; i++){
-            for(int j = 0; j < MAXHEIGHTNUM; j++){
-                mCube.draw(mFinalMVPMatrixs[i][j]);
-            }
-        }
+//        for(int i = 0; i < MAXGRIDSNUM; i++){
+//            for(int j = 0; j < MAXHEIGHTNUM; j++){
+//                mCube.draw(mFinalMVPMatrixs[i][j]);
+//            }
+//        }
 
 
-//        mCube.draw(mFinalMVPMatrixs[0][0]);
-//        mCube.draw(mFinalMVPMatrixs[1][0]);
-//        mCube.draw(mFinalMVPMatrixs[2][0]);
-//        mCube.draw(mFinalMVPMatrixs[4][0]);
-//        mCube.draw(mFinalMVPMatrixs[4][1]);
-//        mCube.draw(mFinalMVPMatrixs[4][2]);
+        mCube.draw(mFinalMVPMatrixs[0][0]);
+        mCube.draw(mFinalMVPMatrixs[1][0]);
+        mCube.draw(mFinalMVPMatrixs[2][0]);
+        mCube.draw(mFinalMVPMatrixs[4][0]);
+        mCube.draw(mFinalMVPMatrixs[4][1]);
+        mCube.draw(mFinalMVPMatrixs[4][2]);
 
 
-        //updateCubeRotation();
+        updateCubeRotation();
 
 
     }
