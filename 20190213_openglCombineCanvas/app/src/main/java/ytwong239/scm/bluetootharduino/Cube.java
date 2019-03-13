@@ -53,18 +53,29 @@ public class Cube {
             1.0f, 0.6f, 0.2f, 1.0f //dark
     };
 
+    private static final float purple[] = {
+            0.635f, 0.396f, 0.760f, 1.0f,
+            0.674f, 0.462f, 0.788f, 1.0f,
+
+            0.596f, 0.329f, 0.737f, 1.0f,
+
+            0.756f, 0.596f, 0.839f, 1.0f,
+
+            0.596f, 0.329f, 0.737f, 1.0f,
+
+            0.756f, 0.596f, 0.839f, 1.0f,
+
+            0.596f, 0.329f, 0.737f, 1.0f,
+            0.596f, 0.329f, 0.737f, 1.0f
+    };
+
     private static final float green[] = {
             0.329f, 0.662f, 0.380f, 1.0f,
             0.403f, 0.701f, 0.447f, 1.0f,
-
             0.258f, 0.627f, 0.313f, 1.0f,
-
             0.552f, 0.776f, 0.588f, 1.0f,
-
             0.258f, 0.627f, 0.313f, 1.0f,
-
             0.552f, 0.776f, 0.588f, 1.0f,
-
             0.258f, 0.627f, 0.313f, 1.0f,
             0.258f, 0.627f, 0.313f, 1.0f
     };
@@ -152,7 +163,7 @@ public class Cube {
                 red.length * 4);
         cbb.order(ByteOrder.nativeOrder());
         colorBuffer = cbb.asFloatBuffer();
-        colorBuffer.put(green);
+        colorBuffer.put(purple);
         colorBuffer.position(0);
 
         drawListBuffer = ByteBuffer.allocateDirect(

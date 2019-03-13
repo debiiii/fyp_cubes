@@ -1,5 +1,6 @@
 package ytwong239.scm.bluetootharduino;
 
+import android.graphics.PixelFormat;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -158,7 +159,8 @@ public class OpenglTestRenderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glDisable(GLES20.GL_DITHER);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         GLES20.glClearDepthf(1.0f);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         GLES20.glDepthFunc(GLES20.GL_LEQUAL);
@@ -245,7 +247,7 @@ public class OpenglTestRenderer implements GLSurfaceView.Renderer{
         mCube.draw(mFinalMVPMatrixs[4][2]);
 
 
-        updateCubeRotation();
+        //updateCubeRotation();
 
 
     }

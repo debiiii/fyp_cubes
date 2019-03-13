@@ -1,5 +1,6 @@
 package ytwong239.scm.bluetootharduino;
 
+import android.graphics.PixelFormat;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Constraints;
 import android.support.v7.app.AppCompatActivity;
@@ -34,9 +35,11 @@ public class ViewGroupActivity extends AppCompatActivity {
         params.topMargin = 20;
         params.rightMargin = 20;
         openglTestSurfaceView.setLayoutParams(params);
-
         openglTestSurfaceView.setEGLConfigChooser(true);
         openglTestSurfaceView.setEGLContextClientVersion(2);
+        openglTestSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        openglTestSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        openglTestSurfaceView.setZOrderOnTop(true);
         openglTestSurfaceView.setRenderer(openglTestRenderer);
 
         tempPage = new TempPage(this);
