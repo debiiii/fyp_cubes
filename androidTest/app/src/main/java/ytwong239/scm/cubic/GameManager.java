@@ -27,9 +27,9 @@ public class GameManager {
     private int currQuestMode = -1;
     private int currQuestNum = 0;
 
-    private QuestionBank2D3D questionBank2D3D = new QuestionBank2D3D();
-    private QuestionBankSPType3 questionBankSPType3 = new QuestionBankSPType3();
-    private QuestionBankSPType4 questionBankSPType4 = new QuestionBankSPType4();
+    private QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
+    private QuestionBank_SPType3 questionBankSPType3 = new QuestionBank_SPType3();
+    private QuestionBank_SPType4 questionBankSPType4 = new QuestionBank_SPType4();
     private Arduino arduino = new Arduino();
 
     private ArrayList<Integer> ran2D3DQuest = new ArrayList<Integer>();
@@ -106,33 +106,33 @@ public class GameManager {
             case 0:
                 //random front/side/top
                 currQuestMode = ran3Views.get(0);
-                QuestionBank2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(0));
+                QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(0));
                 Log.d("ran2D3DQuest", "q0  " +  ran2D3DQuest.get(0));
                 break;
             case 1:
                 currQuestMode = BUILD3DMODEL;
-                QuestionBank2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(1));
+                QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(1));
                 Log.d("ran2D3DQuest", "q1  " +  ran2D3DQuest.get(1));
                 break;
             case 2:
                 currQuestMode = SPTYPE3;
-                QuestionBankSPType3.setCurrQuestBankSPType3Num(ranSpType3.get(0));
+                QuestionBank_SPType3.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 Log.d("ranSpType3", "q2  " +  ranSpType3.get(0));
                 break;
             case 3:
                 //random front/side/top
                 currQuestMode = ran3Views.get(1);
-                QuestionBank2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(3));
+                QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(3));
                 Log.d("ran2D3DQuest", "q3  " +  ran2D3DQuest.get(3));
                 break;
             case 4:
                 currQuestMode = BUILD3DMODEL;
-                QuestionBank2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(4));
+                QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(4));
                 Log.d("ran2D3DQuest", "q4  " +  ran2D3DQuest.get(4));
                 break;
             case 5:
                 currQuestMode = SPTYPE4;
-                QuestionBankSPType4.setCurrQuestBankSPType4Num(ranSpType4.get(1));
+                QuestionBank_SPType4.setCurrQuestBankSPType4Num(ranSpType4.get(1));
                 Log.d("ranSpType4", "q5  " +  ranSpType4.get(1));
                 break;
         }
@@ -273,14 +273,13 @@ public class GameManager {
     }
 
     public int getCurrQuestMode(){
-        return currQuestMode;
+        return this.currQuestMode;
     }
 
     CountDownTimer countDownTimer30s = new CountDownTimer((long)totalTime30s, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             timeLeft30s = millisUntilFinished;
-            Log.d("dfd", String.valueOf(millisUntilFinished));
             resetTimer = false;
         }
 

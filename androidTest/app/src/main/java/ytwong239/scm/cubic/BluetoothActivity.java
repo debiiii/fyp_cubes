@@ -8,7 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PixelFormat;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -42,7 +45,9 @@ public class BluetoothActivity extends AppCompatActivity {
     private StringBuilder stringBuilder = new StringBuilder();
 
     MainView mainView;
-    Arduino arduino = new Arduino();
+
+    OpenGLSurfaceView_3DModel openGLSurfaceView_3DModel;
+    OpenGLRenderer_3DModel openGLRenderer_3DModel;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -55,6 +60,18 @@ public class BluetoothActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mainView = new MainView(this);
         setContentView(mainView);
+
+        openGLSurfaceView_3DModel = new OpenGLSurfaceView_3DModel(this);
+        openGLRenderer_3DModel = new OpenGLRenderer_3DModel();
+
+        openGLSurfaceView_3DModel.setEGLContextClientVersion(2);
+        openGLSurfaceView_3DModel.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        openGLSurfaceView_3DModel.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        openGLSurfaceView_3DModel.setZOrderOnTop(true);
+        openGLSurfaceView_3DModel.setRenderer(openGLRenderer_3DModel);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        addContentView(openGLSurfaceView_3DModel, params);
 
         bluetoothHandler = new Handler(){
             public void handleMessage(android.os.Message msg) {
@@ -102,6 +119,7 @@ public class BluetoothActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        openGLSurfaceView_3DModel.onResume();
 
         bluetoothDevice = bluetoothAdapter.getRemoteDevice("98:D3:61:F9:48:D1");
 
@@ -132,6 +150,8 @@ public class BluetoothActivity extends AppCompatActivity {
     public void onPause()
     {
         super.onPause();
+        openGLSurfaceView_3DModel.onPause();
+
         try
         {
             //Don't leave Bluetooth sockets open when leaving activity
