@@ -173,6 +173,8 @@ public class MainView extends View {
 
     private Bitmap[] qModelPic = new Bitmap[MAXVIEWQUESTNUM];
     private Rect qModelSrc;
+    private Bitmap qModelBkgPic;
+    private Rect qModelBkgSrc;
     private Rect qModelPos;
 
     private Rect drawViewPos;
@@ -216,6 +218,8 @@ public class MainView extends View {
     private Rect spType3Pos_base1;
     private Rect spType3Pos_quest;
 
+    private Bitmap tipIconPic1;
+    private Rect tipIconSrc1;
     private Rect tipIconPos1;
 
     private Bitmap Pic;
@@ -236,6 +240,7 @@ public class MainView extends View {
     Paint white = new Paint();
     Paint font = new Paint();
     Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
+    Paint blackStroke = new Paint();
 
     Typeface aldrich;
 
@@ -288,6 +293,10 @@ public class MainView extends View {
         whiteStroke.setStyle(Paint.Style.STROKE);
         whiteStroke.setColor(Color.WHITE);
         whiteStroke.setStrokeWidth(10);
+
+        blackStroke.setStyle(Paint.Style.STROKE);
+        blackStroke.setColor(Color.BLACK);
+        blackStroke.setStrokeWidth(7);
 
         white.setColor(Color.WHITE);
         white.setTextSize(40);
@@ -399,6 +408,9 @@ public class MainView extends View {
         qModelPic[5] = BitmapFactory.decodeResource(getResources(), R.drawable.question5_3d, opts2);
         qModelPic[6] = BitmapFactory.decodeResource(getResources(), R.drawable.question6_3d, opts2);
         qModelSrc = new Rect(0,0, qModelPic[0].getWidth(), qModelPic[0].getHeight());
+
+        qModelBkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg, opts);
+        qModelBkgSrc = new Rect(0,0, qModelBkgPic.getWidth(), qModelBkgPic.getHeight());
 
         qSpType4Pic_base[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_base, opts2);
         qSpType4Pic_corr0[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct1, opts2);
@@ -1107,7 +1119,8 @@ public class MainView extends View {
 
         //3d model
         //canvas.drawBitmap(qModelPic[questionBank2D3D.getCurrQuestBank2D3DNum()], qModelSrc, qModelPos, null);
-        canvas.drawRect(qModelPos, white);
+        canvas.drawBitmap(qModelBkgPic, qModelBkgSrc, qModelPos, null);
+        //canvas.drawRect(qModelPos, white);
 
         //draw view word label
         switch (gameManager.getCurrQuestMode()){
@@ -1577,6 +1590,10 @@ public class MainView extends View {
         if(modelPic != null && !modelPic.isRecycled()){
             modelPic.recycle();
             modelPic = null;
+        }
+        if(qModelBkgPic != null && !qModelBkgPic.isRecycled()){
+            qModelBkgPic.recycle();
+            qModelBkgPic = null;
         }
         for(int i = 0; i < MAXVIEWQUESTNUM; i++){
             if(qModelPic[i] != null && !qModelPic[i].isRecycled()){

@@ -70,7 +70,7 @@ public class OpenGLRenderer_3DModel implements GLSurfaceView.Renderer {
         float ratio = (float) width / height;
         GLES20.glViewport(0, 0, width, height);
         float size = 0.8f;
-        float gap = ratio / 2.4f;
+        float gap = ratio / 2.33f;
         float left = (-ratio / size) + gap;
         float right = (ratio / size) + gap;
         float bottom = -1f / size;
@@ -135,6 +135,7 @@ public class OpenGLRenderer_3DModel implements GLSurfaceView.Renderer {
                     }
                 }
             }
+
         }
         else{
             clearBuffers(true, true,true);
