@@ -49,6 +49,12 @@ public class BluetoothActivity extends AppCompatActivity {
     OpenGLSurfaceView_3DModel openGLSurfaceView_3DModel;
     OpenGLRenderer_3DModel openGLRenderer_3DModel;
 
+    OpenGLSurfaceView_SPType3_Base0 openGLSurfaceView_spType3_base0;
+    OpenGLRenderer_SPType3_Base0 openGLRenderer_spType3_base0;
+
+    OpenGLSurfaceView_SPType3_Base1 openGLSurfaceView_spType3_base1;
+    OpenGLRenderer_SPType3_Base1 openGLRenderer_spType3_base1;
+
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,7 @@ public class BluetoothActivity extends AppCompatActivity {
         mainView = new MainView(this);
         setContentView(mainView);
 
+        //3d model
         openGLSurfaceView_3DModel = new OpenGLSurfaceView_3DModel(this);
         openGLRenderer_3DModel = new OpenGLRenderer_3DModel();
 
@@ -72,6 +79,31 @@ public class BluetoothActivity extends AppCompatActivity {
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         addContentView(openGLSurfaceView_3DModel, params);
+
+        //sp type 3 base 0
+        openGLSurfaceView_spType3_base0 = new OpenGLSurfaceView_SPType3_Base0(this);
+        openGLRenderer_spType3_base0 = new OpenGLRenderer_SPType3_Base0();
+
+        openGLSurfaceView_spType3_base0.setEGLContextClientVersion(2);
+        openGLSurfaceView_spType3_base0.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        openGLSurfaceView_spType3_base0.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        openGLSurfaceView_spType3_base0.setZOrderOnTop(true);
+        openGLSurfaceView_spType3_base0.setRenderer(openGLRenderer_spType3_base0);
+
+        addContentView(openGLSurfaceView_spType3_base0, params);
+
+        //sp type 3 base 1
+        openGLSurfaceView_spType3_base1 = new OpenGLSurfaceView_SPType3_Base1(this);
+        openGLRenderer_spType3_base1 = new OpenGLRenderer_SPType3_Base1();
+
+        openGLSurfaceView_spType3_base1.setEGLContextClientVersion(2);
+        openGLSurfaceView_spType3_base1.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        openGLSurfaceView_spType3_base1.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        openGLSurfaceView_spType3_base1.setZOrderOnTop(true);
+        openGLSurfaceView_spType3_base1.setRenderer(openGLRenderer_spType3_base1);
+
+        addContentView(openGLSurfaceView_spType3_base1, params);
+
 
         bluetoothHandler = new Handler(){
             public void handleMessage(android.os.Message msg) {

@@ -117,6 +117,8 @@ public class GameManager {
             case 2:
                 currQuestMode = SPTYPE3;
                 QuestionBank_SPType3.setCurrQuestBankSPType3Num(ranSpType3.get(0));
+                QuestionBank_SPType3_Base0.setCurrQuestBankSPType3Num(ranSpType3.get(0));
+                QuestionBank_SPType3_Base1.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 Log.d("ranSpType3", "q2  " +  ranSpType3.get(0));
                 break;
             case 3:
