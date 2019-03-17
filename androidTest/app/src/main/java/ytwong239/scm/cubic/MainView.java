@@ -35,7 +35,7 @@ public class MainView extends View {
     private final static int HOWTOPAGE2 = 5;
     private final static int HOWTOPAGE3 = 6;
     private final static int INFOPAGE = 7;
-    protected int currPage = PRACTICEGAMEPAGE;
+    protected int currPage = MENUPAGE;
 
     private static final int MAXQUESTNUM = 6;
 
@@ -207,10 +207,6 @@ public class MainView extends View {
     private Rect spType3Q2Src;
     private Rect spType3Q2Pos;
 
-    private Bitmap[] qSpType3Pic_base0 = new Bitmap[MAXSPTYPE3NUM];
-    private Bitmap[] qSpType3Pic_base1 = new Bitmap[MAXSPTYPE3NUM];
-    private Bitmap[] qSpType3Pic_quest = new Bitmap[MAXSPTYPE3NUM];
-    private Rect spType3Src;
     private Bitmap qSpType3BkgPic;
     private Rect qspType3BkgSrc;
     private Rect spType3Pos_base0;
@@ -433,14 +429,6 @@ public class MainView extends View {
 
         spType3Q2Pic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype3question2, opts);
         spType3Q2Src = new Rect(0,0, spType3Q2Pic.getWidth(), spType3Q2Pic.getHeight());
-
-        qSpType3Pic_base0[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp2_base_0, opts);
-        qSpType3Pic_base1[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp2_base_1, opts);
-        qSpType3Pic_quest[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp2_quest, opts);
-        qSpType3Pic_base0[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp3_base0, opts);
-        qSpType3Pic_base1[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp3_base1, opts);
-        qSpType3Pic_quest[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp3_quest, opts);
-        spType3Src = new Rect(0,0, qSpType3Pic_base0[0].getWidth(), qSpType3Pic_base0[0].getHeight());
 
         qSpType3BkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg_noword, opts);
         qspType3BkgSrc = new Rect(0,0, qSpType3BkgPic.getWidth(), qSpType3BkgPic.getHeight());
@@ -824,7 +812,7 @@ public class MainView extends View {
         spType3Q0Pos = new Rect(left, top, right, bottom);
 
         width = w / 7;
-        height = (qSpType3Pic_base0[0].getHeight() * width) / qSpType3Pic_base0[0].getWidth();
+        height = (666 * width) / 666;
         left = spType3Q0Pos.left - w / 40 - width;
         top = h / 2 - height / 2 - w / 13;
         right = left + width;
@@ -832,7 +820,7 @@ public class MainView extends View {
         spType3Pos_base0 = new Rect(left, top, right, bottom);
 
         width = w / 7;
-        height = (qSpType3Pic_base1[0].getHeight() * width) / qSpType3Pic_base1[0].getWidth();
+        height = (666 * width) / 666;
         left = spType3Q0Pos.right + w / 40;
         top = h / 2 - height / 2 - w / 13;
         right = left + width;
@@ -840,7 +828,7 @@ public class MainView extends View {
         spType3Pos_base1 = new Rect(left, top, right, bottom);
 
         width = w / 7;
-        height = (qSpType3Pic_quest[0].getHeight() * width) / qSpType3Pic_quest[0].getWidth();
+        height = (666 * width) / 666;
         left = w / 2 - width / 2;
         top = spType3Q0Pos.bottom + w / 35;
         right = left + width;
@@ -876,6 +864,7 @@ public class MainView extends View {
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case PRACTICEGAMEPAGE:
                 drawPracticeGamePage(canvas);
@@ -885,35 +874,41 @@ public class MainView extends View {
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case BATTLEGAMEPAGE:
                 drawBattleGamePage(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case HOWTOPAGE1:
                 drawHowToPage1(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case HOWTOPAGE2:
                 drawHowToPage2(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case HOWTOPAGE3:
                 drawHowToPage3(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case INFOPAGE:
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
 
         }
@@ -1003,6 +998,7 @@ public class MainView extends View {
                 OpenGLRenderer_3DModel.setCanDraw(true);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case DRAWSIDEVIEW:
                 canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
@@ -1010,6 +1006,7 @@ public class MainView extends View {
                 OpenGLRenderer_3DModel.setCanDraw(true);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case DRAWTOPVIEW:
                 canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
@@ -1017,6 +1014,7 @@ public class MainView extends View {
                 OpenGLRenderer_3DModel.setCanDraw(true);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case BUILD3DMODEL:
                 canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
@@ -1024,6 +1022,7 @@ public class MainView extends View {
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case SPTYPE3:
                 canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
@@ -1031,6 +1030,7 @@ public class MainView extends View {
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(true);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(true);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(true);
                 break;
             case SPTYPE4:
                 canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
@@ -1038,6 +1038,7 @@ public class MainView extends View {
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
 
         }
@@ -1208,10 +1209,6 @@ public class MainView extends View {
         canvas.drawBitmap(spType3Q2Pic, spType3Q2Src, spType3Q2Pos, null);
 
         //sp type 3 pic
-        canvas.drawBitmap(qSpType3Pic_base0[questionBankSPType3.getCurrQuestBankSPType3Num()], spType3Src, spType3Pos_base0, null);
-        canvas.drawBitmap(qSpType3Pic_base1[questionBankSPType3.getCurrQuestBankSPType3Num()], spType3Src, spType3Pos_base1, null);
-        canvas.drawBitmap(qSpType3Pic_quest[questionBankSPType3.getCurrQuestBankSPType3Num()], spType3Src, spType3Pos_quest, null);
-
         canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType3Pos_base0, null);
         canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType3Pos_base1, null);
         canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType3Pos_quest, null);
@@ -1657,21 +1654,6 @@ public class MainView extends View {
             spType3Q2Pic.recycle();
             spType3Q2Pic = null;
         }
-        for(int i = 0; i < MAXSPTYPE3NUM; i++){
-            if(qSpType3Pic_base0[i] != null && !qSpType3Pic_base0[i].isRecycled()){
-                qSpType3Pic_base0[i].recycle();
-                qSpType3Pic_base0[i] = null;
-            }
-            if(qSpType3Pic_base1[i] != null && !qSpType3Pic_base1[i].isRecycled()){
-                qSpType3Pic_base1[i].recycle();
-                qSpType3Pic_base1[i] = null;
-            }
-            if(qSpType3Pic_quest[i] != null && !qSpType3Pic_quest[i].isRecycled()){
-                qSpType3Pic_quest[i].recycle();
-                qSpType3Pic_quest[i] = null;
-            }
-        }
-
 
 
     }

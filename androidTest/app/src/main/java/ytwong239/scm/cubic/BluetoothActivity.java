@@ -55,6 +55,9 @@ public class BluetoothActivity extends AppCompatActivity {
     OpenGLSurfaceView_SPType3_Base1 openGLSurfaceView_spType3_base1;
     OpenGLRenderer_SPType3_Base1 openGLRenderer_spType3_base1;
 
+    OpenGLSurfaceView_SPType3_Quest openGLSurfaceView_spType3_quest;
+    OpenGLRenderer_SPType3_Quest openGLRenderer_spType3_quest;
+
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,18 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_spType3_base1.setRenderer(openGLRenderer_spType3_base1);
 
         addContentView(openGLSurfaceView_spType3_base1, params);
+
+        //sp type 3 quest
+        openGLSurfaceView_spType3_quest = new OpenGLSurfaceView_SPType3_Quest(this);
+        openGLRenderer_spType3_quest = new OpenGLRenderer_SPType3_Quest();
+
+        openGLSurfaceView_spType3_quest.setEGLContextClientVersion(2);
+        openGLSurfaceView_spType3_quest.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        openGLSurfaceView_spType3_quest.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        openGLSurfaceView_spType3_quest.setZOrderOnTop(true);
+        openGLSurfaceView_spType3_quest.setRenderer(openGLRenderer_spType3_quest);
+
+        addContentView(openGLSurfaceView_spType3_quest, params);
 
 
         bluetoothHandler = new Handler(){
