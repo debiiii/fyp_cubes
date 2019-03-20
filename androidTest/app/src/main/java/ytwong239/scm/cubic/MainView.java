@@ -35,7 +35,7 @@ public class MainView extends View {
     private final static int HOWTOPAGE2 = 5;
     private final static int HOWTOPAGE3 = 6;
     private final static int INFOPAGE = 7;
-    protected int currPage = MENUPAGE;
+    protected int currPage = PRACTICEGAMEPAGE;
 
     private static final int MAXQUESTNUM = 6;
 
@@ -227,8 +227,8 @@ public class MainView extends View {
 
     GameManager gameManager = new GameManager();
     QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
-    QuestionBank_SPType3 questionBankSPType3 = new QuestionBank_SPType3();
-    QuestionBank_SPType4 questionBankSPType4 = new QuestionBank_SPType4();
+    QuestionBank_SPType3_Ans questionBankSPType3 = new QuestionBank_SPType3_Ans();
+    QuestionBank_SPType4_Ans questionBankSPType4 = new QuestionBank_SPType4_Ans();
     Arduino arduino = new Arduino();
 
     Paint whiteStroke = new Paint();
@@ -759,7 +759,7 @@ public class MainView extends View {
         spType4Pos_base = new Rect(left, top, right, bottom);
 
         int space = qTitlePos.right - spType4Pos_base.right;
-        gap = w / 50;
+        gap = w / 80;
 
         width = (space - gap * 4) / 4;
         height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
@@ -860,55 +860,69 @@ public class MainView extends View {
 
         switch (currPage){
             case MENUPAGE:
-                drawMenuPage(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                drawMenuPage(canvas);
                 break;
             case PRACTICEGAMEPAGE:
                 drawPracticeGamePage(canvas);
                 break;
             case BATTLENUMPAGE:
-                drawBattleNumPage(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                drawBattleNumPage(canvas);
                 break;
             case BATTLEGAMEPAGE:
-                drawBattleGamePage(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                drawBattleGamePage(canvas);
                 break;
             case HOWTOPAGE1:
-                drawHowToPage1(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                drawHowToPage1(canvas);
                 break;
             case HOWTOPAGE2:
-                drawHowToPage2(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                drawHowToPage2(canvas);
                 break;
             case HOWTOPAGE3:
-                drawHowToPage3(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                drawHowToPage3(canvas);
                 break;
             case INFOPAGE:
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
                 break;
 
         }
@@ -993,52 +1007,64 @@ public class MainView extends View {
 
         switch (gameManager.getCurrQuestMode()){
             case DRAWFRONTVIEW:
+                OpenGLRenderer_3DModel.setCanDraw(true);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
                 canvas.drawBitmap(formFrontViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
-                OpenGLRenderer_3DModel.setCanDraw(true);
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case DRAWSIDEVIEW:
+                OpenGLRenderer_3DModel.setCanDraw(true);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
                 canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
-                OpenGLRenderer_3DModel.setCanDraw(true);
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 break;
             case DRAWTOPVIEW:
-                canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
-                drawModel(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(true);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
+                drawModel(canvas);
                 break;
             case BUILD3DMODEL:
-                canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
-                drawViews(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
+                drawViews(canvas);
                 break;
             case SPTYPE3:
-                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
-                drawSpType3(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(true);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(true);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(true);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
+                drawSpType3(canvas);
                 break;
             case SPTYPE4:
-                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
-                drawSpType4(canvas);
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(true);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
+                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
+                drawSpType4(canvas);
                 break;
 
         }
@@ -1219,11 +1245,18 @@ public class MainView extends View {
         canvas.drawBitmap(spType4QPic, spType4QSrc, spType4QPos, null);
 
         //sp type 4 pic
-        canvas.drawBitmap(qSpType4Pic_base[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos_base, null);
+        //canvas.drawBitmap(qSpType4Pic_base[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos_base, null);
         canvas.drawBitmap(qSpType4Pic_corr0[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos0, null);
         canvas.drawBitmap(qSpType4Pic_corr1[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos1, null);
         canvas.drawBitmap(qSpType4Pic_corr2[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos2, null);
         canvas.drawBitmap(qSpType4Pic_incorr[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos3, null);
+
+        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos_base, null);
+        canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos0, null);
+        canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos1, null);
+        canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos2, null);
+        canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos3, null);
+
     }
 
     private void drawTip1(Canvas canvas){
@@ -1303,7 +1336,6 @@ public class MainView extends View {
         timeCirX2 = timeRectPos.right;
         timeSetDone = false;
     }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

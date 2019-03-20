@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 /**
  * Created by DebbieWong on 7/3/2019.
@@ -28,14 +29,15 @@ public class GameManager {
     private int currQuestNum = 0;
 
     private QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
-    private QuestionBank_SPType3 questionBankSPType3 = new QuestionBank_SPType3();
-    private QuestionBank_SPType4 questionBankSPType4 = new QuestionBank_SPType4();
+    private QuestionBank_SPType3_Ans questionBank_spType3_ans = new QuestionBank_SPType3_Ans();
+    private QuestionBank_SPType4_Ans questionBank_spType4_ans = new QuestionBank_SPType4_Ans();
     private Arduino arduino = new Arduino();
 
     private ArrayList<Integer> ran2D3DQuest = new ArrayList<Integer>();
     private ArrayList<Integer> ran3Views = new ArrayList<Integer>();
     private ArrayList<Integer> ranSpType3 = new ArrayList<Integer>();
     private ArrayList<Integer> ranSpType4 = new ArrayList<Integer>();
+    private ArrayList<Integer> ranSpType4Choice = new ArrayList<Integer>();
 
     private Integer[] playerFrontView = new Integer[MAXGRIDSNUM];
     private Integer[] playerSideView = new Integer[MAXGRIDSNUM];
@@ -44,6 +46,8 @@ public class GameManager {
     private float totalTime30s = 30000;
     private float timeLeft30s = 0;
     private boolean resetTimer = false;
+
+    private Random random = new Random();
 
     public GameManager(){
 
@@ -63,15 +67,20 @@ public class GameManager {
         }
         Collections.shuffle(ran3Views);
 
-        for (int i = 0; i < questionBankSPType3.getQuestionSPType3sLength(); i++) {
+        for (int i = 0; i < questionBank_spType3_ans.getQuestionSPType3sLength(); i++) {
             ranSpType3.add(i);
         }
         Collections.shuffle(ranSpType3);
 
-        for (int i = 0; i < questionBankSPType4.getQuestionSPType4sLength(); i++) {
+        for (int i = 0; i < questionBank_spType4_ans.getQuestionSPType4sLength(); i++) {
             ranSpType4.add(i);
         }
         Collections.shuffle(ranSpType4);
+
+        for (int i = 0; i < 4; i++) {
+            ranSpType4Choice.add(i);
+        }
+        Collections.shuffle(ranSpType4Choice);
 
         randQuest();
     }
@@ -116,7 +125,7 @@ public class GameManager {
                 break;
             case 2:
                 currQuestMode = SPTYPE3;
-                QuestionBank_SPType3.setCurrQuestBankSPType3Num(ranSpType3.get(0));
+                QuestionBank_SPType3_Ans.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 QuestionBank_SPType3_Base0.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 QuestionBank_SPType3_Base1.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 QuestionBank_SPType3_Quest.setCurrQuestBankSPType3Num(ranSpType3.get(0));
@@ -135,7 +144,11 @@ public class GameManager {
                 break;
             case 5:
                 currQuestMode = SPTYPE4;
-                QuestionBank_SPType4.setCurrQuestBankSPType4Num(ranSpType4.get(1));
+                QuestionBank_SPType4_Ans.setCurrQuestBankSPType4Num(ranSpType4.get(1));
+                QuestionBank_SPType4_Base.setCurrQuestBankSPType4Num(ranSpType4.get(1));
+                //OpenGLRenderer_SPType4_Choice0.setChoice(ranSpType4Choice.get(0));
+                OpenGLRenderer_SPType4_Choice0.setChoice(1);
+                OpenGLRenderer_SPType4_Choice0.setRotateY(random.nextInt(360));
                 Log.d("ranSpType4", "q5  " +  ranSpType4.get(1));
                 break;
         }
@@ -204,7 +217,7 @@ public class GameManager {
             case SPTYPE3:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
-                        if(questionBankSPType3.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
+                        if(questionBank_spType3_ans.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
                             break;
                         }
                         else{
@@ -219,7 +232,7 @@ public class GameManager {
             case SPTYPE4:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
-                        if(questionBankSPType4.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
+                        if(questionBank_spType4_ans.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
                             break;
                         }
                         else{
@@ -259,6 +272,7 @@ public class GameManager {
         Collections.shuffle(ran3Views);
         Collections.shuffle(ranSpType3);
         Collections.shuffle(ranSpType4);
+        Collections.shuffle(ranSpType4Choice);
 
         currQuestNum = 0;
 

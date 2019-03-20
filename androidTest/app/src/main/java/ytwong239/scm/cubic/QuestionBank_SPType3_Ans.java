@@ -4,14 +4,14 @@ package ytwong239.scm.cubic;
  * Created by DebbieWong on 7/3/2019.
  */
 
-public class QuestionBank_SPType3 {
+public class QuestionBank_SPType3_Ans {
 
     private static final int MAXQUESTBANKSPTYPE3SUM = 2;
     private Question_SPType3 questionSPType3s[] = new Question_SPType3[MAXQUESTBANKSPTYPE3SUM];
 
     private static int currQuestBankSPType3Num;
 
-    public QuestionBank_SPType3(){
+    public QuestionBank_SPType3_Ans(){
         for(int i = 0; i < MAXQUESTBANKSPTYPE3SUM; i++){
             questionSPType3s[i] = new Question_SPType3();
         }
