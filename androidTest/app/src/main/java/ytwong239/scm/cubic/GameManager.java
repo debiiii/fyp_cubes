@@ -25,6 +25,8 @@ public class GameManager {
     private static final int SPTYPE3 = 4;
     private static final int SPTYPE4 = 5;
 
+    private static final int MAXQUESTNUM = 6;
+
     private int currQuestMode = -1;
     private int currQuestNum = 0;
 
@@ -48,7 +50,10 @@ public class GameManager {
     private float timeLeft30s = 0;
     private boolean resetTimer = false;
 
-    private Random random = new Random();
+    private int spType4Ans = 0;
+    private static int spType4PlayerAns = 0;
+
+    private static boolean restart = false;
 
     public GameManager(){
 
@@ -152,18 +157,24 @@ public class GameManager {
                 currQuestMode = SPTYPE4;
                 QuestionBank_SPType4_Ans.setCurrQuestBankSPType4Num(ranSpType4.get(1));
                 QuestionBank_SPType4_Base.setCurrQuestBankSPType4Num(ranSpType4.get(1));
-                OpenGLRenderer_SPType4_Choice0.setChoice(1);
+                OpenGLRenderer_SPType4_Choice0.setChoice(ranSpType4Choice.get(0));
                 OpenGLRenderer_SPType4_Choice0.setRotateY(ranSpType4Rotate.get(0));
-                OpenGLRenderer_SPType4_Choice1.setChoice(2);
+                OpenGLRenderer_SPType4_Choice1.setChoice(ranSpType4Choice.get(1));
                 OpenGLRenderer_SPType4_Choice1.setRotateY(ranSpType4Rotate.get(1));
-                OpenGLRenderer_SPType4_Choice2.setChoice(3);
+                OpenGLRenderer_SPType4_Choice2.setChoice(ranSpType4Choice.get(2));
                 OpenGLRenderer_SPType4_Choice2.setRotateY(ranSpType4Rotate.get(2));
-                OpenGLRenderer_SPType4_Choice3.setChoice(0);
+                OpenGLRenderer_SPType4_Choice3.setChoice(ranSpType4Choice.get(3));
                 OpenGLRenderer_SPType4_Choice3.setRotateY(ranSpType4Rotate.get(3));
+                for(int i = 0; i < 4; i++){
+                    if(ranSpType4Choice.get(i) == 0){
+                        spType4Ans = i;
+                        Log.d("dsfsff", String.valueOf(i));
+                        break;
+                    }
+                }
                 Log.d("ranSpType4", "q5  " +  ranSpType4.get(1));
                 break;
         }
-
 
     }
 
@@ -241,21 +252,12 @@ public class GameManager {
                 }
                 break;
             case SPTYPE4:
-                for(int i = 0; i < MAXGRIDSNUM; i++){
-                    for(int j = 0; j < MAXHEIGHTNUM; j++){
-                        if(questionBank_spType4_ans.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
-                            break;
-                        }
-                        else{
-                            match++;
-                        }
-                    }
-                }
-                if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
-                    nextQ();
+                if(spType4Ans == spType4PlayerAns){
+                    restart();
                 }
                 break;
         }
+
     }
 
     public void nextQ(){
@@ -264,6 +266,7 @@ public class GameManager {
         resetTimer = true;
 
         currQuestNum++;
+
         randQuest();
 
         for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -295,6 +298,8 @@ public class GameManager {
             playerSideView[i] = 0;
             playerTopView[i] = 0;
         }
+
+        restart = true;
     }
 
     public int getCurrQuestNum(){
@@ -329,5 +334,17 @@ public class GameManager {
 
     public boolean getResetTimer(){
         return resetTimer;
+    }
+
+    public static void setSpType4PlayerAns(int val){
+        spType4PlayerAns = val;
+    }
+
+    public boolean getRestart(){
+        return restart;
+    }
+
+    public void setRestartFalse(){
+        restart = false;
     }
 }

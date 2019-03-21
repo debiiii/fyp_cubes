@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -170,8 +171,6 @@ public class MainView extends View {
     private Rect modelSrc;
     private Rect modelPos;
 
-    private Bitmap[] qModelPic = new Bitmap[MAXVIEWQUESTNUM];
-    private Rect qModelSrc;
     private Bitmap qModelBkgPic;
     private Rect qModelBkgSrc;
     private Rect qModelPos;
@@ -181,18 +180,12 @@ public class MainView extends View {
     private Rect drawViewSidePos;
     private Rect drawViewTopPos;
 
-    private Bitmap[] qSpType4Pic_base = new Bitmap[MAXSPTYPE4NUM];
-    private Bitmap[] qSpType4Pic_corr0 = new Bitmap[MAXSPTYPE4NUM];
-    private Bitmap[] qSpType4Pic_corr1 = new Bitmap[MAXSPTYPE4NUM];
-    private Bitmap[] qSpType4Pic_corr2 = new Bitmap[MAXSPTYPE4NUM];
-    private Bitmap[] qSpType4Pic_incorr = new Bitmap[MAXSPTYPE4NUM];
-    private Rect spType4Src;
     private Rect spType4Pos_base;
     private Rect spType4Pos0;
     private Rect spType4Pos1;
     private Rect spType4Pos2;
     private Rect spType4Pos3;
-    private int spType4Choice = 0;
+    private int spType4PlayerChoice = 0;
 
     private Bitmap spType4QPic;
     private Rect spType4QSrc;
@@ -216,11 +209,9 @@ public class MainView extends View {
     private Rect spType3Pos_base1;
     private Rect spType3Pos_quest;
 
-
-
-    private Bitmap tipIconPic1;
-    private Rect tipIconSrc1;
-    private Rect tipIconPos1;
+    private Bitmap tipIconPic;
+    private Rect tipIconSrc;
+    private Rect tipIconPos;
 
     private Bitmap Pic;
     private Rect Src;
@@ -397,29 +388,8 @@ public class MainView extends View {
         modelPic = BitmapFactory.decodeResource(getResources(), R.drawable.model, opts);
         modelSrc = new Rect(0,0, modelPic.getWidth(), modelPic.getHeight());
 
-        qModelPic[0] = BitmapFactory.decodeResource(getResources(), R.drawable.question0_3d, opts2);
-        qModelPic[1] = BitmapFactory.decodeResource(getResources(), R.drawable.question1_3d, opts2);
-        qModelPic[2] = BitmapFactory.decodeResource(getResources(), R.drawable.question2_3d, opts2);
-        qModelPic[3] = BitmapFactory.decodeResource(getResources(), R.drawable.question3_3d, opts2);
-        qModelPic[4] = BitmapFactory.decodeResource(getResources(), R.drawable.question4_3d, opts2);
-        qModelPic[5] = BitmapFactory.decodeResource(getResources(), R.drawable.question5_3d, opts2);
-        qModelPic[6] = BitmapFactory.decodeResource(getResources(), R.drawable.question6_3d, opts2);
-        qModelSrc = new Rect(0,0, qModelPic[0].getWidth(), qModelPic[0].getHeight());
-
         qModelBkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg, opts);
         qModelBkgSrc = new Rect(0,0, qModelBkgPic.getWidth(), qModelBkgPic.getHeight());
-
-        qSpType4Pic_base[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_base, opts2);
-        qSpType4Pic_corr0[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct1, opts2);
-        qSpType4Pic_corr1[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct2, opts2);
-        qSpType4Pic_corr2[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_correct3, opts2);
-        qSpType4Pic_incorr[0] = BitmapFactory.decodeResource(getResources(), R.drawable.sp0_wrong, opts2);
-        qSpType4Pic_base[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_base, opts2);
-        qSpType4Pic_corr0[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct1, opts2);
-        qSpType4Pic_corr1[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct2, opts2);
-        qSpType4Pic_corr2[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_correct3, opts2);
-        qSpType4Pic_incorr[1] = BitmapFactory.decodeResource(getResources(), R.drawable.sp1_wrong, opts2);
-        spType4Src= new Rect(0,0, qSpType4Pic_base[0].getWidth(), qSpType4Pic_base[0].getHeight());
 
         spType4QPic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype4question, opts);
         spType4QSrc = new Rect(0,0, spType4QPic.getWidth(), spType4QPic.getHeight());
@@ -693,7 +663,7 @@ public class MainView extends View {
         int gap = w / 15;
 
         width = w / 5;
-        height = (qModelPic[0].getHeight() * width) / qModelPic[0].getWidth();
+        height = (850 * width) / 850;
         left = w / 2 - gap - width;
         top = h / 2 - height / 2 - w / 40;
         right = left + width;
@@ -754,7 +724,7 @@ public class MainView extends View {
         drawViewTopPos = new Rect(left, top, right, bottom);
 
         width = w / 5;
-        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        height = (666 * width) / 666;
         left = qTitlePos.left;
         top = h / 2 - height / 2 - w / 40;
         right = left + width;
@@ -765,7 +735,7 @@ public class MainView extends View {
         gap = w / 80;
 
         width = (space - gap * 4) / 4;
-        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        height = (666 * width) / 666;
         left = spType4Pos_base.right + gap;
         right = left + width;
         bottom = spType4Pos_base.bottom;
@@ -773,7 +743,7 @@ public class MainView extends View {
         spType4Pos0 = new Rect(left, top, right, bottom);
 
         width = (space - gap * 4) / 4;
-        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        height = (666 * width) / 666;
         left = spType4Pos_base.right + gap * 2 + width;
         right = left + width;
         bottom = spType4Pos_base.bottom;
@@ -781,7 +751,7 @@ public class MainView extends View {
         spType4Pos1 = new Rect(left, top, right, bottom);
 
         width = (space - gap * 4) / 4;
-        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        height = (666 * width) / 666;
         left = spType4Pos_base.right + gap * 3 + width * 2;
         right = left + width;
         bottom = spType4Pos_base.bottom;
@@ -789,7 +759,7 @@ public class MainView extends View {
         spType4Pos2 = new Rect(left, top, right, bottom);
 
         width = (space - gap * 4) / 4;
-        height = (qSpType4Pic_base[0].getHeight() * width) / qSpType4Pic_base[0].getWidth();
+        height = (666 * width) / 666;
         left = spType4Pos_base.right + gap * 4 + width * 3;
         right = left + width;
         bottom = spType4Pos_base.bottom;
@@ -1148,6 +1118,15 @@ public class MainView extends View {
         //answer btn
         canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
 
+        //restart the game
+        if(gameManager.getRestart()){
+            spType4PlayerChoice = 0;
+            resetDrawView();
+            resetTimer();
+            currPage = MENUPAGE;
+            gameManager.setRestartFalse();
+        }
+
     }
 
     private float remap(float value, float from1, float to1, float from2, float to2){
@@ -1205,9 +1184,7 @@ public class MainView extends View {
         canvas.drawBitmap(modelPic, modelSrc, modelPos, null);
 
         //3d model
-        //canvas.drawBitmap(qModelPic[questionBank2D3D.getCurrQuestBank2D3DNum()], qModelSrc, qModelPos, null);
         canvas.drawBitmap(qModelBkgPic, qModelBkgSrc, qModelPos, null);
-        //canvas.drawRect(qModelPos, white);
 
         //draw view word label
         switch (gameManager.getCurrQuestMode()){
@@ -1288,7 +1265,7 @@ public class MainView extends View {
         canvas.drawRect(spType4Pos_base.right, spType4Pos_base.top, spType4Pos_base.right + 5, spType4Pos_base.bottom, white);
 
         //player ans choice
-        switch (spType4Choice){
+        switch (spType4PlayerChoice){
             case 0:
                 Point a = new Point(spType4Pos0.left + spType4Pos0.width() / 2, spType4Pos0.bottom + 10);
                 Point b = new Point(a.x - 20, a.y + 30);
@@ -1338,19 +1315,6 @@ public class MainView extends View {
                 canvas.drawPath(path3, white);
                 break;
         }
-
-        //sp type 4 pic
-        //canvas.drawBitmap(qSpType4Pic_base[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos_base, null);
-        //canvas.drawBitmap(qSpType4Pic_corr0[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos0, null);
-        //canvas.drawBitmap(qSpType4Pic_corr1[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos1, null);
-        //canvas.drawBitmap(qSpType4Pic_corr2[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos2, null);
-        //canvas.drawBitmap(qSpType4Pic_incorr[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos3, null);
-
-        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos_base, null);
-        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos0, null);
-        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos1, null);
-        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos2, null);
-        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos3, null);
 
     }
 
@@ -1452,7 +1416,8 @@ public class MainView extends View {
                         break;
                     case PRACTICEGAMEPAGE:
                         if(answerPos.contains(x, y )){
-                            if(gameManager.getCurrQuestNum() < MAXQUESTNUM - 1){
+                            if(gameManager.getCurrQuestNum() < MAXQUESTNUM){
+                                GameManager.setSpType4PlayerAns(spType4PlayerChoice);
                                 gameManager.compare();
                                 resetDrawView();
                             }
@@ -1477,16 +1442,16 @@ public class MainView extends View {
 
                         if(gameManager.getCurrQuestMode() == SPTYPE4){
                             if(spType4Pos0.contains(x, y)){
-                                spType4Choice = 0;
+                                spType4PlayerChoice = 0;
                             }
                             else if(spType4Pos1.contains(x, y)){
-                                spType4Choice = 1;
+                                spType4PlayerChoice = 1;
                             }
                             else if(spType4Pos2.contains(x, y)){
-                                spType4Choice = 2;
+                                spType4PlayerChoice = 2;
                             }
                             else if(spType4Pos3.contains(x, y)){
-                                spType4Choice = 3;
+                                spType4PlayerChoice = 3;
                             }
                         }
 
@@ -1751,34 +1716,6 @@ public class MainView extends View {
         if(qModelBkgPic != null && !qModelBkgPic.isRecycled()){
             qModelBkgPic.recycle();
             qModelBkgPic = null;
-        }
-        for(int i = 0; i < MAXVIEWQUESTNUM; i++){
-            if(qModelPic[i] != null && !qModelPic[i].isRecycled()){
-                qModelPic[i].recycle();
-                qModelPic[i] = null;
-            }
-        }
-        for(int i = 0; i < MAXSPTYPE4NUM; i++){
-            if(qSpType4Pic_base[i] != null && !qSpType4Pic_base[i].isRecycled()){
-                qSpType4Pic_base[i].recycle();
-                qSpType4Pic_base[i] = null;
-            }
-            if(qSpType4Pic_corr0[i] != null && !qSpType4Pic_corr0[i].isRecycled()){
-                qSpType4Pic_corr0[i].recycle();
-                qSpType4Pic_corr0[i] = null;
-            }
-            if(qSpType4Pic_corr1[i] != null && !qSpType4Pic_corr1[i].isRecycled()){
-                qSpType4Pic_corr1[i].recycle();
-                qSpType4Pic_corr1[i] = null;
-            }
-            if(qSpType4Pic_corr2[i] != null && !qSpType4Pic_corr2[i].isRecycled()){
-                qSpType4Pic_corr2[i].recycle();
-                qSpType4Pic_corr2[i] = null;
-            }
-            if(qSpType4Pic_incorr[i] != null && !qSpType4Pic_incorr[i].isRecycled()){
-                qSpType4Pic_incorr[i].recycle();
-                qSpType4Pic_incorr[i] = null;
-            }
         }
         if(spType4QPic != null && !spType4QPic.isRecycled()){
             spType4QPic.recycle();

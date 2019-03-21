@@ -276,6 +276,11 @@ public class BluetoothActivity extends AppCompatActivity {
         connectedThread.start();
     }
 
+//    @Override
+//    public void onBackPressed() {
+//
+//    }
+
     @Override
     public void onPause()
     {
