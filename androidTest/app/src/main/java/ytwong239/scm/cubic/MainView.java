@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
@@ -190,6 +192,7 @@ public class MainView extends View {
     private Rect spType4Pos1;
     private Rect spType4Pos2;
     private Rect spType4Pos3;
+    private int spType4Choice = 0;
 
     private Bitmap spType4QPic;
     private Rect spType4QSrc;
@@ -866,6 +869,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 drawMenuPage(canvas);
                 break;
             case PRACTICEGAMEPAGE:
@@ -878,6 +884,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 drawBattleNumPage(canvas);
                 break;
             case BATTLEGAMEPAGE:
@@ -887,6 +896,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 drawBattleGamePage(canvas);
                 break;
             case HOWTOPAGE1:
@@ -896,6 +908,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 drawHowToPage1(canvas);
                 break;
             case HOWTOPAGE2:
@@ -905,6 +920,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 drawHowToPage2(canvas);
                 break;
             case HOWTOPAGE3:
@@ -914,6 +932,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 drawHowToPage3(canvas);
                 break;
             case INFOPAGE:
@@ -923,6 +944,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 break;
 
         }
@@ -1013,6 +1037,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formFrontViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
                 break;
@@ -1023,6 +1050,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
                 break;
@@ -1033,6 +1063,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
                 break;
@@ -1043,6 +1076,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
                 drawViews(canvas);
                 break;
@@ -1053,6 +1089,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(true);
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
                 drawSpType3(canvas);
                 break;
@@ -1063,6 +1102,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
                 OpenGLRenderer_SPType4_Base.setCanDraw(true);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
                 canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
                 drawSpType4(canvas);
                 break;
@@ -1243,19 +1285,72 @@ public class MainView extends View {
     private void drawSpType4(Canvas canvas){
         //sp type 4 question
         canvas.drawBitmap(spType4QPic, spType4QSrc, spType4QPos, null);
+        canvas.drawRect(spType4Pos_base.right, spType4Pos_base.top, spType4Pos_base.right + 5, spType4Pos_base.bottom, white);
+
+        //player ans choice
+        switch (spType4Choice){
+            case 0:
+                Point a = new Point(spType4Pos0.left + spType4Pos0.width() / 2, spType4Pos0.bottom + 10);
+                Point b = new Point(a.x - 20, a.y + 30);
+                Point c = new Point(a.x + 20, a.y + 30);
+                Path path = new Path();
+                path.setFillType(Path.FillType.EVEN_ODD);
+                path.moveTo(b.x, b.y);
+                path.lineTo(c.x, c.y);
+                path.lineTo(a.x, a.y);
+                path.close();
+                canvas.drawPath(path, white);
+                break;
+            case 1:
+                Point a1 = new Point(spType4Pos1.left + spType4Pos1.width() / 2, spType4Pos1.bottom + 10);
+                Point b1 = new Point(a1.x - 20, a1.y + 30);
+                Point c1 = new Point(a1.x + 20, a1.y + 30);
+                Path path1 = new Path();
+                path1.setFillType(Path.FillType.EVEN_ODD);
+                path1.moveTo(b1.x, b1.y);
+                path1.lineTo(c1.x, c1.y);
+                path1.lineTo(a1.x, a1.y);
+                path1.close();
+                canvas.drawPath(path1, white);
+                break;
+            case 2:
+                Point a2 = new Point(spType4Pos2.left + spType4Pos2.width() / 2, spType4Pos2.bottom + 10);
+                Point b2 = new Point(a2.x - 20, a2.y + 30);
+                Point c2 = new Point(a2.x + 20, a2.y + 30);
+                Path path2 = new Path();
+                path2.setFillType(Path.FillType.EVEN_ODD);
+                path2.moveTo(b2.x, b2.y);
+                path2.lineTo(c2.x, c2.y);
+                path2.lineTo(a2.x, a2.y);
+                path2.close();
+                canvas.drawPath(path2, white);
+                break;
+            case 3:
+                Point a3 = new Point(spType4Pos3.left + spType4Pos3.width() / 2, spType4Pos3.bottom + 10);
+                Point b3 = new Point(a3.x - 20, a3.y + 30);
+                Point c3 = new Point(a3.x + 20, a3.y + 30);
+                Path path3 = new Path();
+                path3.setFillType(Path.FillType.EVEN_ODD);
+                path3.moveTo(b3.x, b3.y);
+                path3.lineTo(c3.x, c3.y);
+                path3.lineTo(a3.x, a3.y);
+                path3.close();
+                canvas.drawPath(path3, white);
+                break;
+        }
 
         //sp type 4 pic
         //canvas.drawBitmap(qSpType4Pic_base[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos_base, null);
-        canvas.drawBitmap(qSpType4Pic_corr0[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos0, null);
-        canvas.drawBitmap(qSpType4Pic_corr1[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos1, null);
-        canvas.drawBitmap(qSpType4Pic_corr2[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos2, null);
-        canvas.drawBitmap(qSpType4Pic_incorr[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos3, null);
+        //canvas.drawBitmap(qSpType4Pic_corr0[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos0, null);
+        //canvas.drawBitmap(qSpType4Pic_corr1[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos1, null);
+        //canvas.drawBitmap(qSpType4Pic_corr2[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos2, null);
+        //canvas.drawBitmap(qSpType4Pic_incorr[questionBankSPType4.getCurrQuestBankSPType4Num()], spType4Src, spType4Pos3, null);
 
         //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos_base, null);
-        canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos0, null);
-        canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos1, null);
-        canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos2, null);
-        canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos3, null);
+        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos0, null);
+        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos1, null);
+        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos2, null);
+        //canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType4Pos3, null);
 
     }
 
@@ -1377,6 +1472,21 @@ public class MainView extends View {
                                     drawViewTouchCount = 0;
                                     drawViewTouch[i] = !drawViewTouch[i];
                                 }
+                            }
+                        }
+
+                        if(gameManager.getCurrQuestMode() == SPTYPE4){
+                            if(spType4Pos0.contains(x, y)){
+                                spType4Choice = 0;
+                            }
+                            else if(spType4Pos1.contains(x, y)){
+                                spType4Choice = 1;
+                            }
+                            else if(spType4Pos2.contains(x, y)){
+                                spType4Choice = 2;
+                            }
+                            else if(spType4Pos3.contains(x, y)){
+                                spType4Choice = 3;
                             }
                         }
 

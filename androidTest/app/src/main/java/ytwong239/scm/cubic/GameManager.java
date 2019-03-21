@@ -38,6 +38,7 @@ public class GameManager {
     private ArrayList<Integer> ranSpType3 = new ArrayList<Integer>();
     private ArrayList<Integer> ranSpType4 = new ArrayList<Integer>();
     private ArrayList<Integer> ranSpType4Choice = new ArrayList<Integer>();
+    private ArrayList<Integer> ranSpType4Rotate = new ArrayList<Integer>();
 
     private Integer[] playerFrontView = new Integer[MAXGRIDSNUM];
     private Integer[] playerSideView = new Integer[MAXGRIDSNUM];
@@ -81,6 +82,11 @@ public class GameManager {
             ranSpType4Choice.add(i);
         }
         Collections.shuffle(ranSpType4Choice);
+
+        for (int i = 40; i < 300; i+=30) {
+            ranSpType4Rotate.add(i);
+        }
+        Collections.shuffle(ranSpType4Rotate);
 
         randQuest();
     }
@@ -146,9 +152,14 @@ public class GameManager {
                 currQuestMode = SPTYPE4;
                 QuestionBank_SPType4_Ans.setCurrQuestBankSPType4Num(ranSpType4.get(1));
                 QuestionBank_SPType4_Base.setCurrQuestBankSPType4Num(ranSpType4.get(1));
-                //OpenGLRenderer_SPType4_Choice0.setChoice(ranSpType4Choice.get(0));
                 OpenGLRenderer_SPType4_Choice0.setChoice(1);
-                OpenGLRenderer_SPType4_Choice0.setRotateY(random.nextInt(360));
+                OpenGLRenderer_SPType4_Choice0.setRotateY(ranSpType4Rotate.get(0));
+                OpenGLRenderer_SPType4_Choice1.setChoice(2);
+                OpenGLRenderer_SPType4_Choice1.setRotateY(ranSpType4Rotate.get(1));
+                OpenGLRenderer_SPType4_Choice2.setChoice(3);
+                OpenGLRenderer_SPType4_Choice2.setRotateY(ranSpType4Rotate.get(2));
+                OpenGLRenderer_SPType4_Choice3.setChoice(0);
+                OpenGLRenderer_SPType4_Choice3.setRotateY(ranSpType4Rotate.get(3));
                 Log.d("ranSpType4", "q5  " +  ranSpType4.get(1));
                 break;
         }
@@ -273,6 +284,7 @@ public class GameManager {
         Collections.shuffle(ranSpType3);
         Collections.shuffle(ranSpType4);
         Collections.shuffle(ranSpType4Choice);
+        Collections.shuffle(ranSpType4Rotate);
 
         currQuestNum = 0;
 

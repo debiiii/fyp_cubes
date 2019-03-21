@@ -16,7 +16,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by DebbieWong on 18/3/2019.
  */
 
-public class OpenGLRenderer_SPType4_Choice0 implements GLSurfaceView.Renderer {
+public class OpenGLRenderer_SPType4_Choice2 implements GLSurfaceView.Renderer {
     private static final float CUBE_ROTATION_INCREMENT = 0.6f;
     private static final int REFRESH_RATE_FPS = 60;
     private static final float FRAME_TIME_MILLIS = TimeUnit.SECONDS.toMillis(1) / REFRESH_RATE_FPS;
@@ -45,7 +45,7 @@ public class OpenGLRenderer_SPType4_Choice0 implements GLSurfaceView.Renderer {
 
     Random random = new Random();
 
-    public OpenGLRenderer_SPType4_Choice0(){
+    public OpenGLRenderer_SPType4_Choice2(){
         mMVPMatrix = new float[16];
         mProjectionMatrix = new float[16];
         mViewMatrix = new float[16];
@@ -76,9 +76,9 @@ public class OpenGLRenderer_SPType4_Choice0 implements GLSurfaceView.Renderer {
         float ratio = (float) width / height;
         GLES20.glViewport(0, 0, width, height);
         float size = 0.5f;
-        float gap = ratio / 2.43f;
-        float left = (-ratio / size) + gap;
-        float right = (ratio / size) + gap;
+        float gap = ratio / 1.45f;
+        float left = (-ratio / size) - gap;
+        float right = (ratio / size) - gap;
         gap = ratio / 8.9f;
         float bottom = (-1f / size) + gap;
         float top = (1f / size) + gap;
