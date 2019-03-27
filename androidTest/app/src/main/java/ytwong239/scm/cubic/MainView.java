@@ -231,8 +231,7 @@ public class MainView extends View {
 
     GameManager gameManager = new GameManager();
     QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
-    QuestionBank_SPType3_Ans questionBankSPType3 = new QuestionBank_SPType3_Ans();
-    QuestionBank_SPType4_Ans questionBankSPType4 = new QuestionBank_SPType4_Ans();
+    Tips_SPType3 tips_spType3 = new Tips_SPType3();
     Arduino arduino = new Arduino();
 
     Paint whiteStroke = new Paint();
@@ -240,10 +239,12 @@ public class MainView extends View {
     Paint darkOrange = new Paint();
     Paint white = new Paint();
     Paint font = new Paint();
+    Paint tipFont = new Paint();
     Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
     Paint blackStroke = new Paint();
 
     Typeface aldrich;
+    Typeface myriad;
 
     Boolean debugVisible = false;
 
@@ -257,6 +258,8 @@ public class MainView extends View {
         AssetManager am = context.getApplicationContext().getAssets();
         aldrich = Typeface.createFromAsset(am,
                 String.format(Locale.US, "font/%s", "aldrich.ttf"));
+        myriad = Typeface.createFromAsset(am,
+                String.format(Locale.US, "font/%s", "myriadarabic.otf"));
 
         init();
         initBitmap();
@@ -268,6 +271,8 @@ public class MainView extends View {
         AssetManager am = context.getApplicationContext().getAssets();
         aldrich = Typeface.createFromAsset(am,
                 String.format(Locale.US, "font/%s", "aldrich.ttf"));
+        myriad = Typeface.createFromAsset(am,
+                String.format(Locale.US, "font/%s", "myriadarabic.otf"));
 
         init();
         initBitmap();
@@ -279,6 +284,8 @@ public class MainView extends View {
         AssetManager am = context.getApplicationContext().getAssets();
         aldrich = Typeface.createFromAsset(am,
                 String.format(Locale.US, "font/%s", "aldrich.ttf"));
+        myriad = Typeface.createFromAsset(am,
+                String.format(Locale.US, "font/%s", "myriadarabic.otf"));
 
 
         init();
@@ -306,6 +313,11 @@ public class MainView extends View {
         font.setColor(Color.WHITE);
         font.setTextSize(70);
         font.setTextAlign(Paint.Align.RIGHT);
+
+        tipFont.setTypeface(myriad);
+        tipFont.setColor(darkOrange.getColor());
+        tipFont.setTextSize(50);
+        tipFont.setTextAlign(Paint.Align.CENTER);
 
         for(int i = 0; i < drawViewPos2.length; i++){
             drawViewPos2[i] = new Rect(0,0,0,0);
@@ -1140,21 +1152,30 @@ public class MainView extends View {
 
         canvas.drawText(String.valueOf((int)gameManager.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
 
-        timeRemapWidth = (int)remap(gameManager.getTimeLeft30s(), gameManager.getTotalTime30s(), 0, timeFullWidth, 0);
+        timeRemapWidth = (int)remap(gameManager.getTimeLeft30s(), gameManager.getTotalTime30s(), -1, timeFullWidth, -1);
 
-        if(timeCurrWidth > timeRemapWidth){
-            timeCurrWidth--;
-        }
-        else if(timeCurrWidth == timeRemapWidth){
-            timeCurrWidth = timeRemapWidth;
-        }
+        //--more smooth timer. but will faster than word--
+//        if(timeCurrWidth > timeRemapWidth){
+//            timeCurrWidth--;
+//        }
+//        else if(timeCurrWidth == timeRemapWidth){
+//            timeCurrWidth = timeRemapWidth;
+//        }
+//        if(timeCirX2 <= timeRectPos.left){
+//            timeCirX1 = timeCirX2;
+//            timeCirR -= 5;
+//            timeRectPos.right = 0;
+//        }else{
+//            timeRectPos.right = timeRectPos.left + timeCurrWidth;
+//            timeCirX2 = timeRectPos.right;
+//        }
+        //--more smooth timer. but will faster than word--
 
-        if(timeCirX2 <= timeRectPos.left){
-            timeCirX1 = timeCirX2;
-            timeCirR -= 5;
+        if(timeRemapWidth == -1){
+            timeCirR = 0;
             timeRectPos.right = 0;
         }else{
-            timeRectPos.right = timeRectPos.left + timeCurrWidth;
+            timeRectPos.right = timeRectPos.left + timeRemapWidth;
             timeCirX2 = timeRectPos.right;
         }
 
@@ -1374,15 +1395,47 @@ public class MainView extends View {
 
     private void drawTip(Canvas canvas){
 
-        if(tipIsShown){
-            canvas.drawBitmap(tipBoxPic, tipBoxSrc, tipBoxPos, null);
-            canvas.drawBitmap(tipModelBkgPic, tipModelBkgSrc, tipModelBkgPos, null);
-            OpenGLRenderer_Tips.setCanDraw(true);
+        if(timeRemapWidth == -1){
+            if(tipIsShown){
+                canvas.drawBitmap(tipBoxPic, tipBoxSrc, tipBoxPos, null);
+                OpenGLRenderer_Tips.setCanDraw(true);
+                switch (gameManager.getCurrQuestMode()){
+                    case SPTYPE3:
+                        canvas.drawText(tips_spType3.getString(), tipBoxPos.centerX(), tipBoxPos.centerY(), tipFont);
+                        break;
+
+                    case SPTYPE4:
+                        String ans = "";
+                        String ans2 = "";
+                        switch (gameManager.getSpType4Ans()){
+                            case 0:
+                                ans = "1st";
+                                ans2 = "4th";
+                                break;
+                            case 1:
+                                ans = "2nd";
+                                ans2 = "3rd";
+                                break;
+                            case 2:
+                                ans = "1st";
+                                ans2 = "3rd";
+                                break;
+                            case 3:
+                                ans = "2nd";
+                                ans2 = "4th";
+                                break;
+                        }
+                        canvas.drawText(ans + " or " + ans2, tipBoxPos.centerX(), tipBoxPos.centerY() - 30, tipFont);
+                        canvas.drawText("is the correct answer", tipBoxPos.centerX(), tipBoxPos.centerY() + 30, tipFont);
+                        break;
+                }
+            }
+            else if(!tipIsShown){
+                canvas.drawBitmap(tipIconPic, tipIconSrc, tipIconPos, null);
+                OpenGLRenderer_Tips.setCanDraw(false);
+            }
         }
-        else if(!tipIsShown){
-            canvas.drawBitmap(tipIconPic, tipIconSrc, tipIconPos, null);
-            OpenGLRenderer_Tips.setCanDraw(false);
-        }
+
     }
 
     private void drawBattleGamePage(Canvas canvas){
@@ -1518,11 +1571,11 @@ public class MainView extends View {
                             }
                         }
 
-                        if(tipIconPos.contains(x, y)){
+                        if(timeRemapWidth == -1 && tipIconPos.contains(x, y)){
                             tipIsShown = true;
                         }
 
-                        if(tipIsShown){
+                        if(timeRemapWidth == -1 && tipIsShown){
                             if(tipBoxPos.contains(x, y)){
                                 tipIsShown = true;
                             }

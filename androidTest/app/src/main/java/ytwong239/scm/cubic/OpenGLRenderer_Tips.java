@@ -140,36 +140,50 @@ public class OpenGLRenderer_Tips implements GLSurfaceView.Renderer {
 
             switch (currQuestMode){
                 case DRAWFRONTVIEW:
+                    mCubeRotation = 0;
+                    //Matrix.setRotateM(mRotationMatrix, 0, mCubeRotation, 0.0f, 1.0f, 0.0f);
                     for(int i = 0; i < MAXGRIDSNUM; i++){
                         for(int j = 0; j < MAXHEIGHTNUM; j++) {
-                            //if(questionBank_2D3D.getIsCubePresent(i, j)){
+                            if(questionBank_2D3D.getIsCubePresent(i, j)){
                                 mCubeOrange.draw(mFinalMVPMatrixs[i][j]);
-                            //}
+                            }
                         }
                     }
                     drawFront();
                     break;
                 case DRAWSIDEVIEW:
+                    mCubeRotation = 0;
+                    //Matrix.setRotateM(mRotationMatrix, 0, mCubeRotation, 0.0f, 1.0f, 0.0f);
                     for(int i = 0; i < MAXGRIDSNUM; i++){
                         for(int j = 0; j < MAXHEIGHTNUM; j++) {
-                            //if(questionBank_2D3D.getIsCubePresent(i, j)){
+                            if(questionBank_2D3D.getIsCubePresent(i, j)){
                                 mCubeOrange.draw(mFinalMVPMatrixs[i][j]);
-                            //}
+                            }
                         }
                     }
                     drawSide();
                     break;
                 case DRAWTOPVIEW:
+                    mCubeRotation = 0;
+                    //Matrix.setRotateM(mRotationMatrix, 0, mCubeRotation, 0.0f, 1.0f, 0.0f);
                     for(int i = 0; i < MAXGRIDSNUM; i++){
                         for(int j = 0; j < MAXHEIGHTNUM; j++) {
-                            //if(questionBank_2D3D.getIsCubePresent(i, j)){
+                            if(questionBank_2D3D.getIsCubePresent(i, j)){
                                 mCubeOrange.draw(mFinalMVPMatrixs[i][j]);
-                            //}
+                            }
                         }
                     }
                     drawTop();
                     break;
                 case BUILD3DMODEL:
+                    for(int i = 0; i < MAXGRIDSNUM; i++){
+                        for(int j = 0; j < MAXHEIGHTNUM; j++) {
+                            if(questionBank_2D3D.getIsCubePresent(i, j)){
+                                mCubeOrange.draw(mFinalMVPMatrixs[i][j]);
+                            }
+                        }
+                    }
+                    updateCubeRotation();
                     break;
             }
 
@@ -178,7 +192,6 @@ public class OpenGLRenderer_Tips implements GLSurfaceView.Renderer {
             clearBuffers(true, true,true);
         }
 
-        //updateCubeRotation();
     }
 
     private void drawFront(){

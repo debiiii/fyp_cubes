@@ -143,6 +143,7 @@ public class GameManager {
                 QuestionBank_SPType3_Base0.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 QuestionBank_SPType3_Base1.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 QuestionBank_SPType3_Quest.setCurrQuestBankSPType3Num(ranSpType3.get(0));
+                Tips_SPType3.setCurrQuestNum(ranSpType3.get(0));
                 Log.d("ranSpType3", "q2  " +  ranSpType3.get(0));
                 break;
             case 3:
@@ -325,7 +326,7 @@ public class GameManager {
 
         @Override
         public void onFinish() {
-            timeLeft30s = 0;
+            timeLeft30s = -1;
             countDownTimer30s.cancel();
         }
     };
@@ -352,5 +353,9 @@ public class GameManager {
 
     public void setRestartFalse(){
         restart = false;
+    }
+
+    public int getSpType4Ans(){
+        return spType4Ans;
     }
 }
