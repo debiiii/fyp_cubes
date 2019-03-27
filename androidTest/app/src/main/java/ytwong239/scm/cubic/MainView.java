@@ -135,6 +135,7 @@ public class MainView extends View {
     private Bitmap formSideViewPic;
     private Bitmap formTopViewPic;
     private Bitmap formAnsPic;
+    private Bitmap selectAnsPic;
     private Rect qTitleSrc;
     private Rect qTitlePos;
 
@@ -212,6 +213,15 @@ public class MainView extends View {
     private Bitmap tipIconPic;
     private Rect tipIconSrc;
     private Rect tipIconPos;
+    private Bitmap tipBoxPic;
+    private Rect tipBoxSrc;
+    private Rect tipBoxPos;
+    private Bitmap tipModelBkgPic;
+    private Rect tipModelBkgSrc;
+    private Rect tipModelBkgPos;
+    private boolean tipIsShown = false;
+
+
 
     private Bitmap Pic;
     private Rect Src;
@@ -371,6 +381,7 @@ public class MainView extends View {
         formSideViewPic= BitmapFactory.decodeResource(getResources(), R.drawable.sideview, opts);
         formTopViewPic= BitmapFactory.decodeResource(getResources(), R.drawable.topview, opts);
         formAnsPic= BitmapFactory.decodeResource(getResources(), R.drawable.formans, opts);
+        selectAnsPic= BitmapFactory.decodeResource(getResources(), R.drawable.selectans, opts);
         qTitleSrc = new Rect(0,0, qTitlePic[0].getWidth(), qTitlePic[0].getHeight());
 
         qTopPic = BitmapFactory.decodeResource(getResources(), R.drawable.top, opts);
@@ -405,6 +416,15 @@ public class MainView extends View {
 
         qSpType3BkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg_noword, opts);
         qspType3BkgSrc = new Rect(0,0, qSpType3BkgPic.getWidth(), qSpType3BkgPic.getHeight());
+
+        tipIconPic = BitmapFactory.decodeResource(getResources(), R.drawable.tipsicon, opts);
+        tipIconSrc = new Rect(0,0, tipIconPic.getWidth(), tipIconPic.getHeight());
+
+        tipBoxPic = BitmapFactory.decodeResource(getResources(), R.drawable.tipbox, opts);
+        tipBoxSrc = new Rect(0,0, tipBoxPic.getWidth(), tipBoxPic.getHeight());
+
+        tipModelBkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg_orange, opts);
+        tipModelBkgSrc = new Rect(0,0, tipModelBkgPic.getWidth(), tipModelBkgPic.getHeight());
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -824,6 +844,30 @@ public class MainView extends View {
         bottom = top + height;
         spType3Q2Pos = new Rect(left, top, right, bottom);
 
+        width = w / 4;
+        height = (tipBoxPic.getHeight() * width) / tipBoxPic.getWidth();
+        left = 50;
+        top = h - height - 30;
+        right = left + width;
+        bottom = top + height;
+        tipBoxPos = new Rect(left, top, right, bottom);
+
+        width = w / 15;
+        height = (tipIconPic.getHeight() * width) / tipIconPic.getWidth();
+        left = 50;
+        top = h - height - 50;
+        right = left + width;
+        bottom = top + height;
+        tipIconPos = new Rect(left, top, right, bottom);
+
+        width = w / 6 - 4;
+        height = (850 * width) / 850;
+        left = (tipBoxPos.left + tipBoxPos.width() / 2) - width / 2 + 17;
+        top = tipBoxPos.top + h / 13 - h / 552;
+        right = left + width;
+        bottom = top + height;
+        tipModelBkgPos = new Rect(left, top, right, bottom);
+
     }
 
     @Override
@@ -842,6 +886,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
                 drawMenuPage(canvas);
                 break;
             case PRACTICEGAMEPAGE:
@@ -857,6 +902,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
                 drawBattleNumPage(canvas);
                 break;
             case BATTLEGAMEPAGE:
@@ -869,6 +915,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
                 drawBattleGamePage(canvas);
                 break;
             case HOWTOPAGE1:
@@ -881,6 +928,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
                 drawHowToPage1(canvas);
                 break;
             case HOWTOPAGE2:
@@ -893,6 +941,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
                 drawHowToPage2(canvas);
                 break;
             case HOWTOPAGE3:
@@ -905,6 +954,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
                 drawHowToPage3(canvas);
                 break;
             case INFOPAGE:
@@ -917,6 +967,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
                 break;
 
         }
@@ -1075,7 +1126,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
-                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
+                canvas.drawBitmap(selectAnsPic, qTitleSrc, qTitlePos, null);
                 drawSpType4(canvas);
                 break;
 
@@ -1117,6 +1168,9 @@ public class MainView extends View {
 
         //answer btn
         canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+
+        //tip icon
+        drawTip(canvas);
 
         //restart the game
         if(gameManager.getRestart()){
@@ -1318,8 +1372,17 @@ public class MainView extends View {
 
     }
 
-    private void drawTip1(Canvas canvas){
+    private void drawTip(Canvas canvas){
 
+        if(tipIsShown){
+            canvas.drawBitmap(tipBoxPic, tipBoxSrc, tipBoxPos, null);
+            canvas.drawBitmap(tipModelBkgPic, tipModelBkgSrc, tipModelBkgPos, null);
+            OpenGLRenderer_Tips.setCanDraw(true);
+        }
+        else if(!tipIsShown){
+            canvas.drawBitmap(tipIconPic, tipIconSrc, tipIconPos, null);
+            OpenGLRenderer_Tips.setCanDraw(false);
+        }
     }
 
     private void drawBattleGamePage(Canvas canvas){
@@ -1452,6 +1515,19 @@ public class MainView extends View {
                             }
                             else if(spType4Pos3.contains(x, y)){
                                 spType4PlayerChoice = 3;
+                            }
+                        }
+
+                        if(tipIconPos.contains(x, y)){
+                            tipIsShown = true;
+                        }
+
+                        if(tipIsShown){
+                            if(tipBoxPos.contains(x, y)){
+                                tipIsShown = true;
+                            }
+                            else{
+                                tipIsShown = false;
                             }
                         }
 
@@ -1693,6 +1769,26 @@ public class MainView extends View {
             form3dmodelPic.recycle();
             form3dmodelPic = null;
         }
+        if(formFrontViewPic != null && !formFrontViewPic.isRecycled()){
+            formFrontViewPic.recycle();
+            formFrontViewPic = null;
+        }
+        if(formSideViewPic != null && !formSideViewPic.isRecycled()){
+            formSideViewPic.recycle();
+            formSideViewPic = null;
+        }
+        if(formTopViewPic != null && !formTopViewPic.isRecycled()){
+            formTopViewPic.recycle();
+            formTopViewPic = null;
+        }
+        if(formAnsPic != null && !formAnsPic.isRecycled()){
+            formAnsPic.recycle();
+            formAnsPic = null;
+        }
+        if(selectAnsPic != null && !selectAnsPic.isRecycled()){
+            selectAnsPic.recycle();
+            selectAnsPic = null;
+        }
         if(qTopPic != null && !qTopPic.isRecycled()){
             qTopPic.recycle();
             qTopPic = null;
@@ -1732,6 +1828,18 @@ public class MainView extends View {
         if(spType3Q2Pic != null && !spType3Q2Pic.isRecycled()){
             spType3Q2Pic.recycle();
             spType3Q2Pic = null;
+        }
+        if(tipIconPic != null && !tipIconPic.isRecycled()){
+            tipIconPic.recycle();
+            tipIconPic = null;
+        }
+        if(tipBoxPic != null && !tipBoxPic.isRecycled()){
+            tipBoxPic.recycle();
+            tipBoxPic = null;
+        }
+        if(tipModelBkgPic != null && !tipModelBkgPic.isRecycled()){
+            tipModelBkgPic.recycle();
+            tipModelBkgPic = null;
         }
 
 

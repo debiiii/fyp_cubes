@@ -132,7 +132,46 @@ public class Cube_Orange {
         colorHandle = GLES20.glGetUniformLocation(program, "vColor");
 
         GLES20.glUniform4fv(colorHandle, 1, orange[6], 0);
+        //front = 5
         indexBuffer.position(5 * 6);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
+
+        GLES20.glDisableVertexAttribArray(positionHandle);
+    }
+
+    public void drawSide(float[] mvpMatrix){
+        GLES20.glUseProgram(program);
+
+        positionHandle = GLES20.glGetAttribLocation(program, "vPosition");
+        GLES20.glEnableVertexAttribArray(positionHandle);
+        GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
+
+        MVPMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix");
+        GLES20.glUniformMatrix4fv(MVPMatrixHandle, 1, false, mvpMatrix, 0);
+        colorHandle = GLES20.glGetUniformLocation(program, "vColor");
+
+        GLES20.glUniform4fv(colorHandle, 1, orange[6], 0);
+        //side = 4
+        indexBuffer.position(4 * 6);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
+
+        GLES20.glDisableVertexAttribArray(positionHandle);
+    }
+
+    public void drawTop(float[] mvpMatrix){
+        GLES20.glUseProgram(program);
+
+        positionHandle = GLES20.glGetAttribLocation(program, "vPosition");
+        GLES20.glEnableVertexAttribArray(positionHandle);
+        GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
+
+        MVPMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix");
+        GLES20.glUniformMatrix4fv(MVPMatrixHandle, 1, false, mvpMatrix, 0);
+        colorHandle = GLES20.glGetUniformLocation(program, "vColor");
+
+        GLES20.glUniform4fv(colorHandle, 1, orange[6], 0);
+        //top = 3
+        indexBuffer.position(3 * 6);
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
 
         GLES20.glDisableVertexAttribArray(positionHandle);

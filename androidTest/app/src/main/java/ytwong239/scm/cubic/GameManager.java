@@ -126,16 +126,19 @@ public class GameManager {
             case 0:
                 //random front/side/top
                 currQuestMode = ran3Views.get(0);
+                OpenGLRenderer_Tips.setCurrQuestMode(ran3Views.get(0));
                 QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(0));
                 Log.d("ran2D3DQuest", "q0  " +  ran2D3DQuest.get(0));
                 break;
             case 1:
                 currQuestMode = BUILD3DMODEL;
+                OpenGLRenderer_Tips.setCurrQuestMode(BUILD3DMODEL);
                 QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(1));
                 Log.d("ran2D3DQuest", "q1  " +  ran2D3DQuest.get(1));
                 break;
             case 2:
                 currQuestMode = SPTYPE3;
+                OpenGLRenderer_Tips.setCurrQuestMode(SPTYPE3);
                 QuestionBank_SPType3_Ans.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 QuestionBank_SPType3_Base0.setCurrQuestBankSPType3Num(ranSpType3.get(0));
                 QuestionBank_SPType3_Base1.setCurrQuestBankSPType3Num(ranSpType3.get(0));
@@ -145,16 +148,19 @@ public class GameManager {
             case 3:
                 //random front/side/top
                 currQuestMode = ran3Views.get(1);
+                OpenGLRenderer_Tips.setCurrQuestMode(ran3Views.get(1));
                 QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(3));
                 Log.d("ran2D3DQuest", "q3  " +  ran2D3DQuest.get(3));
                 break;
             case 4:
                 currQuestMode = BUILD3DMODEL;
+                OpenGLRenderer_Tips.setCurrQuestMode(BUILD3DMODEL);
                 QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(4));
                 Log.d("ran2D3DQuest", "q4  " +  ran2D3DQuest.get(4));
                 break;
             case 5:
                 currQuestMode = SPTYPE4;
+                OpenGLRenderer_Tips.setCurrQuestMode(SPTYPE4);
                 QuestionBank_SPType4_Ans.setCurrQuestBankSPType4Num(ranSpType4.get(1));
                 QuestionBank_SPType4_Base.setCurrQuestBankSPType4Num(ranSpType4.get(1));
                 OpenGLRenderer_SPType4_Choice0.setChoice(ranSpType4Choice.get(0));

@@ -73,6 +73,9 @@ public class BluetoothActivity extends AppCompatActivity {
     OpenGLSurfaceView_SPType4_Choice3 openGLSurfaceView_spType4_choice3;
     OpenGLRenderer_SPType4_Choice3 openGLRenderer_spType4_choice3;
 
+    OpenGLSurfaceView_Tips openGLSurfaceView_tips;
+    OpenGLRenderer_Tips openGLRenderer_tips;
+
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,6 +197,19 @@ public class BluetoothActivity extends AppCompatActivity {
 
         addContentView(openGLSurfaceView_spType4_choice3, params);
 
+        //tips
+        openGLSurfaceView_tips = new OpenGLSurfaceView_Tips(this);
+        openGLRenderer_tips = new OpenGLRenderer_Tips();
+
+        openGLSurfaceView_tips.setEGLContextClientVersion(2);
+        openGLSurfaceView_tips.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        openGLSurfaceView_tips.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        openGLSurfaceView_tips.setZOrderOnTop(true);
+        openGLSurfaceView_tips.setRenderer(openGLRenderer_tips);
+
+        addContentView(openGLSurfaceView_tips, params);
+
+
 
         bluetoothHandler = new Handler(){
             public void handleMessage(android.os.Message msg) {
@@ -250,6 +266,7 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_spType4_choice1.onResume();
         openGLSurfaceView_spType4_choice2.onResume();
         openGLSurfaceView_spType4_choice3.onResume();
+        openGLSurfaceView_tips.onResume();
 
         bluetoothDevice = bluetoothAdapter.getRemoteDevice("98:D3:61:F9:48:D1");
 
@@ -294,6 +311,7 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_spType4_choice1.onPause();
         openGLSurfaceView_spType4_choice2.onPause();
         openGLSurfaceView_spType4_choice3.onPause();
+        openGLSurfaceView_tips.onPause();
 
         try
         {
