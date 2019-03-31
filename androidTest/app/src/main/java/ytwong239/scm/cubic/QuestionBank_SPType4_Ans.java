@@ -18,23 +18,20 @@ public class QuestionBank_SPType4_Ans {
         }
 
         questionSPType4s[0].setQuestionVal(0, 0);
+        questionSPType4s[0].setQuestionVal(0, 1);
+        questionSPType4s[0].setQuestionVal(0, 2);
         questionSPType4s[0].setQuestionVal(1, 0);
-        questionSPType4s[0].setQuestionVal(1, 1);
-        questionSPType4s[0].setQuestionVal(1, 2);
-        questionSPType4s[0].setQuestionVal(4, 2);
-        questionSPType4s[0].setQuestionVal(7, 2);
-        questionSPType4s[0].setQuestionVal(8, 2);
+        questionSPType4s[0].setQuestionVal(2, 0);
+        questionSPType4s[0].setQuestionVal(3, 0);
+        questionSPType4s[0].setQuestionVal(3, 1);
 
-        questionSPType4s[1].setQuestionVal(0, 0);
-        questionSPType4s[1].setQuestionVal(0, 1);
-        questionSPType4s[1].setQuestionVal(1, 1);
+        questionSPType4s[1].setQuestionVal(2, 0);
         questionSPType4s[1].setQuestionVal(2, 1);
         questionSPType4s[1].setQuestionVal(3, 0);
+        questionSPType4s[1].setQuestionVal(4, 0);
+        questionSPType4s[1].setQuestionVal(5, 0);
         questionSPType4s[1].setQuestionVal(5, 1);
-        questionSPType4s[1].setQuestionVal(6, 0);
         questionSPType4s[1].setQuestionVal(8, 0);
-        questionSPType4s[1].setQuestionVal(8, 1);
-        questionSPType4s[1].setQuestionVal(8, 2);
     }
 
     public static void setCurrQuestBankSPType4Num(int num){

@@ -1,6 +1,7 @@
 package ytwong239.scm.cubic;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -221,36 +222,38 @@ public class MainView extends View {
     private Rect tipModelBkgPos;
     private boolean tipIsShown = false;
 
-
-
     private Bitmap Pic;
     private Rect Src;
     private Rect Pos;
 
-    int lastX = 0;
+    private int lastX = 0;
 
-    GameManager gameManager = new GameManager();
-    QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
-    Tips_SPType3 tips_spType3 = new Tips_SPType3();
-    Arduino arduino = new Arduino();
+    private GameManager gameManager = new GameManager();
+    private QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
+    private Tips_SPType3 tips_spType3 = new Tips_SPType3();
+    private Arduino arduino = new Arduino();
 
-    Paint whiteStroke = new Paint();
-    Paint lightOrange = new Paint();
-    Paint darkOrange = new Paint();
-    Paint white = new Paint();
-    Paint font = new Paint();
-    Paint tipFont = new Paint();
-    Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
-    Paint blackStroke = new Paint();
+    private Paint whiteStroke = new Paint();
+    private Paint lightOrange = new Paint();
+    private Paint darkOrange = new Paint();
+    private Paint white = new Paint();
+    private Paint font = new Paint();
+    private Paint tipFont = new Paint();
+    private Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
+    private Paint blackStroke = new Paint();
 
-    Typeface aldrich;
-    Typeface myriad;
+    private Typeface aldrich;
+    private Typeface myriad;
 
-    Boolean debugVisible = false;
+    private Boolean debugVisible = false;
 
     private Rect[] drawViewPos2 = new Rect[MAXGRIDSNUM];
     private boolean[] drawViewTouch = new boolean[MAXGRIDSNUM];
     private int drawViewTouchCount = 0;
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    int playedRound = 0;
 
     public MainView(Context context) {
         super(context);
@@ -263,6 +266,11 @@ public class MainView extends View {
 
         init();
         initBitmap();
+
+        sharedPreferences = context.getSharedPreferences(String.valueOf(R.string.app_name), Context.MODE_PRIVATE);
+        if(sharedPreferences.getInt(String.valueOf(R.integer.playedRound),0) != 0){
+            playedRound = sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0);
+        }
     }
 
     public MainView(Context context, @Nullable AttributeSet attrs) {
@@ -276,6 +284,11 @@ public class MainView extends View {
 
         init();
         initBitmap();
+
+        sharedPreferences = context.getSharedPreferences(String.valueOf(R.string.app_name), Context.MODE_PRIVATE);
+        if(sharedPreferences.getInt(String.valueOf(R.integer.playedRound),0) != 0){
+            playedRound = sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0);
+        }
     }
 
     public MainView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -290,6 +303,11 @@ public class MainView extends View {
 
         init();
         initBitmap();
+
+        sharedPreferences = context.getSharedPreferences(String.valueOf(R.string.app_name), Context.MODE_PRIVATE);
+        if(sharedPreferences.getInt(String.valueOf(R.integer.playedRound),0) != 0){
+            playedRound = sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0);
+        }
     }
 
     private void init(){
@@ -993,6 +1011,8 @@ public class MainView extends View {
 
         forArduino();
 
+        canvas.drawText("playedRound: " + sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0), 600, 1000, font);
+
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -1195,6 +1215,12 @@ public class MainView extends View {
 
         //restart the game
         if(gameManager.getRestart()){
+            //save data
+            playedRound++;
+            editor = sharedPreferences.edit();
+            editor.putInt(String.valueOf(R.integer.playedRound), playedRound);
+            editor.commit();
+
             spType4PlayerChoice = 0;
             resetDrawView();
             resetTimer();
@@ -1537,12 +1563,6 @@ public class MainView extends View {
                                 gameManager.compare();
                                 resetDrawView();
                             }
-//                            else{
-//                                resetDrawView();
-//                                resetTimer();
-//                                gameManager.restart();
-//                                currPage = MENUPAGE;
-//                            }
                         }
 
                         if(gameManager.getCurrQuestMode() == DRAWFRONTVIEW ||

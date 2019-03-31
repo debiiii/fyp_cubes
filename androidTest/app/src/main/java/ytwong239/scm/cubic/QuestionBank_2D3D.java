@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class QuestionBank_2D3D {
 
-    private static final int MAXQUESTBANK2D3DSUM = 7;
+    private static final int MAXQUESTBANK2D3DSUM = 6;
     private Question_2D3D question2D3DS[] = new Question_2D3D[MAXQUESTBANK2D3DSUM];
 
     private static int currQuestBank2D3DNum;
@@ -45,28 +45,22 @@ public class QuestionBank_2D3D {
         question2D3DS[3].setQuestionVal(8, 0);
         question2D3DS[3].updateView();
 
-        question2D3DS[4].setQuestionVal(0, 2);
-        question2D3DS[4].setQuestionVal(1, 1);
-        question2D3DS[4].setQuestionVal(1, 2);
-        question2D3DS[4].setQuestionVal(4, 0);
-        question2D3DS[4].setQuestionVal(4, 1);
-        question2D3DS[4].setQuestionVal(5, 0);
+        question2D3DS[4].setQuestionVal(0, 0);
+        question2D3DS[4].setQuestionVal(0, 1);
+        question2D3DS[4].setQuestionVal(1, 0);
+        question2D3DS[4].setQuestionVal(3, 0);
+        question2D3DS[4].setQuestionVal(6, 0);
         question2D3DS[4].updateView();
 
+        question2D3DS[5].setQuestionVal(2, 0);
         question2D3DS[5].setQuestionVal(3, 0);
         question2D3DS[5].setQuestionVal(3, 1);
-        question2D3DS[5].setQuestionVal(3, 2);
-        question2D3DS[5].setQuestionVal(4, 1);
+        question2D3DS[5].setQuestionVal(5, 0);
         question2D3DS[5].setQuestionVal(5, 1);
-        question2D3DS[5].setQuestionVal(6, 0);
-        question2D3DS[5].setQuestionVal(6, 1);
+        question2D3DS[5].setQuestionVal(5, 2);
+        question2D3DS[5].setQuestionVal(7, 0);
         question2D3DS[5].updateView();
 
-        question2D3DS[6].setQuestionVal(0, 0);
-        question2D3DS[6].setQuestionVal(0, 1);
-        question2D3DS[6].setQuestionVal(0, 2);
-        question2D3DS[6].setQuestionVal(1, 0);
-        question2D3DS[6].updateView();
     }
 
     public static void setCurrQuestBank2D3DNum(int num){

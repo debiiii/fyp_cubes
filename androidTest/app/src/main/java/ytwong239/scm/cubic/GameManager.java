@@ -307,6 +307,7 @@ public class GameManager {
         }
 
         restart = true;
+
     }
 
     public int getCurrQuestNum(){
