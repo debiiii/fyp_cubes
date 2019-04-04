@@ -227,6 +227,8 @@ public class MainView extends View {
     private Rect detectionBoxSrc;
     private Rect detectionBoxPos;
     private boolean detectionIsShown = false;
+    private Bitmap detectionModelBkgPic;
+    private Rect detectionModelBkgSrc;
     private Rect detectionModelBkgPos;
 
     private Bitmap Pic;
@@ -466,6 +468,9 @@ public class MainView extends View {
 
         detectionBoxPic = BitmapFactory.decodeResource(getResources(), R.drawable.detectioncheckbox, opts);
         detectionBoxSrc = new Rect(0,0, detectionBoxPic.getWidth(), detectionBoxPic.getHeight());
+
+        detectionModelBkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg_orange, opts);
+        detectionModelBkgSrc = new Rect(0,0, detectionModelBkgPic.getWidth(), detectionModelBkgPic.getHeight());
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -944,6 +949,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawMenuPage(canvas);
                 break;
             case PRACTICEGAMEPAGE:
@@ -960,6 +966,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawBattleNumPage(canvas);
                 break;
             case BATTLEGAMEPAGE:
@@ -973,6 +980,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawBattleGamePage(canvas);
                 break;
             case HOWTOPAGE1:
@@ -986,6 +994,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawHowToPage1(canvas);
                 break;
             case HOWTOPAGE2:
@@ -999,6 +1008,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawHowToPage2(canvas);
                 break;
             case HOWTOPAGE3:
@@ -1012,6 +1022,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawHowToPage3(canvas);
                 break;
             case INFOPAGE:
@@ -1025,6 +1036,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 break;
 
         }
@@ -1226,8 +1238,9 @@ public class MainView extends View {
         }
 
         if(gameManager.getResetTimer()){
-            //close the tips when next question
+            //close the tips and detection check when next question
             OpenGLRenderer_Tips.setCanDraw(false);
+            OpenGLRenderer_DetectionCheck.setCanDraw(false);
             resetTimer();
         }
 
@@ -1457,6 +1470,7 @@ public class MainView extends View {
             if(tipIsShown){
                 canvas.drawBitmap(tipBoxPic, tipBoxSrc, tipBoxPos, null);
                 OpenGLRenderer_Tips.setCanDraw(true);
+
                 switch (gameManager.getCurrQuestMode()){
                     case SPTYPE3:
                         canvas.drawText(tips_spType3.getString(), tipBoxPos.centerX(), tipBoxPos.centerY(), tipFont);
@@ -1498,10 +1512,22 @@ public class MainView extends View {
 
     private void drawDetection(Canvas canvas){
         if(detectionIsShown){
+            for(int i = 0; i < MAXGRIDSNUM; i++){
+                for(int j = 0; j < MAXHEIGHTNUM; j++) {
+                    if(arduino.getIsCubePresent(i,j)){
+                        OpenGLRenderer_DetectionCheck.setIsCubePressentTrue(i, j);
+                    }
+                    else{
+                        OpenGLRenderer_DetectionCheck.setIsCubePressentFalse(i, j);
+                    }
+                }
+            }
+            OpenGLRenderer_DetectionCheck.setCanDraw(true);
             canvas.drawBitmap(detectionBoxPic, detectionBoxSrc, detectionBoxPos, null);
-            canvas.drawBitmap(qModelBkgPic, qModelBkgSrc, detectionModelBkgPos, null);
+            canvas.drawBitmap(detectionModelBkgPic, detectionModelBkgSrc, detectionModelBkgPos, null);
         }
         else if(!detectionIsShown){
+            OpenGLRenderer_DetectionCheck.setCanDraw(false);
             canvas.drawBitmap(detectionIconPic, detectionIconSrc, detectionIconPos, null);
         }
     }
