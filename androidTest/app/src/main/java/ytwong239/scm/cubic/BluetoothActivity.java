@@ -88,6 +88,8 @@ public class BluetoothActivity extends AppCompatActivity {
         mainView = new MainView(this);
         setContentView(mainView);
 
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
         //3d model
         openGLSurfaceView_3DModel = new OpenGLSurfaceView_3DModel(this);
         openGLRenderer_3DModel = new OpenGLRenderer_3DModel();
@@ -98,7 +100,6 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_3DModel.setZOrderOnTop(true);
         openGLSurfaceView_3DModel.setRenderer(openGLRenderer_3DModel);
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         addContentView(openGLSurfaceView_3DModel, params);
 
         //sp type 3 base 0
@@ -210,7 +211,6 @@ public class BluetoothActivity extends AppCompatActivity {
         addContentView(openGLSurfaceView_tips, params);
 
 
-
         bluetoothHandler = new Handler(){
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == HANDLERSTATE) {
@@ -267,6 +267,7 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_spType4_choice2.onResume();
         openGLSurfaceView_spType4_choice3.onResume();
         openGLSurfaceView_tips.onResume();
+
 
         bluetoothDevice = bluetoothAdapter.getRemoteDevice("98:D3:61:F9:48:D1");
 

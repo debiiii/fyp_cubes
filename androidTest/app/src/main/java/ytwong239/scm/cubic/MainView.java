@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewConfiguration;
 
@@ -39,7 +40,7 @@ public class MainView extends View {
     private final static int HOWTOPAGE2 = 5;
     private final static int HOWTOPAGE3 = 6;
     private final static int INFOPAGE = 7;
-    protected int currPage = PRACTICEGAMEPAGE;
+    protected int currPage = MENUPAGE;
 
     private static final int MAXQUESTNUM = 6;
 
@@ -217,10 +218,16 @@ public class MainView extends View {
     private Bitmap tipBoxPic;
     private Rect tipBoxSrc;
     private Rect tipBoxPos;
-    private Bitmap tipModelBkgPic;
-    private Rect tipModelBkgSrc;
-    private Rect tipModelBkgPos;
     private boolean tipIsShown = false;
+
+    private Bitmap detectionIconPic;
+    private Rect detectionIconSrc;
+    private Rect detectionIconPos;
+    private Bitmap detectionBoxPic;
+    private Rect detectionBoxSrc;
+    private Rect detectionBoxPos;
+    private boolean detectionIsShown = false;
+    private Rect detectionModelBkgPos;
 
     private Bitmap Pic;
     private Rect Src;
@@ -230,6 +237,7 @@ public class MainView extends View {
 
     private GameManager gameManager = new GameManager();
     private QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
+    private QuestionBank_SPType3_Ans questionBank_spType3_ans = new QuestionBank_SPType3_Ans();
     private Tips_SPType3 tips_spType3 = new Tips_SPType3();
     private Arduino arduino = new Arduino();
 
@@ -450,11 +458,14 @@ public class MainView extends View {
         tipIconPic = BitmapFactory.decodeResource(getResources(), R.drawable.tipsicon, opts);
         tipIconSrc = new Rect(0,0, tipIconPic.getWidth(), tipIconPic.getHeight());
 
-        tipBoxPic = BitmapFactory.decodeResource(getResources(), R.drawable.tipbox, opts);
+        tipBoxPic = BitmapFactory.decodeResource(getResources(), R.drawable.tipsbox, opts);
         tipBoxSrc = new Rect(0,0, tipBoxPic.getWidth(), tipBoxPic.getHeight());
 
-        tipModelBkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg_orange, opts);
-        tipModelBkgSrc = new Rect(0,0, tipModelBkgPic.getWidth(), tipModelBkgPic.getHeight());
+        detectionIconPic = BitmapFactory.decodeResource(getResources(), R.drawable.dectioncheckicon, opts);
+        detectionIconSrc = new Rect(0,0, detectionIconPic.getWidth(), detectionIconPic.getHeight());
+
+        detectionBoxPic = BitmapFactory.decodeResource(getResources(), R.drawable.detectioncheckbox, opts);
+        detectionBoxSrc = new Rect(0,0, detectionBoxPic.getWidth(), detectionBoxPic.getHeight());
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -890,13 +901,29 @@ public class MainView extends View {
         bottom = top + height;
         tipIconPos = new Rect(left, top, right, bottom);
 
-        width = w / 6 - 4;
-        height = (850 * width) / 850;
-        left = (tipBoxPos.left + tipBoxPos.width() / 2) - width / 2 + 17;
-        top = tipBoxPos.top + h / 13 - h / 552;
+        width = w / 15;
+        height = (detectionIconPic.getHeight() * width) / detectionIconPic.getWidth();
+        left = w - width - 50;
+        top = h - height - 50;
         right = left + width;
         bottom = top + height;
-        tipModelBkgPos = new Rect(left, top, right, bottom);
+        detectionIconPos = new Rect(left, top, right, bottom);
+
+        width = w / 4;
+        height = (detectionBoxPic.getHeight() * width) / detectionBoxPic.getWidth();
+        left = w - width - 50;
+        top = h - height - 30;
+        right = left + width;
+        bottom = top + height;
+        detectionBoxPos = new Rect(left, top, right, bottom);
+
+        width = w / 7;
+        height = (850 * width) / 850;
+        left = (detectionBoxPos.left + detectionBoxPos.width() / 2) - width / 2;
+        top = detectionBoxPos.bottom - height - h / 20;
+        right = left + width;
+        bottom = top + height;
+        detectionModelBkgPos = new Rect(left, top, right, bottom);
 
     }
 
@@ -1011,8 +1038,6 @@ public class MainView extends View {
 
         forArduino();
 
-        canvas.drawText("playedRound: " + sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0), 600, 1000, font);
-
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -1121,6 +1146,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
+                drawTip(canvas);
                 break;
             case BUILD3DMODEL:
                 OpenGLRenderer_3DModel.setCanDraw(false);
@@ -1200,6 +1226,8 @@ public class MainView extends View {
         }
 
         if(gameManager.getResetTimer()){
+            //close the tips when next question
+            OpenGLRenderer_Tips.setCanDraw(false);
             resetTimer();
         }
 
@@ -1212,6 +1240,9 @@ public class MainView extends View {
 
         //tip icon
         drawTip(canvas);
+
+        //detection check icon
+        drawDetection(canvas);
 
         //restart the game
         if(gameManager.getRestart()){
@@ -1227,6 +1258,7 @@ public class MainView extends View {
             currPage = MENUPAGE;
             gameManager.setRestartFalse();
         }
+
 
     }
 
@@ -1464,6 +1496,16 @@ public class MainView extends View {
 
     }
 
+    private void drawDetection(Canvas canvas){
+        if(detectionIsShown){
+            canvas.drawBitmap(detectionBoxPic, detectionBoxSrc, detectionBoxPos, null);
+            canvas.drawBitmap(qModelBkgPic, qModelBkgSrc, detectionModelBkgPos, null);
+        }
+        else if(!detectionIsShown){
+            canvas.drawBitmap(detectionIconPic, detectionIconSrc, detectionIconPos, null);
+        }
+    }
+
     private void drawBattleGamePage(Canvas canvas){
         Paint p = new Paint(Color.BLACK);
         p.setTextSize(100);
@@ -1562,6 +1604,41 @@ public class MainView extends View {
                                 GameManager.setSpType4PlayerAns(spType4PlayerChoice);
                                 gameManager.compare();
                                 resetDrawView();
+                                //-------here-----
+                                int match = 0;
+                                switch (gameManager.getCurrQuestMode()){
+                                    case BUILD3DMODEL:
+                                        for(int i = 0; i < MAXGRIDSNUM; i++){
+                                            for(int j = 0; j < MAXHEIGHTNUM; j++){
+                                                if(questionBank2D3D.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
+                                                    break;
+                                                }
+                                                else{
+                                                    match++;
+                                                }
+                                            }
+                                        }
+                                        if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
+                                            gameManager.nextQ();
+                                        }
+                                        break;
+                                    case SPTYPE3:
+                                        for(int i = 0; i < MAXGRIDSNUM; i++){
+                                            for(int j = 0; j < MAXHEIGHTNUM; j++){
+                                                if(questionBank_spType3_ans.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
+                                                    break;
+                                                }
+                                                else{
+                                                    match++;
+                                                }
+                                            }
+                                        }
+                                        if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
+                                            gameManager.nextQ();
+                                        }
+                                        break;
+                                }
+                                //------here-------
                             }
                         }
 
@@ -1604,10 +1681,21 @@ public class MainView extends View {
                             }
                         }
 
+                        if(detectionIconPos.contains(x, y)){
+                            detectionIsShown = true;
+                        }
+
+                        if(detectionIsShown){
+                            if(detectionBoxPos.contains(x, y)){
+                                detectionIsShown = true;
+                            }
+                            else{
+                                detectionIsShown = false;
+                            }
+                        }
+
                         //------debug use-------
-                        int xpos = canvasW - 200;
-                        int ypos = canvasH - 200;
-                        if(x < canvasW && x > xpos && y > ypos && y < canvasH){
+                        if(x < canvasW && x > canvasW - 200 && y > canvasH / 2 - 200 && y < canvasH / 2 + 200){
                             if(gameManager.getCurrQuestNum() < MAXQUESTNUM - 1){
                                 gameManager.nextQ();
                                 resetDrawView();
@@ -1709,7 +1797,7 @@ public class MainView extends View {
                 //swipe
                 lastX = x;
 
-                if(x > 0 && x < 200 && y > 0 && y < 200){
+                if(x > canvasW / 2 - 200 && x < canvasW / 2 + 200 && y > 0 && y < 200){
                     debugVisible = !debugVisible;
                 }
 
@@ -1909,10 +1997,6 @@ public class MainView extends View {
         if(tipBoxPic != null && !tipBoxPic.isRecycled()){
             tipBoxPic.recycle();
             tipBoxPic = null;
-        }
-        if(tipModelBkgPic != null && !tipModelBkgPic.isRecycled()){
-            tipModelBkgPic.recycle();
-            tipModelBkgPic = null;
         }
 
 

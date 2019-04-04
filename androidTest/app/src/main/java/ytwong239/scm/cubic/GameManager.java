@@ -228,6 +228,7 @@ public class GameManager {
                     nextQ();
                 }
                 break;
+            //-----here------
             case BUILD3DMODEL:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
@@ -237,8 +238,12 @@ public class GameManager {
                         else{
                             match++;
                         }
+
+                        Log.d("questionBank2D3D", String.valueOf(i) + " " + String.valueOf(j) + ": "+ String.valueOf(questionBank2D3D.getIsCubePresent(i, j)));
+                        Log.d("arduino", String.valueOf(i) + " " + String.valueOf(j) + ": " + String.valueOf(arduino.getIsCubePresent(i, j)));
                     }
                 }
+                Log.d("match", String.valueOf(match));
                 if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
                     nextQ();
                 }
@@ -258,6 +263,7 @@ public class GameManager {
                     nextQ();
                 }
                 break;
+            //-----here-----
             case SPTYPE4:
                 if(spType4Ans == spType4PlayerAns){
                     restart();

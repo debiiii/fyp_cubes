@@ -27,10 +27,10 @@ public class Grid {
 
     public void update(){
         //determine the cubeNum from arduino value
-        if(ardValue >= 765){
+        if(ardValue >= 750){
             cubeNum = 3;
         }
-        else if(ardValue >= 680){
+        else if(ardValue >= 670){
             cubeNum = 2;
         }
         else if(ardValue >= 490){

@@ -32,7 +32,7 @@ public class Question_2D3D {
     }
 
     public void setQuestionVal(int grid, int height){
-        this.isCubePresent[grid][height] = true;
+        isCubePresent[grid][height] = true;
     }
 
     public void updateView(){
