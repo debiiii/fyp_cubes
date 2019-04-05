@@ -63,7 +63,7 @@ public class GameManager {
             playerTopView[i] = 0;
         }
 
-        for(int i = 0; i < questionBank2D3D.getQuestion2D3DSLength(); i++){
+        for(int i = 0; i < questionBank2D3D.getQuestion2D3DsLength(); i++){
             ran2D3DQuest.add(i);
         }
         Collections.shuffle(ran2D3DQuest);
@@ -187,6 +187,11 @@ public class GameManager {
 
     public void compare(){
         int match = 0;
+
+        //****next time try-------
+        arduino.run();
+        //if can't then set a static Boolean[][] ardIsCubePresent, and in Mainview update this array
+        //****next time try-------
 
         switch (currQuestMode){
             case DRAWFRONTVIEW:

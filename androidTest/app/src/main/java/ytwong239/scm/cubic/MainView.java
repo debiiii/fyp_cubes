@@ -44,10 +44,6 @@ public class MainView extends View {
 
     private static final int MAXQUESTNUM = 6;
 
-    private final static int MAXVIEWQUESTNUM = 7;
-    private final static int MAXSPTYPE3NUM = 2;
-    private final static int MAXSPTYPE4NUM = 2;
-
     private static final int DRAWFRONTVIEW = 0;
     private static final int DRAWSIDEVIEW = 1;
     private static final int DRAWTOPVIEW = 2;
