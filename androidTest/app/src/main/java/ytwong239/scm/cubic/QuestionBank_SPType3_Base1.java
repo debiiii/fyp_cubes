@@ -6,7 +6,7 @@ package ytwong239.scm.cubic;
 
 public class QuestionBank_SPType3_Base1 {
 
-    private static final int MAXQUESTBANKSPTYPE3SUM = 5;
+    private static final int MAXQUESTBANKSPTYPE3SUM = 6;
 
     private Question_SPType3 questionSPType3s[] = new Question_SPType3[MAXQUESTBANKSPTYPE3SUM];
 
@@ -46,6 +46,12 @@ public class QuestionBank_SPType3_Base1 {
         questionSPType3s[4].setQuestionVal(6,0);
         questionSPType3s[4].setQuestionVal(6,1);
         questionSPType3s[4].setQuestionVal(7,0);
+
+        questionSPType3s[5].setQuestionVal(4,0);
+        questionSPType3s[5].setQuestionVal(7,0);
+        questionSPType3s[5].setQuestionVal(7,1);
+        questionSPType3s[5].setQuestionVal(8,0);
+
 
 
 

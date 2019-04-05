@@ -6,7 +6,7 @@ package ytwong239.scm.cubic;
 
 public class Tips_SPType3 {
 
-    private static final int MAXQUESTBANKSPTYPE3SUM = 5;
+    private static final int MAXQUESTBANKSPTYPE3SUM = 6;
     private String tipsSPType3[] = new String[MAXQUESTBANKSPTYPE3SUM];
     private static int currQuestNum = 0;
 
@@ -16,6 +16,7 @@ public class Tips_SPType3 {
         tipsSPType3[2] = "Rotate 180° clockwise";
         tipsSPType3[3] = "Rotate 90° anticlockwise";
         tipsSPType3[4] = "Rotate 90° anticlockwise";
+        tipsSPType3[5] = "Rotate 90° clockwise";
     }
 
     public static void setCurrQuestNum(int val){
