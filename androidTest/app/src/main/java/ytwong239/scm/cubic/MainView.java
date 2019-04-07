@@ -75,6 +75,10 @@ public class MainView extends View {
     private Rect player4Pos;
     private int playerNum = 0;
 
+    private Bitmap puzzleModePic;
+    private Rect puzzleModeSrc;
+    private Rect puzzleModePos;
+
     private Bitmap settingPic;
     private Rect settingSrc;
     private Rect settingPos;
@@ -161,7 +165,6 @@ public class MainView extends View {
     private int timeRemapWidth;
     private boolean timeSetDone = false;
 
-
     private Bitmap answerPic;
     private Rect answerSrc;
     private Rect answerPos;
@@ -238,6 +241,7 @@ public class MainView extends View {
     private QuestionBank_SPType3_Ans questionBank_spType3_ans = new QuestionBank_SPType3_Ans();
     private Tips_SPType3 tips_spType3 = new Tips_SPType3();
     private Arduino arduino = new Arduino();
+    private Puzzle puzzle = new Puzzle();
 
     private Paint whiteStroke = new Paint();
     private Paint lightOrange = new Paint();
@@ -259,7 +263,6 @@ public class MainView extends View {
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    int playedRound = 0;
 
     public MainView(Context context) {
         super(context);
@@ -274,9 +277,7 @@ public class MainView extends View {
         initBitmap();
 
         sharedPreferences = context.getSharedPreferences(String.valueOf(R.string.app_name), Context.MODE_PRIVATE);
-        if(sharedPreferences.getInt(String.valueOf(R.integer.playedRound),0) != 0){
-            playedRound = sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0);
-        }
+        Puzzle.setPlayedRound(sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0));
     }
 
     public MainView(Context context, @Nullable AttributeSet attrs) {
@@ -292,9 +293,7 @@ public class MainView extends View {
         initBitmap();
 
         sharedPreferences = context.getSharedPreferences(String.valueOf(R.string.app_name), Context.MODE_PRIVATE);
-        if(sharedPreferences.getInt(String.valueOf(R.integer.playedRound),0) != 0){
-            playedRound = sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0);
-        }
+        Puzzle.setPlayedRound(sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0));
     }
 
     public MainView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -311,9 +310,7 @@ public class MainView extends View {
         initBitmap();
 
         sharedPreferences = context.getSharedPreferences(String.valueOf(R.string.app_name), Context.MODE_PRIVATE);
-        if(sharedPreferences.getInt(String.valueOf(R.integer.playedRound),0) != 0){
-            playedRound = sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0);
-        }
+        Puzzle.setPlayedRound(sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0));
     }
 
     private void init(){
@@ -366,6 +363,9 @@ public class MainView extends View {
 
         battleModeNumPic = BitmapFactory.decodeResource(getResources(), R.drawable.battlemodenum, opts);
         battleModeNumSrc = new Rect(0,0, battleModeNumPic.getWidth(), battleModeNumPic.getHeight());
+
+        puzzleModePic = BitmapFactory.decodeResource(getResources(), R.drawable.puzzlemode, opts);
+        puzzleModeSrc = new Rect(0,0, puzzleModePic.getWidth(), puzzleModePic.getHeight());
 
         settingPic = BitmapFactory.decodeResource(getResources(), R.drawable.setting, opts);
         settingSrc = new Rect(0,0, settingPic.getWidth(), settingPic.getHeight());
@@ -480,29 +480,40 @@ public class MainView extends View {
         canvasW = w;
         canvasH = h;
 
-        int width = w / 3;
-        int height = (practiceModePic.getHeight() * width) / practiceModePic.getWidth();
-        int left = w / 2 - w / 20 - width;
+        int space = w;
+        int gap = w / 55;
+
+        int width = w / 4 + w / 20;
+        int height = (battleModePic.getHeight() * width) / battleModePic.getWidth();
+        int left = w / 2 - width / 2;
         int top = h / 2 - height / 2;
         int right = left + width;
         int bottom = top + height;
-        practiceModePos = new Rect(left, top, right, bottom);
-
-        width = w / 3;
-        height = (battleModePic.getHeight() * width) / battleModePic.getWidth();
-        left = w / 2 + w / 20;
-        top = h / 2 - height / 2;
-        right = left + width;
-        bottom = top + height;
         battleModePos = new Rect(left, top, right, bottom);
 
-        width = w / 3;
+        width = w / 4 + w / 20;
         height = (battleModeNumPic.getHeight() * width) / battleModeNumPic.getWidth();
-        left = w / 2 + w / 20;
+        left = w / 2 - width / 2;
         top = h / 2 - height / 2;
         right = left + width;
         bottom = top + height;
         battleModeNumPos = new Rect(left, top, right, bottom);
+
+        width = w / 4 + w / 20;
+        height = (practiceModePic.getHeight() * width) / practiceModePic.getWidth();
+        left = battleModePos.left - gap - width;
+        top = h / 2 - height / 2;
+        right = left + width;
+        bottom = top + height;
+        practiceModePos = new Rect(left, top, right, bottom);
+
+        width = w / 4 + w / 20;
+        height = (puzzleModePic.getHeight() * width) / puzzleModePic.getWidth();
+        left = battleModePos.right + gap;
+        top = h / 2 - height / 2;
+        right = left + width;
+        bottom = top + height;
+        puzzleModePos = new Rect(left, top, right, bottom);
 
         width = (battleModeNumPos.width() - 160) / 3;
         height = (battleModeNumPos.height() - 100)/ 5;
@@ -722,7 +733,7 @@ public class MainView extends View {
         bottom = top + height;
         answerPos = new Rect(left, top, right, bottom);
 
-        int gap = w / 15;
+        gap = w / 15;
 
         width = w / 5;
         height = (850 * width) / 850;
@@ -793,7 +804,7 @@ public class MainView extends View {
         bottom = top + height;
         spType4Pos_base = new Rect(left, top, right, bottom);
 
-        int space = qTitlePos.right - spType4Pos_base.right;
+        space = qTitlePos.right - spType4Pos_base.right;
         gap = w / 80;
 
         width = (space - gap * 4) / 4;
@@ -1046,16 +1057,20 @@ public class MainView extends View {
 
         forArduino();
 
+        canvas.drawText("played: " + puzzle.getPlayedRound(), 100, 700, tipFont);
+
     }
 
     private void drawMenuPage(Canvas canvas){
         canvas.drawBitmap(practiceModePic, practiceModeSrc, practiceModePos, null);
         canvas.drawBitmap(battleModePic, battleModeSrc, battleModePos, null);
+        canvas.drawBitmap(puzzleModePic, puzzleModeSrc, puzzleModePos, null);
     }
 
     private void drawBattleNumPage(Canvas canvas){
         canvas.drawBitmap(practiceModePic, practiceModeSrc, practiceModePos, null);
         canvas.drawBitmap(battleModeNumPic, battleModeNumSrc, battleModeNumPos, null);
+        canvas.drawBitmap(puzzleModePic, puzzleModeSrc, puzzleModePos, null);
 
 //        Paint p = new Paint();
 //        p.setColor(Color.BLUE);
@@ -1256,9 +1271,9 @@ public class MainView extends View {
         //restart the game
         if(gameManager.getRestart()){
             //save data
-            playedRound++;
+            Puzzle.setPlayedRound(puzzle.getPlayedRound() + 1);
             editor = sharedPreferences.edit();
-            editor.putInt(String.valueOf(R.integer.playedRound), playedRound);
+            editor.putInt(String.valueOf(R.integer.playedRound), puzzle.getPlayedRound());
             editor.commit();
 
             spType4PlayerChoice = 0;
@@ -1889,6 +1904,10 @@ public class MainView extends View {
         if(battleModeNumPic != null && !battleModeNumPic.isRecycled()){
             battleModeNumPic.recycle();
             battleModeNumPic = null;
+        }
+        if(puzzleModePic != null && !puzzleModePic.isRecycled()){
+            puzzleModePic.recycle();
+            puzzleModePic = null;
         }
         if(settingPic != null && !settingPic.isRecycled()){
             settingPic.recycle();
