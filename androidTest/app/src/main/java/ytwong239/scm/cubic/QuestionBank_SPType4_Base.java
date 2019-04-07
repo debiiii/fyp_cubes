@@ -6,7 +6,7 @@ package ytwong239.scm.cubic;
 
 public class QuestionBank_SPType4_Base {
 
-    private static final int MAXQUESTBANKSPTYPE4SUM = 2;
+    private static final int MAXQUESTBANKSPTYPE4SUM = 6;
     private Question_SPType4 questionSPType4s[] = new Question_SPType4[MAXQUESTBANKSPTYPE4SUM];
 
     private static int currQuestBankSPType4Num;
@@ -17,18 +17,50 @@ public class QuestionBank_SPType4_Base {
             questionSPType4s[i] = new Question_SPType4();
         }
 
-        questionSPType4s[0].setQuestionVal(0, 0);
-        questionSPType4s[0].setQuestionVal(0, 1);
-        questionSPType4s[0].setQuestionVal(0, 2);
-        questionSPType4s[0].setQuestionVal(1, 0);
-        questionSPType4s[0].setQuestionVal(2, 0);
-        questionSPType4s[0].setQuestionVal(3, 0);
+        questionSPType4s[0].setQuestionVal(0,2);
+        questionSPType4s[0].setQuestionVal(3,2);
+        questionSPType4s[0].setQuestionVal(4,2);
+        questionSPType4s[0].setQuestionVal(5,0);
+        questionSPType4s[0].setQuestionVal(5,1);
+        questionSPType4s[0].setQuestionVal(5,2);
+        questionSPType4s[0].setQuestionVal(8,0);
 
-        questionSPType4s[1].setQuestionVal(2, 0);
-        questionSPType4s[1].setQuestionVal(2, 1);
-        questionSPType4s[1].setQuestionVal(3, 0);
-        questionSPType4s[1].setQuestionVal(4, 0);
-        questionSPType4s[1].setQuestionVal(5, 0);
+        questionSPType4s[1].setQuestionVal(0,0);
+        questionSPType4s[1].setQuestionVal(0,1);
+        questionSPType4s[1].setQuestionVal(0,2);
+        questionSPType4s[1].setQuestionVal(1,0);
+        questionSPType4s[1].setQuestionVal(2,0);
+        questionSPType4s[1].setQuestionVal(3,0);
+
+        questionSPType4s[2].setQuestionVal(2,0);
+        questionSPType4s[2].setQuestionVal(2,1);
+        questionSPType4s[2].setQuestionVal(3,0);
+        questionSPType4s[2].setQuestionVal(4,0);
+        questionSPType4s[2].setQuestionVal(5,0);
+
+        questionSPType4s[3].setQuestionVal(0,0);
+        questionSPType4s[3].setQuestionVal(0,1);
+        questionSPType4s[3].setQuestionVal(0,2);
+        questionSPType4s[3].setQuestionVal(3,1);
+        questionSPType4s[3].setQuestionVal(6,1);
+        questionSPType4s[3].setQuestionVal(7,1);
+        questionSPType4s[3].setQuestionVal(8,0);
+        questionSPType4s[3].setQuestionVal(8,1);
+
+        questionSPType4s[4].setQuestionVal(0,0);
+        questionSPType4s[4].setQuestionVal(4,0);
+        questionSPType4s[4].setQuestionVal(4,1);
+        questionSPType4s[4].setQuestionVal(6,0);
+        questionSPType4s[4].setQuestionVal(8,0);
+        questionSPType4s[4].setQuestionVal(8,1);
+        questionSPType4s[4].setQuestionVal(8,2);
+
+        questionSPType4s[5].setQuestionVal(0,0);
+        questionSPType4s[5].setQuestionVal(1,0);
+        questionSPType4s[5].setQuestionVal(1,1);
+        questionSPType4s[5].setQuestionVal(1,2);
+        questionSPType4s[5].setQuestionVal(4,2);
+        questionSPType4s[5].setQuestionVal(7,2);
 
     }
 

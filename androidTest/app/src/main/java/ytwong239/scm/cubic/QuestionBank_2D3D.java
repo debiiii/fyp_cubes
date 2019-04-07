@@ -70,7 +70,6 @@ public class QuestionBank_2D3D {
         question2D3Ds[8].setQuestionVal(4,0);
         question2D3Ds[8].setQuestionVal(8,0);
 
-        question2D3Ds[9].setQuestionVal(2,0);
         question2D3Ds[9].setQuestionVal(4,0);
         question2D3Ds[9].setQuestionVal(4,1);
         question2D3Ds[9].setQuestionVal(6,0);
