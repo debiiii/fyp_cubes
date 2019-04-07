@@ -31,6 +31,16 @@ import java.util.UUID;
 
 public class BluetoothActivity extends AppCompatActivity {
 
+    private final static int MENUPAGE = 0;
+    private final static int PRACTICEGAMEPAGE = 1;
+    private final static int BATTLENUMPAGE = 2;
+    private final static int BATTLEGAMEPAGE = 3;
+    private final static int HOWTOPAGE1 = 4;
+    private final static int HOWTOPAGE2 = 5;
+    private final static int HOWTOPAGE3 = 6;
+    private final static int INFOPAGE = 7;
+    private final static int PUZZLEPAGE = 8;
+
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice bluetoothDevice;
     private BluetoothSocket bluetoothSocket;
@@ -310,10 +320,14 @@ public class BluetoothActivity extends AppCompatActivity {
         connectedThread.start();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//
-//    }
+    @Override
+    public void onBackPressed() {
+        switch (mainView.currPage){
+            case PUZZLEPAGE:
+                mainView.currPage = MENUPAGE;
+                break;
+        }
+    }
 
     @Override
     public void onPause()

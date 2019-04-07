@@ -40,6 +40,7 @@ public class MainView extends View {
     private final static int HOWTOPAGE2 = 5;
     private final static int HOWTOPAGE3 = 6;
     private final static int INFOPAGE = 7;
+    private final static int PUZZLEPAGE = 8;
     protected int currPage = MENUPAGE;
 
     private static final int MAXQUESTNUM = 6;
@@ -51,10 +52,12 @@ public class MainView extends View {
     private static final int SPTYPE3 = 4;
     private static final int SPTYPE4 = 5;
 
-    static final int MAXBASESNUM = 3;
-    static final int MAXGRIDSNUM = 9;
-    static final int MAXCUBESNUM = MAXBASESNUM * MAXGRIDSNUM;
-    static final int MAXHEIGHTNUM = 3;
+    private static final int MAXBASESNUM = 3;
+    private static final int MAXGRIDSNUM = 9;
+    private static final int MAXCUBESNUM = MAXBASESNUM * MAXGRIDSNUM;
+    private static final int MAXHEIGHTNUM = 3;
+
+    private static final int PUZZLEPIECENUM = 8;
 
     private int canvasW;
     private int canvasH;
@@ -78,6 +81,9 @@ public class MainView extends View {
     private Bitmap puzzleModePic;
     private Rect puzzleModeSrc;
     private Rect puzzleModePos;
+
+    private Bitmap disablePic;
+    private Rect disableSrc;
 
     private Bitmap settingPic;
     private Rect settingSrc;
@@ -230,6 +236,22 @@ public class MainView extends View {
     private Rect detectionModelBkgSrc;
     private Rect detectionModelBkgPos;
 
+    private Bitmap puzzlePic;
+    private Rect puzzleSrc;
+    private Rect puzzlePos;
+    private int puzzlePieceW = 0;
+    private int puzzlePieceH = 0;
+    private Rect[] puzzleCoverPos = new Rect[PUZZLEPIECENUM];
+    private Bitmap puzzleTitlePic1;
+    private Rect puzzleTitleSrc1;
+    private Rect puzzleTitlePos1;
+    private Bitmap puzzleTitlePic2;
+    private Rect puzzleTitleSrc2;
+    private Rect puzzleTitlePos2;
+    private Bitmap puzzleTitlePic3;
+    private Rect puzzleTitleSrc3;
+    private Rect puzzleTitlePos3;
+
     private Bitmap Pic;
     private Rect Src;
     private Rect Pos;
@@ -251,6 +273,7 @@ public class MainView extends View {
     private Paint tipFont = new Paint();
     private Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
     private Paint blackStroke = new Paint();
+    private Paint coverPaint = new Paint();
 
     private Typeface aldrich;
     private Typeface myriad;
@@ -330,6 +353,8 @@ public class MainView extends View {
         white.setColor(Color.WHITE);
         white.setTextSize(40);
 
+        coverPaint.setColor(Color.argb(250, 0, 0, 0));
+
         font.setTypeface(aldrich);
         font.setColor(Color.WHITE);
         font.setTextSize(70);
@@ -366,6 +391,9 @@ public class MainView extends View {
 
         puzzleModePic = BitmapFactory.decodeResource(getResources(), R.drawable.puzzlemode, opts);
         puzzleModeSrc = new Rect(0,0, puzzleModePic.getWidth(), puzzleModePic.getHeight());
+
+        disablePic = BitmapFactory.decodeResource(getResources(), R.drawable.disable, opts);
+        disableSrc = new Rect(0,0, disablePic.getWidth(), disablePic.getHeight());
 
         settingPic = BitmapFactory.decodeResource(getResources(), R.drawable.setting, opts);
         settingSrc = new Rect(0,0, settingPic.getWidth(), settingPic.getHeight());
@@ -468,6 +496,18 @@ public class MainView extends View {
         detectionModelBkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg_orange, opts);
         detectionModelBkgSrc = new Rect(0,0, detectionModelBkgPic.getWidth(), detectionModelBkgPic.getHeight());
 
+        puzzlePic = BitmapFactory.decodeResource(getResources(), R.drawable.puzzle, opts);
+        puzzleSrc = new Rect(0,0, puzzlePic.getWidth(), puzzlePic.getHeight());
+
+        puzzleTitlePic1 = BitmapFactory.decodeResource(getResources(), R.drawable.youhavecompleted, opts);
+        puzzleTitleSrc1 = new Rect(0,0, puzzleTitlePic1.getWidth(), puzzleTitlePic1.getHeight());
+
+        puzzleTitlePic2 = BitmapFactory.decodeResource(getResources(), R.drawable.rounds, opts);
+        puzzleTitleSrc2 = new Rect(0,0, puzzleTitlePic2.getWidth(), puzzleTitlePic2.getHeight());
+
+        puzzleTitlePic3 = BitmapFactory.decodeResource(getResources(), R.drawable.tworoundequal, opts);
+        puzzleTitleSrc3 = new Rect(0,0, puzzleTitlePic3.getWidth(), puzzleTitlePic3.getHeight());
+
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
 
@@ -481,7 +521,7 @@ public class MainView extends View {
         canvasH = h;
 
         int space = w;
-        int gap = w / 55;
+        int gap = w / 100;
 
         int width = w / 4 + w / 20;
         int height = (battleModePic.getHeight() * width) / battleModePic.getWidth();
@@ -937,6 +977,62 @@ public class MainView extends View {
         bottom = top + height;
         detectionModelBkgPos = new Rect(left, top, right, bottom);
 
+        width = w / 2;
+        height = (puzzleTitlePic1.getHeight() * width) / puzzleTitlePic1.getWidth();
+        left = w / 2 - width / 2;
+        top = (settingPos.top + settingPos.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        puzzleTitlePos1 = new Rect(left, top, right, bottom);
+
+        height = puzzleTitlePos1.height();
+        width = (puzzleTitlePic2.getWidth() * height) / puzzleTitlePic2.getHeight();
+        left = w / 2 - width / 2;
+        top = puzzleTitlePos1.bottom + h / 10;
+        right = left + width;
+        bottom = top + height;
+        puzzleTitlePos2 = new Rect(left, top, right, bottom);
+
+        width = w / 2 + w / 30;
+        height = (puzzlePic.getHeight() * width) / puzzlePic.getWidth();
+        left = w / 2 - width / 2;
+        top = puzzleTitlePos2.bottom + h / 20;
+        right = left + width;
+        bottom = top + height;
+        puzzlePos = new Rect(left, top, right, bottom);
+
+        width = w / 4;
+        height = (puzzleTitlePic3.getHeight() * width) / puzzleTitlePic3.getWidth();
+        left = puzzlePos.right - width;
+        top = puzzlePos.bottom + h / 100;
+        right = left + width;
+        bottom = top + height;
+        puzzleTitlePos3 = new Rect(left, top, right, bottom);
+
+        puzzlePieceW = puzzlePos.width() / 4;
+        puzzlePieceH = puzzlePos.height() / 2;
+
+        for(int i = 0; i < PUZZLEPIECENUM / 2; i++){
+            width = puzzlePieceW;
+            height = puzzlePieceH;
+            left = puzzlePos.left + puzzlePieceW * i;
+            top = puzzlePos.top;
+            right = left + width;
+            bottom = top + height;
+            puzzleCoverPos[i] = new Rect(left, top, right, bottom);
+        }
+
+        for(int i = PUZZLEPIECENUM / 2, j = 0; i < PUZZLEPIECENUM && j < PUZZLEPIECENUM / 2; i++, j++){
+            width = puzzlePieceW;
+            height = puzzlePieceH;
+            left = puzzlePos.left + puzzlePieceW * j;
+            top = puzzlePos.top + puzzlePieceH;
+            right = left + width;
+            bottom = top + height;
+            puzzleCoverPos[i] = new Rect(left, top, right, bottom);
+        }
+
+
     }
 
     @Override
@@ -1045,6 +1141,20 @@ public class MainView extends View {
                 OpenGLRenderer_Tips.setCanDraw(false);
                 OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 break;
+            case PUZZLEPAGE:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawPuzzlePage(canvas);
+                break;
 
         }
 
@@ -1057,8 +1167,6 @@ public class MainView extends View {
 
         forArduino();
 
-        canvas.drawText("played: " + puzzle.getPlayedRound(), 100, 700, tipFont);
-
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -1069,8 +1177,10 @@ public class MainView extends View {
 
     private void drawBattleNumPage(Canvas canvas){
         canvas.drawBitmap(practiceModePic, practiceModeSrc, practiceModePos, null);
+        canvas.drawBitmap(disablePic, disableSrc, practiceModePos, null);
         canvas.drawBitmap(battleModeNumPic, battleModeNumSrc, battleModeNumPos, null);
         canvas.drawBitmap(puzzleModePic, puzzleModeSrc, puzzleModePos, null);
+        canvas.drawBitmap(disablePic, disableSrc, puzzleModePos, null);
 
 //        Paint p = new Paint();
 //        p.setColor(Color.BLUE);
@@ -1617,6 +1727,21 @@ public class MainView extends View {
         timeSetDone = false;
     }
 
+    private void drawPuzzlePage(Canvas canvas){
+        puzzle.update();
+        canvas.drawBitmap(puzzleTitlePic1, puzzleTitleSrc1, puzzleTitlePos1, null);
+        canvas.drawBitmap(puzzleTitlePic2, puzzleTitleSrc2, puzzleTitlePos2, null);
+        canvas.drawText(String.valueOf(puzzle.getPlayedRound()), canvasW /2, puzzleTitlePos1.bottom + canvasH / 15, font);
+        canvas.drawBitmap(puzzleTitlePic3, puzzleTitleSrc3, puzzleTitlePos3, null);
+        canvas.drawBitmap(puzzlePic, puzzleSrc, puzzlePos, null);
+        for(int i = 0; i < PUZZLEPIECENUM; i++){
+            if(puzzle.getCoverIsShown(i)){
+                canvas.drawRect(puzzleCoverPos[i], coverPaint);
+            }
+        }
+
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
@@ -1633,6 +1758,9 @@ public class MainView extends View {
                         }
                         else if(battleModePos.contains(x, y)){
                             currPage = BATTLENUMPAGE;
+                        }
+                        else if(puzzleModePos.contains(x, y)){
+                            currPage = PUZZLEPAGE;
                         }
                         break;
                     case PRACTICEGAMEPAGE:
@@ -1750,21 +1878,22 @@ public class MainView extends View {
 
                         break;
                     case BATTLENUMPAGE:
-                        if(practiceModePos.contains(x, y)){
-                            playerNum = 1;
-                            currPage = HOWTOPAGE1;
+                        if(battleModeNumPos.contains(x, y)){
+                            if(player2Pos.contains(x, y)){
+                                playerNum = 2;
+                                currPage = HOWTOPAGE1;
+                            }
+                            else if(player3Pos.contains(x, y)){
+                                playerNum = 3;
+                                currPage = HOWTOPAGE1;
+                            }
+                            else if(player4Pos.contains(x, y)){
+                                playerNum = 4;
+                                currPage = HOWTOPAGE1;
+                            }
                         }
-                        else if(player2Pos.contains(x, y)){
-                            playerNum = 2;
-                            currPage = HOWTOPAGE1;
-                        }
-                        else if(player3Pos.contains(x, y)){
-                            playerNum = 3;
-                            currPage = HOWTOPAGE1;
-                        }
-                        else if(player4Pos.contains(x, y)){
-                            playerNum = 4;
-                            currPage = HOWTOPAGE1;
+                        else{
+                            currPage = MENUPAGE;
                         }
                         break;
                     case BATTLEGAMEPAGE:
@@ -1908,6 +2037,10 @@ public class MainView extends View {
         if(puzzleModePic != null && !puzzleModePic.isRecycled()){
             puzzleModePic.recycle();
             puzzleModePic = null;
+        }
+        if(disablePic != null && !disablePic.isRecycled()){
+            disablePic.recycle();
+            disablePic = null;
         }
         if(settingPic != null && !settingPic.isRecycled()){
             settingPic.recycle();
