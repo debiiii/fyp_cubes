@@ -55,12 +55,22 @@ public class GameManager {
 
     private static boolean restart = false;
 
+    private static boolean[][] questIsCubePresent = new boolean[MAXGRIDSNUM][MAXHEIGHTNUM];
+    private static boolean[][] ardIsCubePresent = new boolean[MAXGRIDSNUM][MAXHEIGHTNUM];
+
     public GameManager(){
 
         for(int i = 0; i < MAXGRIDSNUM; i++){
             playerFrontView[i] = 0;
             playerSideView[i] = 0;
             playerTopView[i] = 0;
+        }
+
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            for(int j = 0; j < MAXHEIGHTNUM; j++){
+                questIsCubePresent[i][j] = false;
+                ardIsCubePresent[i][j] = false;
+            }
         }
 
         for(int i = 0; i < questionBank2D3D.getQuestion2D3DsLength(); i++){
@@ -237,15 +247,15 @@ public class GameManager {
             case BUILD3DMODEL:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
-                        if(questionBank2D3D.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
+                        if(questIsCubePresent[i][j] != ardIsCubePresent[i][j]){
                             break;
                         }
                         else{
                             match++;
                         }
 
-                        Log.d("questionBank2D3D", String.valueOf(i) + " " + String.valueOf(j) + ": "+ String.valueOf(questionBank2D3D.getIsCubePresent(i, j)));
-                        Log.d("arduino", String.valueOf(i) + " " + String.valueOf(j) + ": " + String.valueOf(arduino.getIsCubePresent(i, j)));
+                        Log.d("questIsCubePresent", String.valueOf(i) + " " + String.valueOf(j) + ": "+ String.valueOf(questIsCubePresent[i][j]));
+                        Log.d("arduino", String.valueOf(i) + " " + String.valueOf(j) + ": " + String.valueOf(ardIsCubePresent[i][j]));
                     }
                 }
                 Log.d("match", String.valueOf(match));
@@ -256,7 +266,7 @@ public class GameManager {
             case SPTYPE3:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
-                        if(questionBank_spType3_ans.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
+                        if(questIsCubePresent[i][j] != ardIsCubePresent[i][j]){
                             break;
                         }
                         else{
@@ -369,5 +379,21 @@ public class GameManager {
 
     public int getSpType4Ans(){
         return spType4Ans;
+    }
+
+    public static void setQuestIsCubePresentTrue(int grid, int height){
+        questIsCubePresent[grid][height] = true;
+    }
+
+    public static void setQuestIsCubePresentFalse(int grid, int height){
+        questIsCubePresent[grid][height] = false;
+    }
+
+    public static void setArdIsCubePresentTrue(int grid, int height){
+        ardIsCubePresent[grid][height] = true;
+    }
+
+    public static void setArdIsCubePresentFalse(int grid, int height){
+        ardIsCubePresent[grid][height] = false;
     }
 }

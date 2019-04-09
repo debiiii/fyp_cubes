@@ -17,7 +17,11 @@
             android:name=".SplashScreenActivity"
             android:noHistory="true"
             android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".TurnOnBluetoothActivity"
@@ -30,11 +34,7 @@
         <activity
             android:name=".BluetoothActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".TempActivity"

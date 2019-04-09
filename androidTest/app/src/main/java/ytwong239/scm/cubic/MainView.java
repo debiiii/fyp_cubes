@@ -223,6 +223,9 @@ public class MainView extends View {
     private Bitmap tipBoxPic;
     private Rect tipBoxSrc;
     private Rect tipBoxPos;
+    private Bitmap tipBoxPic2;
+    private Rect tipBoxSrc2;
+    private Rect tipBoxPos2;
     private boolean tipIsShown = false;
 
     private Bitmap detectionIconPic;
@@ -486,6 +489,9 @@ public class MainView extends View {
 
         tipBoxPic = BitmapFactory.decodeResource(getResources(), R.drawable.tipsbox, opts);
         tipBoxSrc = new Rect(0,0, tipBoxPic.getWidth(), tipBoxPic.getHeight());
+
+        tipBoxPic2 = BitmapFactory.decodeResource(getResources(), R.drawable.tipsbox2, opts);
+        tipBoxSrc2 = new Rect(0,0, tipBoxPic2.getWidth(), tipBoxPic2.getHeight());
 
         detectionIconPic = BitmapFactory.decodeResource(getResources(), R.drawable.dectioncheckicon, opts);
         detectionIconSrc = new Rect(0,0, detectionIconPic.getWidth(), detectionIconPic.getHeight());
@@ -945,6 +951,14 @@ public class MainView extends View {
         bottom = top + height;
         tipBoxPos = new Rect(left, top, right, bottom);
 
+        width = w / 4;
+        height = (tipBoxPic2.getHeight() * width) / tipBoxPic2.getWidth();
+        left = 50;
+        top = h - height - 30;
+        right = left + width;
+        bottom = top + height;
+        tipBoxPos2 = new Rect(left, top, right, bottom);
+
         width = w / 15;
         height = (tipIconPic.getHeight() * width) / tipIconPic.getWidth();
         left = 50;
@@ -1240,6 +1254,9 @@ public class MainView extends View {
         //question title
         canvas.drawBitmap(qTitlePic[gameManager.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
 
+        //timer
+        drawTimer(canvas);
+
         switch (gameManager.getCurrQuestMode()){
             case DRAWFRONTVIEW:
                 OpenGLRenderer_3DModel.setCanDraw(true);
@@ -1279,7 +1296,6 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
                 drawModel(canvas);
-                drawTip(canvas);
                 break;
             case BUILD3DMODEL:
                 OpenGLRenderer_3DModel.setCanDraw(false);
@@ -1293,6 +1309,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
                 drawViews(canvas);
+                drawDetection(canvas);
                 break;
             case SPTYPE3:
                 OpenGLRenderer_3DModel.setCanDraw(false);
@@ -1306,6 +1323,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
                 drawSpType3(canvas);
+                drawDetection(canvas);
                 break;
             case SPTYPE4:
                 OpenGLRenderer_3DModel.setCanDraw(false);
@@ -1323,7 +1341,31 @@ public class MainView extends View {
 
         }
 
-        //timer
+        //answer btn
+        canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+
+        //tip icon
+        drawTip(canvas);
+
+        //restart the game
+        if(gameManager.getRestart()){
+            //save data
+            Puzzle.setPlayedRound(puzzle.getPlayedRound() + 1);
+            editor = sharedPreferences.edit();
+            editor.putInt(String.valueOf(R.integer.playedRound), puzzle.getPlayedRound());
+            editor.commit();
+
+            spType4PlayerChoice = 0;
+            resetDrawView();
+            resetTimer();
+            currPage = MENUPAGE;
+            gameManager.setRestartFalse();
+        }
+
+
+    }
+
+    private void drawTimer(Canvas canvas){
         if(!timeSetDone){
             gameManager.countDownTimer30s.start();
             timeSetDone = true;
@@ -1368,32 +1410,6 @@ public class MainView extends View {
         canvas.drawCircle(timeCirX1, timeCirY1, timeCirR, white);
         canvas.drawCircle(timeCirX2, timeCirY2, timeCirR, white);
         canvas.drawRect(timeRectPos, white);
-
-        //answer btn
-        canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
-
-        //tip icon
-        drawTip(canvas);
-
-        //detection check icon
-        drawDetection(canvas);
-
-        //restart the game
-        if(gameManager.getRestart()){
-            //save data
-            Puzzle.setPlayedRound(puzzle.getPlayedRound() + 1);
-            editor = sharedPreferences.edit();
-            editor.putInt(String.valueOf(R.integer.playedRound), puzzle.getPlayedRound());
-            editor.commit();
-
-            spType4PlayerChoice = 0;
-            resetDrawView();
-            resetTimer();
-            currPage = MENUPAGE;
-            gameManager.setRestartFalse();
-        }
-
-
     }
 
     private float remap(float value, float from1, float to1, float from2, float to2){
@@ -1589,7 +1605,12 @@ public class MainView extends View {
 
         if(timeRemapWidth == -1){
             if(tipIsShown){
-                canvas.drawBitmap(tipBoxPic, tipBoxSrc, tipBoxPos, null);
+                if(gameManager.getCurrQuestMode() == SPTYPE4){
+                    canvas.drawBitmap(tipBoxPic2, tipBoxSrc2, tipBoxPos2, null);
+                }
+                else{
+                    canvas.drawBitmap(tipBoxPic, tipBoxSrc, tipBoxPos, null);
+                }
                 OpenGLRenderer_Tips.setCanDraw(true);
 
                 switch (gameManager.getCurrQuestMode()){
@@ -1618,8 +1639,8 @@ public class MainView extends View {
                                 ans2 = "4th";
                                 break;
                         }
-                        canvas.drawText(ans + " or " + ans2, tipBoxPos.centerX(), tipBoxPos.centerY() - 30, tipFont);
-                        canvas.drawText("is the correct answer", tipBoxPos.centerX(), tipBoxPos.centerY() + 30, tipFont);
+                        canvas.drawText(ans + " or " + ans2, tipBoxPos2.centerX(), tipBoxPos2.centerY() - 30, tipFont);
+                        canvas.drawText("is the correct answer", tipBoxPos2.centerX(), tipBoxPos2.centerY() + 30, tipFont);
                         break;
                 }
             }
@@ -1742,6 +1763,46 @@ public class MainView extends View {
 
     }
 
+    private void updateGM(){
+        switch (gameManager.getCurrQuestMode()){
+            case BUILD3DMODEL:
+                for(int i = 0; i < MAXGRIDSNUM; i++){
+                    for(int j = 0; j < MAXHEIGHTNUM; j++){
+                        if(questionBank2D3D.getIsCubePresent(i, j)){
+                            GameManager.setQuestIsCubePresentTrue(i, j);
+                        }
+                        else{
+                            GameManager.setQuestIsCubePresentFalse(i, j);
+                        }
+                    }
+                }
+                break;
+            case SPTYPE3:
+                for(int i = 0; i < MAXGRIDSNUM; i++){
+                    for(int j = 0; j < MAXHEIGHTNUM; j++){
+                        if(questionBank_spType3_ans.getIsCubePresent(i, j)){
+                            GameManager.setQuestIsCubePresentTrue(i, j);
+                        }
+                        else{
+                            GameManager.setQuestIsCubePresentFalse(i, j);
+                        }
+                    }
+                }
+                break;
+        }
+
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            for(int j = 0; j < MAXHEIGHTNUM; j++){
+                if(arduino.getIsCubePresent(i, j)){
+                    GameManager.setArdIsCubePresentTrue(i, j);
+                }
+                else{
+                    GameManager.setArdIsCubePresentFalse(i, j);
+                }
+            }
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
@@ -1767,43 +1828,9 @@ public class MainView extends View {
                         if(answerPos.contains(x, y )){
                             if(gameManager.getCurrQuestNum() < MAXQUESTNUM){
                                 GameManager.setSpType4PlayerAns(spType4PlayerChoice);
+                                updateGM();
                                 gameManager.compare();
                                 resetDrawView();
-                                //-------here-----
-                                int match = 0;
-                                switch (gameManager.getCurrQuestMode()){
-                                    case BUILD3DMODEL:
-                                        for(int i = 0; i < MAXGRIDSNUM; i++){
-                                            for(int j = 0; j < MAXHEIGHTNUM; j++){
-                                                if(questionBank2D3D.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
-                                                    break;
-                                                }
-                                                else{
-                                                    match++;
-                                                }
-                                            }
-                                        }
-                                        if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
-                                            gameManager.nextQ();
-                                        }
-                                        break;
-                                    case SPTYPE3:
-                                        for(int i = 0; i < MAXGRIDSNUM; i++){
-                                            for(int j = 0; j < MAXHEIGHTNUM; j++){
-                                                if(questionBank_spType3_ans.getIsCubePresent(i, j) != arduino.getIsCubePresent(i,j)){
-                                                    break;
-                                                }
-                                                else{
-                                                    match++;
-                                                }
-                                            }
-                                        }
-                                        if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
-                                            gameManager.nextQ();
-                                        }
-                                        break;
-                                }
-                                //------here-------
                             }
                         }
 
