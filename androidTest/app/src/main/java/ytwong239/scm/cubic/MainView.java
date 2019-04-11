@@ -41,7 +41,7 @@ public class MainView extends View {
     private final static int HOWTOPAGE3 = 6;
     private final static int INFOPAGE = 7;
     private final static int PUZZLEPAGE = 8;
-    protected int currPage = MENUPAGE;
+    protected int currPage = BATTLEGAMEPAGE;
 
     private static final int MAXQUESTNUM = 6;
 
@@ -254,6 +254,34 @@ public class MainView extends View {
     private Bitmap puzzleTitlePic3;
     private Rect puzzleTitleSrc3;
     private Rect puzzleTitlePos3;
+
+    private Bitmap redPlayerBtnLPic;
+    private Rect redPlayerBtnLSrc;
+    private Rect redPlayerBtnLPos;
+
+    private Bitmap bluePlayerBtnLPic;
+    private Rect bluePlayerBtnLSrc;
+    private Rect bluePlayerBtnLPos;
+
+    private Bitmap greenPlayerBtnLPic;
+    private Rect greenPlayerBtnLSrc;
+    private Rect greenPlayerBtnLPos;
+
+    private Bitmap redPlayerBtnSPic;
+    private Rect redPlayerBtnSSrc;
+    private Rect redPlayerBtnSPos;
+
+    private Bitmap bluePlayerBtnSPic;
+    private Rect bluePlayerBtnSSrc;
+    private Rect bluePlayerBtnSPos;
+
+    private Bitmap greenPlayerBtnSPic;
+    private Rect greenPlayerBtnSSrc;
+    private Rect greenPlayerBtnSPos;
+
+    private Bitmap purplePlayerBtnSPic;
+    private Rect purplePlayerBtnSSrc;
+    private Rect purplePlayerBtnSPos;
 
     private Bitmap Pic;
     private Rect Src;
@@ -513,6 +541,27 @@ public class MainView extends View {
 
         puzzleTitlePic3 = BitmapFactory.decodeResource(getResources(), R.drawable.tworoundequal, opts);
         puzzleTitleSrc3 = new Rect(0,0, puzzleTitlePic3.getWidth(), puzzleTitlePic3.getHeight());
+
+        redPlayerBtnLPic = BitmapFactory.decodeResource(getResources(), R.drawable.redl, opts);
+        redPlayerBtnLSrc = new Rect(0,0, redPlayerBtnLPic.getWidth(), redPlayerBtnLPic.getHeight());
+
+        bluePlayerBtnLPic = BitmapFactory.decodeResource(getResources(), R.drawable.bluel, opts);
+        bluePlayerBtnLSrc = new Rect(0,0, bluePlayerBtnLPic.getWidth(), bluePlayerBtnLPic.getHeight());
+
+        greenPlayerBtnLPic = BitmapFactory.decodeResource(getResources(), R.drawable.greenl, opts);
+        greenPlayerBtnLSrc = new Rect(0,0, greenPlayerBtnLPic.getWidth(), greenPlayerBtnLPic.getHeight());
+
+        redPlayerBtnSPic = BitmapFactory.decodeResource(getResources(), R.drawable.reds, opts);
+        redPlayerBtnSSrc = new Rect(0,0, redPlayerBtnSPic.getWidth(), redPlayerBtnSPic.getHeight());
+
+        bluePlayerBtnSPic = BitmapFactory.decodeResource(getResources(), R.drawable.blues, opts);
+        bluePlayerBtnSSrc = new Rect(0,0, bluePlayerBtnSPic.getWidth(), bluePlayerBtnSPic.getHeight());
+
+        greenPlayerBtnSPic = BitmapFactory.decodeResource(getResources(), R.drawable.greens, opts);
+        greenPlayerBtnSSrc = new Rect(0,0, greenPlayerBtnSPic.getWidth(), greenPlayerBtnSPic.getHeight());
+
+        purplePlayerBtnSPic = BitmapFactory.decodeResource(getResources(), R.drawable.purples, opts);
+        purplePlayerBtnSSrc = new Rect(0,0, purplePlayerBtnSPic.getWidth(), purplePlayerBtnSPic.getHeight());
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -1045,6 +1094,46 @@ public class MainView extends View {
             bottom = top + height;
             puzzleCoverPos[i] = new Rect(left, top, right, bottom);
         }
+
+        width = w / 11 + w / 4224;
+        height = (redPlayerBtnLPic.getHeight() * width) / redPlayerBtnLPic.getWidth();
+        left = 0;
+        top = h / 2 - height / 2;
+        right = left + width;
+        bottom = top + height;
+        redPlayerBtnLPos = new Rect(left, top, right, bottom);
+
+        width = w / 11 + w / 4224;
+        height = (bluePlayerBtnLPic.getHeight() * width) / bluePlayerBtnLPic.getWidth();
+        left = w - width;
+        top = h / 2 - height / 2;
+        right = left + width;
+        bottom = top + height;
+        bluePlayerBtnLPos = new Rect(left, top, right, bottom);
+
+        width = bluePlayerBtnLPos.height();
+        height = (greenPlayerBtnLPic.getHeight() * width) / greenPlayerBtnLPic.getWidth();
+        left = w / 2 - width / 2;
+        top = h - height;
+        right = left + width;
+        bottom = top + height;
+        greenPlayerBtnLPos = new Rect(left, top, right, bottom);
+
+        width = w / 11 + w / 4224;
+        height = (redPlayerBtnSPic.getHeight() * width) / redPlayerBtnSPic.getWidth();
+        left = 0;
+        top = qTitlePos.bottom;
+        right = left + width;
+        bottom = top + height;
+        redPlayerBtnSPos = new Rect(left, top, right, bottom);
+
+        width = w / 11 + w / 4224;
+        height = (bluePlayerBtnSPic.getHeight() * width) / bluePlayerBtnSPic.getWidth();
+        left = 0;
+        top = h - height;
+        right = left + width;
+        bottom = top + height;
+        bluePlayerBtnSPos = new Rect(left, top, right, bottom);
 
 
     }
@@ -1675,10 +1764,17 @@ public class MainView extends View {
     }
 
     private void drawBattleGamePage(Canvas canvas){
-        Paint p = new Paint(Color.BLACK);
-        p.setTextSize(100);
-        canvas.drawText("Battle", 100, 100, p);
+        canvas.drawBitmap(qTitlePic[gameManager.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
 
+        drawViews(canvas);
+        drawTimer(canvas);
+
+        //canvas.drawBitmap(redPlayerBtnLPic, redPlayerBtnLSrc, redPlayerBtnLPos, null);
+        canvas.drawBitmap(bluePlayerBtnLPic, bluePlayerBtnLSrc, bluePlayerBtnLPos, null);
+        canvas.drawBitmap(greenPlayerBtnLPic, greenPlayerBtnLSrc, greenPlayerBtnLPos, null);
+
+        canvas.drawBitmap(redPlayerBtnSPic, redPlayerBtnSSrc, redPlayerBtnSPos, null);
+        canvas.drawBitmap(bluePlayerBtnSPic, bluePlayerBtnSSrc, bluePlayerBtnSPos, null);
     }
 
     private void drawDebug(Canvas canvas) {
@@ -1924,6 +2020,10 @@ public class MainView extends View {
                         }
                         break;
                     case BATTLEGAMEPAGE:
+                        if(bluePlayerBtnLPos.contains(x, y)){
+                            Log.d("sfsdf", "sffsd");
+                        }
+
                         break;
                     case HOWTOPAGE1:
                         if(backPos.contains(x, y)){
@@ -2199,7 +2299,34 @@ public class MainView extends View {
             tipBoxPic.recycle();
             tipBoxPic = null;
         }
-
+        if(detectionIconPic != null && !detectionIconPic.isRecycled()){
+            detectionIconPic.recycle();
+            detectionIconPic = null;
+        }
+        if(detectionBoxPic != null && !detectionBoxPic.isRecycled()){
+            detectionBoxPic.recycle();
+            detectionBoxPic = null;
+        }
+        if(detectionModelBkgPic != null && !detectionModelBkgPic.isRecycled()){
+            detectionModelBkgPic.recycle();
+            detectionModelBkgPic = null;
+        }
+        if(puzzlePic != null && !puzzlePic.isRecycled()){
+            puzzlePic.recycle();
+            puzzlePic = null;
+        }
+        if(puzzleTitlePic1 != null && !puzzleTitlePic1.isRecycled()){
+            puzzleTitlePic1.recycle();
+            puzzleTitlePic1 = null;
+        }
+        if(puzzleTitlePic2 != null && !puzzleTitlePic2.isRecycled()){
+            puzzleTitlePic2.recycle();
+            puzzleTitlePic2 = null;
+        }
+        if(puzzleTitlePic3 != null && !puzzleTitlePic3.isRecycled()){
+            puzzleTitlePic3.recycle();
+            puzzleTitlePic3 = null;
+        }
 
     }
 }
