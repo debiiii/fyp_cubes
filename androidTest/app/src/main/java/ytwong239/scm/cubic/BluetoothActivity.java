@@ -326,6 +326,9 @@ public class BluetoothActivity extends AppCompatActivity {
             case PUZZLEPAGE:
                 mainView.currPage = MENUPAGE;
                 break;
+            case BATTLEGAMEPAGE:
+                mainView.currPage = MENUPAGE;
+                break;
         }
     }
 

@@ -41,7 +41,7 @@ public class MainView extends View {
     private final static int HOWTOPAGE3 = 6;
     private final static int INFOPAGE = 7;
     private final static int PUZZLEPAGE = 8;
-    protected int currPage = BATTLEGAMEPAGE;
+    protected int currPage = MENUPAGE;
 
     private static final int MAXQUESTNUM = 6;
 
@@ -58,6 +58,13 @@ public class MainView extends View {
     private static final int MAXHEIGHTNUM = 3;
 
     private static final int PUZZLEPIECENUM = 8;
+
+    private static final int QUESTSTAGE = 0;
+    private static final int REDANSWERSTAGE = 1;
+    private static final int BLUEANSWERSTAGE = 2;
+    private static final int GREENANSWERSTAGE = 3;
+    private static final int PURPLEANSWERSTAGE = 4;
+    private static final int RESULTSTAGE = 5;
 
     private int canvasW;
     private int canvasH;
@@ -289,12 +296,13 @@ public class MainView extends View {
 
     private int lastX = 0;
 
-    private GameManager gameManager = new GameManager();
+    private GameManager_PracticeMode gameManagerPracticeMode = new GameManager_PracticeMode();
     private QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
     private QuestionBank_SPType3_Ans questionBank_spType3_ans = new QuestionBank_SPType3_Ans();
     private Tips_SPType3 tips_spType3 = new Tips_SPType3();
     private Arduino arduino = new Arduino();
     private Puzzle puzzle = new Puzzle();
+    private GameManager_BattleMode gameManagerBattleMode = new GameManager_BattleMode();
 
     private Paint whiteStroke = new Paint();
     private Paint lightOrange = new Paint();
@@ -305,6 +313,14 @@ public class MainView extends View {
     private Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
     private Paint blackStroke = new Paint();
     private Paint coverPaint = new Paint();
+    private Paint red = new Paint();
+    private Paint blue = new Paint();
+    private Paint green = new Paint();
+    private Paint purple = new Paint();
+    private Paint redStroke = new Paint();
+    private Paint blueStroke = new Paint();
+    private Paint greenStroke = new Paint();
+    private Paint purpleStroke = new Paint();
 
     private Typeface aldrich;
     private Typeface myriad;
@@ -402,6 +418,27 @@ public class MainView extends View {
             drawViewPaint[i].setColor(lightOrange.getColor());
             drawViewTouch[i] = false;
         }
+
+        red.setColor(Color.rgb(224,78,78));
+        blue.setColor(Color.rgb(82,167,199));
+        green.setColor(Color.rgb(66,160,80));
+        purple.setColor(Color.rgb(152,84,188));
+
+        redStroke.setStyle(Paint.Style.STROKE);
+        redStroke.setColor(red.getColor());
+        redStroke.setStrokeWidth(40);
+
+        blueStroke.setStyle(Paint.Style.STROKE);
+        blueStroke.setColor(blue.getColor());
+        blueStroke.setStrokeWidth(40);
+
+        greenStroke.setStyle(Paint.Style.STROKE);
+        greenStroke.setColor(green.getColor());
+        greenStroke.setStrokeWidth(40);
+
+        purpleStroke.setStyle(Paint.Style.STROKE);
+        purpleStroke.setColor(purple.getColor());
+        purpleStroke.setStrokeWidth(40);
 
     }
 
@@ -1135,6 +1172,22 @@ public class MainView extends View {
         bottom = top + height;
         bluePlayerBtnSPos = new Rect(left, top, right, bottom);
 
+        width = w / 11 + w / 4224;
+        height = (greenPlayerBtnSPic.getHeight() * width) / greenPlayerBtnSPic.getWidth();
+        left = w - width;
+        top = qTitlePos.bottom;
+        right = left + width;
+        bottom = top + height;
+        greenPlayerBtnSPos = new Rect(left, top, right, bottom);
+
+        width = w / 11 + w / 4224;
+        height = (purplePlayerBtnSPic.getHeight() * width) / purplePlayerBtnSPic.getWidth();
+        left = w - width;
+        top = h - height;
+        right = left + width;
+        bottom = top + height;
+        purplePlayerBtnSPos = new Rect(left, top, right, bottom);
+
 
     }
 
@@ -1176,15 +1229,6 @@ public class MainView extends View {
                 drawBattleNumPage(canvas);
                 break;
             case BATTLEGAMEPAGE:
-                OpenGLRenderer_3DModel.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                OpenGLRenderer_SPType4_Base.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
                 OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawBattleGamePage(canvas);
@@ -1270,6 +1314,12 @@ public class MainView extends View {
 
         forArduino();
 
+
+        canvas.drawText("R: " + gameManagerBattleMode.getRedScore(), redPlayerBtnSPos.right + 30, redPlayerBtnSPos.top, tipFont);
+        canvas.drawText("B: " + gameManagerBattleMode.getBlueScore(), bluePlayerBtnSPos.right + 30, bluePlayerBtnSPos.top, tipFont);
+        canvas.drawText("G: " + gameManagerBattleMode.getGreenScore(), greenPlayerBtnSPos.left - 30, greenPlayerBtnSPos.top, tipFont);
+        canvas.drawText("P: " + gameManagerBattleMode.getPurpleScore(), purplePlayerBtnSPos.left - 30, purplePlayerBtnSPos.top, tipFont);
+
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -1341,12 +1391,12 @@ public class MainView extends View {
     private void drawPracticeGamePage(Canvas canvas){
 
         //question title
-        canvas.drawBitmap(qTitlePic[gameManager.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
+        canvas.drawBitmap(qTitlePic[gameManagerPracticeMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
 
         //timer
-        drawTimer(canvas);
+        drawTimerPracticeMode(canvas);
 
-        switch (gameManager.getCurrQuestMode()){
+        switch (gameManagerPracticeMode.getCurrQuestMode()){
             case DRAWFRONTVIEW:
                 OpenGLRenderer_3DModel.setCanDraw(true);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
@@ -1358,7 +1408,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formFrontViewPic, qTitleSrc, qTitlePos, null);
-                drawModel(canvas);
+                drawModelPracticeMode(canvas);
                 break;
             case DRAWSIDEVIEW:
                 OpenGLRenderer_3DModel.setCanDraw(true);
@@ -1371,7 +1421,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
-                drawModel(canvas);
+                drawModelPracticeMode(canvas);
                 break;
             case DRAWTOPVIEW:
                 OpenGLRenderer_3DModel.setCanDraw(true);
@@ -1384,7 +1434,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
-                drawModel(canvas);
+                drawModelPracticeMode(canvas);
                 break;
             case BUILD3DMODEL:
                 OpenGLRenderer_3DModel.setCanDraw(false);
@@ -1397,7 +1447,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
-                drawViews(canvas);
+                drawViewsPracticeMode(canvas);
                 drawDetection(canvas);
                 break;
             case SPTYPE3:
@@ -1425,7 +1475,7 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
                 canvas.drawBitmap(selectAnsPic, qTitleSrc, qTitlePos, null);
-                drawSpType4(canvas);
+                drawSpType4PracticeMode(canvas);
                 break;
 
         }
@@ -1437,7 +1487,7 @@ public class MainView extends View {
         drawTip(canvas);
 
         //restart the game
-        if(gameManager.getRestart()){
+        if(gameManagerPracticeMode.getRestart()){
             //save data
             Puzzle.setPlayedRound(puzzle.getPlayedRound() + 1);
             editor = sharedPreferences.edit();
@@ -1448,21 +1498,21 @@ public class MainView extends View {
             resetDrawView();
             resetTimer();
             currPage = MENUPAGE;
-            gameManager.setRestartFalse();
+            gameManagerPracticeMode.setRestartFalse();
         }
 
 
     }
 
-    private void drawTimer(Canvas canvas){
+    private void drawTimerPracticeMode(Canvas canvas){
         if(!timeSetDone){
-            gameManager.countDownTimer30s.start();
+            gameManagerPracticeMode.countDownTimer30s.start();
             timeSetDone = true;
         }
 
-        canvas.drawText(String.valueOf((int)gameManager.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
+        canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
 
-        timeRemapWidth = (int)remap(gameManager.getTimeLeft30s(), gameManager.getTotalTime30s(), -1, timeFullWidth, -1);
+        timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeft30s(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
 
         //--more smooth timer. but will faster than word--
 //        if(timeCurrWidth > timeRemapWidth){
@@ -1489,7 +1539,7 @@ public class MainView extends View {
             timeCirX2 = timeRectPos.right;
         }
 
-        if(gameManager.getResetTimer()){
+        if(gameManagerPracticeMode.getResetTimer()){
             //close the tips and detection check when next question
             OpenGLRenderer_Tips.setCanDraw(false);
             OpenGLRenderer_DetectionCheck.setCanDraw(false);
@@ -1505,7 +1555,7 @@ public class MainView extends View {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
 
-    private void drawViews(Canvas canvas){
+    private void drawViewsPracticeMode(Canvas canvas){
         //top, side, front word
         canvas.drawBitmap(qTopPic, qTopSrc, qTopPos, null);
         canvas.drawBitmap(qSidePic, qSideSrc, qSidePos, null);
@@ -1550,7 +1600,7 @@ public class MainView extends View {
 
     }
 
-    private void drawModel(Canvas canvas){
+    private void drawModelPracticeMode(Canvas canvas){
 
         //model word
         canvas.drawBitmap(modelPic, modelSrc, modelPos, null);
@@ -1559,7 +1609,7 @@ public class MainView extends View {
         canvas.drawBitmap(qModelBkgPic, qModelBkgSrc, qModelPos, null);
 
         //draw view word label
-        switch (gameManager.getCurrQuestMode()){
+        switch (gameManagerPracticeMode.getCurrQuestMode()){
             case DRAWFRONTVIEW:
                 canvas.drawBitmap(qFrontPic, qFrontSrc, drawViewFrontPos, null);
                 break;
@@ -1583,29 +1633,29 @@ public class MainView extends View {
 
             if(drawViewTouch[i]){
                 drawViewPaint[i].setColor(darkOrange.getColor());
-                switch (gameManager.getCurrQuestMode()){
+                switch (gameManagerPracticeMode.getCurrQuestMode()){
                     case DRAWFRONTVIEW:
-                        gameManager.setPlayerFrontView(i);
+                        gameManagerPracticeMode.setPlayerFrontView(i);
                         break;
                     case DRAWSIDEVIEW:
-                        gameManager.setPlayerSideView(i);
+                        gameManagerPracticeMode.setPlayerSideView(i);
                         break;
                     case DRAWTOPVIEW:
-                        gameManager.setPlayerTopView(i);
+                        gameManagerPracticeMode.setPlayerTopView(i);
                         break;
                 }
             }
             else{
                 drawViewPaint[i].setColor(lightOrange.getColor());
-                switch (gameManager.getCurrQuestMode()){
+                switch (gameManagerPracticeMode.getCurrQuestMode()){
                     case DRAWFRONTVIEW:
-                        gameManager.clearPlayerFrontView(i);
+                        gameManagerPracticeMode.clearPlayerFrontView(i);
                         break;
                     case DRAWSIDEVIEW:
-                        gameManager.clearPlayerSideView(i);
+                        gameManagerPracticeMode.clearPlayerSideView(i);
                         break;
                     case DRAWTOPVIEW:
-                        gameManager.clearPlayerTopView(i);
+                        gameManagerPracticeMode.clearPlayerTopView(i);
                         break;
                 }
             }
@@ -1613,9 +1663,6 @@ public class MainView extends View {
             canvas.drawRect(drawViewPos2[i].left, drawViewPos2[i].top, drawViewPos2[i].right,  drawViewPos2[i].bottom, whiteStroke);
             canvas.drawRect(drawViewPos2[i].left, drawViewPos2[i].top, drawViewPos2[i].right,  drawViewPos2[i].bottom, drawViewPaint[i]);
         }
-
-
-
 
     }
 
@@ -1631,7 +1678,7 @@ public class MainView extends View {
         canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType3Pos_quest, null);
     }
 
-    private void drawSpType4(Canvas canvas){
+    private void drawSpType4PracticeMode(Canvas canvas){
         //sp type 4 question
         canvas.drawBitmap(spType4QPic, spType4QSrc, spType4QPos, null);
         canvas.drawRect(spType4Pos_base.right, spType4Pos_base.top, spType4Pos_base.right + 5, spType4Pos_base.bottom, white);
@@ -1694,7 +1741,7 @@ public class MainView extends View {
 
         if(timeRemapWidth == -1){
             if(tipIsShown){
-                if(gameManager.getCurrQuestMode() == SPTYPE4){
+                if(gameManagerPracticeMode.getCurrQuestMode() == SPTYPE4){
                     canvas.drawBitmap(tipBoxPic2, tipBoxSrc2, tipBoxPos2, null);
                 }
                 else{
@@ -1702,7 +1749,7 @@ public class MainView extends View {
                 }
                 OpenGLRenderer_Tips.setCanDraw(true);
 
-                switch (gameManager.getCurrQuestMode()){
+                switch (gameManagerPracticeMode.getCurrQuestMode()){
                     case SPTYPE3:
                         canvas.drawText(tips_spType3.getString(), tipBoxPos.centerX(), tipBoxPos.centerY(), tipFont);
                         break;
@@ -1710,7 +1757,7 @@ public class MainView extends View {
                     case SPTYPE4:
                         String ans = "";
                         String ans2 = "";
-                        switch (gameManager.getSpType4Ans()){
+                        switch (gameManagerPracticeMode.getSpType4Ans()){
                             case 0:
                                 ans = "1st";
                                 ans2 = "4th";
@@ -1764,17 +1811,421 @@ public class MainView extends View {
     }
 
     private void drawBattleGamePage(Canvas canvas){
-        canvas.drawBitmap(qTitlePic[gameManager.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
 
-        drawViews(canvas);
-        drawTimer(canvas);
+        switch (gameManagerBattleMode.getCurrStage()){
+            case QUESTSTAGE:
+                canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
+                switch (playerNum){
+                    case 2:
+                        canvas.drawBitmap(redPlayerBtnLPic, redPlayerBtnLSrc, redPlayerBtnLPos, null);
+                        canvas.drawBitmap(bluePlayerBtnLPic, bluePlayerBtnLSrc, bluePlayerBtnLPos, null);
+                        break;
+                    case 3:
+                        canvas.drawBitmap(redPlayerBtnLPic, redPlayerBtnLSrc, redPlayerBtnLPos, null);
+                        canvas.drawBitmap(bluePlayerBtnLPic, bluePlayerBtnLSrc, bluePlayerBtnLPos, null);
+                        canvas.drawBitmap(greenPlayerBtnLPic, greenPlayerBtnLSrc, greenPlayerBtnLPos, null);
+                        break;
+                    case 4:
+                        canvas.drawBitmap(redPlayerBtnSPic, redPlayerBtnSSrc, redPlayerBtnSPos, null);
+                        canvas.drawBitmap(bluePlayerBtnSPic, bluePlayerBtnSSrc, bluePlayerBtnSPos, null);
+                        canvas.drawBitmap(greenPlayerBtnSPic, greenPlayerBtnSSrc, greenPlayerBtnSPos, null);
+                        canvas.drawBitmap(purplePlayerBtnSPic, purplePlayerBtnSSrc, purplePlayerBtnSPos, null);
+                        break;
+                }
+                break;
+            case REDANSWERSTAGE:
+                canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
+                canvas.drawRect(0, 0, canvasW, canvasH, redStroke);
+                canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+                break;
+            case BLUEANSWERSTAGE:
+                canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
+                canvas.drawRect(0, 0, canvasW, canvasH, blueStroke);
+                canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+                break;
+            case GREENANSWERSTAGE:
+                canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
+                canvas.drawRect(0, 0, canvasW, canvasH, greenStroke);
+                canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+                break;
+            case PURPLEANSWERSTAGE:
+                canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
+                canvas.drawRect(0, 0, canvasW, canvasH, purpleStroke);
+                canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+                break;
+            case RESULTSTAGE:
+                break;
+        }
 
-        //canvas.drawBitmap(redPlayerBtnLPic, redPlayerBtnLSrc, redPlayerBtnLPos, null);
-        canvas.drawBitmap(bluePlayerBtnLPic, bluePlayerBtnLSrc, bluePlayerBtnLPos, null);
-        canvas.drawBitmap(greenPlayerBtnLPic, greenPlayerBtnLSrc, greenPlayerBtnLPos, null);
+        //timer
+        drawTimerBattleMode(canvas);
 
-        canvas.drawBitmap(redPlayerBtnSPic, redPlayerBtnSSrc, redPlayerBtnSPos, null);
-        canvas.drawBitmap(bluePlayerBtnSPic, bluePlayerBtnSSrc, bluePlayerBtnSPos, null);
+        switch (gameManagerBattleMode.getCurrQuestMode()){
+            case DRAWFRONTVIEW:
+                OpenGLRenderer_3DModel.setCanDraw(true);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                canvas.drawBitmap(formFrontViewPic, qTitleSrc, qTitlePos, null);
+                drawModelBattleMode(canvas);
+                break;
+            case DRAWSIDEVIEW:
+                OpenGLRenderer_3DModel.setCanDraw(true);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
+                drawModelBattleMode(canvas);
+                break;
+            case DRAWTOPVIEW:
+                OpenGLRenderer_3DModel.setCanDraw(true);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
+                drawModelBattleMode(canvas);
+                break;
+            case BUILD3DMODEL:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
+                drawViewsBattleMode(canvas);
+                if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
+                    drawDetection(canvas);
+                }
+                break;
+            case SPTYPE3:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(true);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(true);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(true);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
+                drawSpType3(canvas);
+                if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
+                    drawDetection(canvas);
+                }
+                break;
+            case SPTYPE4:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(true);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
+                canvas.drawBitmap(selectAnsPic, qTitleSrc, qTitlePos, null);
+                drawSpType4BattleMode(canvas);
+                break;
+            case -1:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                break;
+        }
+
+        if(gameManagerBattleMode.getRestart()){
+            spType4PlayerChoice = 0;
+            resetDrawView();
+            resetTimer();
+            currPage = MENUPAGE;
+            gameManagerBattleMode.setRestartFalse();
+        }
+
+    }
+
+    private void drawTimerBattleMode(Canvas canvas){
+        if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
+            if(!timeSetDone){
+                gameManagerBattleMode.countDownTimer10s.start();
+                timeSetDone = true;
+            }
+
+            canvas.drawText(String.valueOf((int)gameManagerBattleMode.getTimeLeft10s() / 1000), timeTxtX, timeTxtY, font);
+
+            timeRemapWidth = (int)remap(gameManagerBattleMode.getTimeLeft10s(), gameManagerBattleMode.getTotalTime10s(), -1, timeFullWidth, -1);
+
+            if(timeRemapWidth == -1){
+                timeCirR = 0;
+                timeRectPos.right = 0;
+            }else{
+                timeRectPos.right = timeRectPos.left + timeRemapWidth;
+                timeCirX2 = timeRectPos.right;
+            }
+
+            canvas.drawCircle(timeCirX1, timeCirY1, timeCirR, white);
+            canvas.drawCircle(timeCirX2, timeCirY2, timeCirR, white);
+            canvas.drawRect(timeRectPos, white);
+
+        }
+        else if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
+            if(!timeSetDone){
+                gameManagerBattleMode.countDownTimer30s.start();
+                timeSetDone = true;
+            }
+
+            canvas.drawText(String.valueOf((int)gameManagerBattleMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
+
+            timeRemapWidth = (int)remap(gameManagerBattleMode.getTimeLeft30s(), gameManagerBattleMode.getTotalTime30s(), -1, timeFullWidth, -1);
+
+            if(timeRemapWidth == -1){
+                timeCirR = 0;
+                timeRectPos.right = 0;
+            }else{
+                timeRectPos.right = timeRectPos.left + timeRemapWidth;
+                timeCirX2 = timeRectPos.right;
+            }
+
+            canvas.drawCircle(timeCirX1, timeCirY1, timeCirR, white);
+            canvas.drawCircle(timeCirX2, timeCirY2, timeCirR, white);
+            canvas.drawRect(timeRectPos, white);
+        }
+
+        if(gameManagerBattleMode.getResetTimer10s()){
+            resetTimer();
+        }
+
+        if(gameManagerBattleMode.getResetTimer30s()){
+            resetTimer();
+        }
+
+    }
+
+    private void drawViewsBattleMode(Canvas canvas){
+        //top, side, front word
+        canvas.drawBitmap(qTopPic, qTopSrc, qTopPos, null);
+        canvas.drawBitmap(qSidePic, qSideSrc, qSidePos, null);
+        canvas.drawBitmap(qFrontPic, qFrontSrc, qFrontPos, null);
+
+        //rectangle front side top view
+        int row = 0;
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                if(questionBank2D3D.getFrontView(row + j) == 1){
+                    canvas.drawRect( qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width() , whiteStroke);
+                    canvas.drawRect(qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width(), darkOrange);
+                }
+                else{
+                    canvas.drawRect( qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width() , whiteStroke);
+                    canvas.drawRect(qFrontViewPos.left + j * qFrontViewPos.width(), qFrontViewPos.top + i * qFrontViewPos.width(), qFrontViewPos.right + j * qFrontViewPos.width(), qFrontViewPos.bottom + i * qFrontViewPos.width(), lightOrange);
+                }
+
+                if(questionBank2D3D.getSideView(row + j) == 1){
+                    canvas.drawRect( qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width() , whiteStroke);
+                    canvas.drawRect(qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width(), darkOrange);
+                }
+                else{
+                    canvas.drawRect( qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width() , whiteStroke);
+                    canvas.drawRect(qSideViewPos.left + j * qSideViewPos.width(), qSideViewPos.top + i * qSideViewPos.width(), qSideViewPos.right + j * qSideViewPos.width(), qSideViewPos.bottom + i * qSideViewPos.width(), lightOrange);
+                }
+
+                if(questionBank2D3D.getTopView(row + j) == 1){
+                    canvas.drawRect( qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width() , whiteStroke);
+                    canvas.drawRect(qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width(), darkOrange);
+                }
+                else{
+                    canvas.drawRect( qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width() , whiteStroke);
+                    canvas.drawRect(qTopViewPos.left + j * qTopViewPos.width(), qTopViewPos.top + i * qTopViewPos.width(), qTopViewPos.right + j * qTopViewPos.width(), qTopViewPos.bottom + i * qTopViewPos.width(), lightOrange);
+                }
+
+                if(j == 2){
+                    row += 3;
+                }
+            }
+        }
+    }
+
+    private void drawModelBattleMode(Canvas canvas){
+        //model word
+        canvas.drawBitmap(modelPic, modelSrc, modelPos, null);
+
+        //3d model
+        canvas.drawBitmap(qModelBkgPic, qModelBkgSrc, qModelPos, null);
+
+        //draw view word label
+        switch (gameManagerPracticeMode.getCurrQuestMode()){
+            case DRAWFRONTVIEW:
+                canvas.drawBitmap(qFrontPic, qFrontSrc, drawViewFrontPos, null);
+                break;
+            case DRAWSIDEVIEW:
+                canvas.drawBitmap(qSidePic, qSideSrc, drawViewSidePos, null);
+                break;
+            case DRAWTOPVIEW:
+                canvas.drawBitmap(qTopPic, qTopSrc, drawViewTopPos, null);
+                break;
+        }
+
+        //clear the player draw view when user hold the button
+        if(drawViewTouchCount > 5){
+            for(int i = 0; i < drawViewPos2.length; i++){
+                drawViewTouch[i] = false;
+            }
+        }
+
+        //player draw view rectangle
+        for(int i = 0; i < drawViewPos2.length; i++){
+
+            if(drawViewTouch[i]){
+                switch (gameManagerBattleMode.getCurrStage()){
+                    case QUESTSTAGE:
+                        drawViewPaint[i].setColor(darkOrange.getColor());
+                        break;
+                    case REDANSWERSTAGE:
+                        drawViewPaint[i].setColor(red.getColor());
+                        break;
+                    case BLUEANSWERSTAGE:
+                        drawViewPaint[i].setColor(blue.getColor());
+                        break;
+                    case GREENANSWERSTAGE:
+                        drawViewPaint[i].setColor(green.getColor());
+                        break;
+                    case PURPLEANSWERSTAGE:
+                        drawViewPaint[i].setColor(purple.getColor());
+                        break;
+                }
+                switch (gameManagerBattleMode.getCurrQuestMode()){
+                    case DRAWFRONTVIEW:
+                        gameManagerBattleMode.setPlayerFrontView(i);
+                        break;
+                    case DRAWSIDEVIEW:
+                        gameManagerBattleMode.setPlayerSideView(i);
+                        break;
+                    case DRAWTOPVIEW:
+                        gameManagerBattleMode.setPlayerTopView(i);
+                        break;
+                }
+            }
+            else{
+                drawViewPaint[i].setColor(lightOrange.getColor());
+                switch (gameManagerBattleMode.getCurrQuestMode()){
+                    case DRAWFRONTVIEW:
+                        gameManagerBattleMode.clearPlayerFrontView(i);
+                        break;
+                    case DRAWSIDEVIEW:
+                        gameManagerBattleMode.clearPlayerSideView(i);
+                        break;
+                    case DRAWTOPVIEW:
+                        gameManagerBattleMode.clearPlayerTopView(i);
+                        break;
+                }
+            }
+
+            canvas.drawRect(drawViewPos2[i].left, drawViewPos2[i].top, drawViewPos2[i].right,  drawViewPos2[i].bottom, whiteStroke);
+            canvas.drawRect(drawViewPos2[i].left, drawViewPos2[i].top, drawViewPos2[i].right,  drawViewPos2[i].bottom, drawViewPaint[i]);
+        }
+    }
+
+    private void drawSpType4BattleMode(Canvas canvas){
+        //sp type 4 question
+        canvas.drawBitmap(spType4QPic, spType4QSrc, spType4QPos, null);
+        canvas.drawRect(spType4Pos_base.right, spType4Pos_base.top, spType4Pos_base.right + 5, spType4Pos_base.bottom, white);
+
+        Paint paint = new Paint();
+        switch (gameManagerBattleMode.getCurrStage()){
+            case QUESTSTAGE:
+                paint.setColor(white.getColor());
+                break;
+            case REDANSWERSTAGE:
+                paint.setColor(red.getColor());
+                break;
+            case BLUEANSWERSTAGE:
+                paint.setColor(blue.getColor());
+                break;
+            case GREENANSWERSTAGE:
+                paint.setColor(green.getColor());
+                break;
+            case PURPLEANSWERSTAGE:
+                paint.setColor(purple.getColor());
+                break;
+        }
+
+
+        //player ans choice
+        switch (spType4PlayerChoice){
+            case 0:
+                Point a = new Point(spType4Pos0.left + spType4Pos0.width() / 2, spType4Pos0.bottom + 10);
+                Point b = new Point(a.x - 20, a.y + 30);
+                Point c = new Point(a.x + 20, a.y + 30);
+                Path path = new Path();
+                path.setFillType(Path.FillType.EVEN_ODD);
+                path.moveTo(b.x, b.y);
+                path.lineTo(c.x, c.y);
+                path.lineTo(a.x, a.y);
+                path.close();
+                canvas.drawPath(path, paint);
+                break;
+            case 1:
+                Point a1 = new Point(spType4Pos1.left + spType4Pos1.width() / 2, spType4Pos1.bottom + 10);
+                Point b1 = new Point(a1.x - 20, a1.y + 30);
+                Point c1 = new Point(a1.x + 20, a1.y + 30);
+                Path path1 = new Path();
+                path1.setFillType(Path.FillType.EVEN_ODD);
+                path1.moveTo(b1.x, b1.y);
+                path1.lineTo(c1.x, c1.y);
+                path1.lineTo(a1.x, a1.y);
+                path1.close();
+                canvas.drawPath(path1, paint);
+                break;
+            case 2:
+                Point a2 = new Point(spType4Pos2.left + spType4Pos2.width() / 2, spType4Pos2.bottom + 10);
+                Point b2 = new Point(a2.x - 20, a2.y + 30);
+                Point c2 = new Point(a2.x + 20, a2.y + 30);
+                Path path2 = new Path();
+                path2.setFillType(Path.FillType.EVEN_ODD);
+                path2.moveTo(b2.x, b2.y);
+                path2.lineTo(c2.x, c2.y);
+                path2.lineTo(a2.x, a2.y);
+                path2.close();
+                canvas.drawPath(path2, paint);
+                break;
+            case 3:
+                Point a3 = new Point(spType4Pos3.left + spType4Pos3.width() / 2, spType4Pos3.bottom + 10);
+                Point b3 = new Point(a3.x - 20, a3.y + 30);
+                Point c3 = new Point(a3.x + 20, a3.y + 30);
+                Path path3 = new Path();
+                path3.setFillType(Path.FillType.EVEN_ODD);
+                path3.moveTo(b3.x, b3.y);
+                path3.lineTo(c3.x, c3.y);
+                path3.lineTo(a3.x, a3.y);
+                path3.close();
+                canvas.drawPath(path3, paint);
+                break;
+        }
+
     }
 
     private void drawDebug(Canvas canvas) {
@@ -1860,15 +2311,15 @@ public class MainView extends View {
     }
 
     private void updateGM(){
-        switch (gameManager.getCurrQuestMode()){
+        switch (gameManagerPracticeMode.getCurrQuestMode()){
             case BUILD3DMODEL:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
                         if(questionBank2D3D.getIsCubePresent(i, j)){
-                            GameManager.setQuestIsCubePresentTrue(i, j);
+                            gameManagerPracticeMode.setQuestIsCubePresentTrue(i, j);
                         }
                         else{
-                            GameManager.setQuestIsCubePresentFalse(i, j);
+                            gameManagerPracticeMode.setQuestIsCubePresentFalse(i, j);
                         }
                     }
                 }
@@ -1877,10 +2328,10 @@ public class MainView extends View {
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
                         if(questionBank_spType3_ans.getIsCubePresent(i, j)){
-                            GameManager.setQuestIsCubePresentTrue(i, j);
+                            gameManagerPracticeMode.setQuestIsCubePresentTrue(i, j);
                         }
                         else{
-                            GameManager.setQuestIsCubePresentFalse(i, j);
+                            gameManagerPracticeMode.setQuestIsCubePresentFalse(i, j);
                         }
                     }
                 }
@@ -1890,10 +2341,10 @@ public class MainView extends View {
         for(int i = 0; i < MAXGRIDSNUM; i++){
             for(int j = 0; j < MAXHEIGHTNUM; j++){
                 if(arduino.getIsCubePresent(i, j)){
-                    GameManager.setArdIsCubePresentTrue(i, j);
+                    gameManagerPracticeMode.setArdIsCubePresentTrue(i, j);
                 }
                 else{
-                    GameManager.setArdIsCubePresentFalse(i, j);
+                    gameManagerPracticeMode.setArdIsCubePresentFalse(i, j);
                 }
             }
         }
@@ -1922,17 +2373,17 @@ public class MainView extends View {
                         break;
                     case PRACTICEGAMEPAGE:
                         if(answerPos.contains(x, y )){
-                            if(gameManager.getCurrQuestNum() < MAXQUESTNUM){
-                                GameManager.setSpType4PlayerAns(spType4PlayerChoice);
+                            if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM){
+                                gameManagerPracticeMode.setSpType4PlayerAns(spType4PlayerChoice);
                                 updateGM();
-                                gameManager.compare();
+                                gameManagerPracticeMode.compare();
                                 resetDrawView();
                             }
                         }
 
-                        if(gameManager.getCurrQuestMode() == DRAWFRONTVIEW ||
-                                gameManager.getCurrQuestMode() == DRAWSIDEVIEW ||
-                                gameManager.getCurrQuestMode() == DRAWTOPVIEW){
+                        if(gameManagerPracticeMode.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                gameManagerPracticeMode.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                gameManagerPracticeMode.getCurrQuestMode() == DRAWTOPVIEW){
                             for(int i = 0; i < drawViewPos2.length; i++){
                                 if(drawViewPos2[i].contains(x, y)){
                                     drawViewTouchCount = 0;
@@ -1941,7 +2392,7 @@ public class MainView extends View {
                             }
                         }
 
-                        if(gameManager.getCurrQuestMode() == SPTYPE4){
+                        if(gameManagerPracticeMode.getCurrQuestMode() == SPTYPE4){
                             if(spType4Pos0.contains(x, y)){
                                 spType4PlayerChoice = 0;
                             }
@@ -1984,15 +2435,15 @@ public class MainView extends View {
 
                         //------debug use-------
                         if(x < canvasW && x > canvasW - 200 && y > canvasH / 2 - 200 && y < canvasH / 2 + 200){
-                            if(gameManager.getCurrQuestNum() < MAXQUESTNUM - 1){
-                                gameManager.nextQ();
+                            if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM - 1){
+                                gameManagerPracticeMode.nextQ();
                                 resetDrawView();
                                 resetTimer();
                             }
                             else{
                                 resetDrawView();
                                 resetTimer();
-                                gameManager.restart();
+                                gameManagerPracticeMode.restart();
                                 currPage = MENUPAGE;
                             }
                         }
@@ -2020,9 +2471,100 @@ public class MainView extends View {
                         }
                         break;
                     case BATTLEGAMEPAGE:
-                        if(bluePlayerBtnLPos.contains(x, y)){
-                            Log.d("sfsdf", "sffsd");
+                        switch (playerNum){
+                            case 2:
+                                if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
+                                    if(redPlayerBtnLPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                    }
+                                    else if(bluePlayerBtnLPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                    }
+                                }
+                                break;
+                            case 3:
+                                if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
+                                    if(redPlayerBtnLPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                    }
+                                    else if(bluePlayerBtnLPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                    }
+                                    else if(greenPlayerBtnLPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(GREENANSWERSTAGE);
+                                    }
+                                }
+                                break;
+                            case 4:
+                                if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
+                                    if(redPlayerBtnSPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                    }
+                                    else if(bluePlayerBtnSPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                    }
+                                    else if(greenPlayerBtnSPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(GREENANSWERSTAGE);
+                                    }
+                                    else if(purplePlayerBtnSPos.contains(x, y)){
+                                        resetTimer();
+                                        GameManager_BattleMode.setCurrStage(PURPLEANSWERSTAGE);
+                                    }
+                                }
+                                break;
                         }
+
+                        if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
+                            if(gameManagerBattleMode.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                    gameManagerBattleMode.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                    gameManagerBattleMode.getCurrQuestMode() == DRAWTOPVIEW){
+                                for(int i = 0; i < drawViewPos2.length; i++){
+                                    if(drawViewPos2[i].contains(x, y)){
+                                        drawViewTouchCount = 0;
+                                        drawViewTouch[i] = !drawViewTouch[i];
+                                    }
+                                }
+                            }
+
+                            if(gameManagerBattleMode.getCurrQuestMode() == SPTYPE4){
+                                if(spType4Pos0.contains(x, y)){
+                                    spType4PlayerChoice = 0;
+                                }
+                                else if(spType4Pos1.contains(x, y)){
+                                    spType4PlayerChoice = 1;
+                                }
+                                else if(spType4Pos2.contains(x, y)){
+                                    spType4PlayerChoice = 2;
+                                }
+                                else if(spType4Pos3.contains(x, y)){
+                                    spType4PlayerChoice = 3;
+                                }
+                            }
+
+                            if(detectionIconPos.contains(x, y)){
+                                detectionIsShown = true;
+                            }
+
+                            if(detectionIsShown){
+                                if(detectionBoxPos.contains(x, y)){
+                                    detectionIsShown = true;
+                                }
+                                else{
+                                    detectionIsShown = false;
+                                }
+                            }
+                        }
+
+
+
 
                         break;
                     case HOWTOPAGE1:
@@ -2099,9 +2641,9 @@ public class MainView extends View {
             case MotionEvent.ACTION_MOVE:
                 switch (currPage){
                     case PRACTICEGAMEPAGE:
-                        if(gameManager.getCurrQuestMode() == DRAWFRONTVIEW ||
-                                gameManager.getCurrQuestMode() == DRAWSIDEVIEW ||
-                                gameManager.getCurrQuestMode() == DRAWTOPVIEW){
+                        if(gameManagerPracticeMode.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                gameManagerPracticeMode.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                gameManagerPracticeMode.getCurrQuestMode() == DRAWTOPVIEW){
                             for(int i = 0; i < drawViewPos2.length; i++){
                                 if(drawViewPos2[i].contains(x, y)){
                                     drawViewTouchCount++;
@@ -2109,10 +2651,20 @@ public class MainView extends View {
                             }
                         }
                         break;
+                    case BATTLEGAMEPAGE:
+                        if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE) {
+                            if(gameManagerBattleMode.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                    gameManagerBattleMode.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                    gameManagerBattleMode.getCurrQuestMode() == DRAWTOPVIEW){
+                                for(int i = 0; i < drawViewPos2.length; i++){
+                                    if(drawViewPos2[i].contains(x, y)){
+                                        drawViewTouchCount++;
+                                    }
+                                }
+                            }
+                        }
+                        break;
                 }
-
-
-
                 break;
 
             case MotionEvent.ACTION_UP:

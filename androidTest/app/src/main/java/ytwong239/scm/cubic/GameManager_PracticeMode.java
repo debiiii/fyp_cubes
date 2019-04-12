@@ -11,7 +11,7 @@ import java.util.Random;
  * Created by DebbieWong on 7/3/2019.
  */
 
-public class GameManager {
+public class GameManager_PracticeMode {
 
     private static final int MAXBASESNUM = 3;
     private static final int MAXGRIDSNUM = 9;
@@ -33,7 +33,6 @@ public class GameManager {
     private QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
     private QuestionBank_SPType3_Ans questionBank_spType3_ans = new QuestionBank_SPType3_Ans();
     private QuestionBank_SPType4_Ans questionBank_spType4_ans = new QuestionBank_SPType4_Ans();
-    private Arduino arduino = new Arduino();
 
     private ArrayList<Integer> ran2D3DQuest = new ArrayList<Integer>();
     private ArrayList<Integer> ran3Views = new ArrayList<Integer>();
@@ -58,7 +57,7 @@ public class GameManager {
     private static boolean[][] questIsCubePresent = new boolean[MAXGRIDSNUM][MAXHEIGHTNUM];
     private static boolean[][] ardIsCubePresent = new boolean[MAXGRIDSNUM][MAXHEIGHTNUM];
 
-    public GameManager(){
+    public GameManager_PracticeMode(){
 
         for(int i = 0; i < MAXGRIDSNUM; i++){
             playerFrontView[i] = 0;
@@ -197,11 +196,6 @@ public class GameManager {
 
     public void compare(){
         int match = 0;
-
-        //****next time try-------
-        arduino.run();
-        //if can't then set a static Boolean[][] ardIsCubePresent, and in Mainview update this array
-        //****next time try-------
 
         switch (currQuestMode){
             case DRAWFRONTVIEW:
