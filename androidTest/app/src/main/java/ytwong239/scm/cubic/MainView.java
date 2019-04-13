@@ -64,7 +64,8 @@ public class MainView extends View {
     private static final int BLUEANSWERSTAGE = 2;
     private static final int GREENANSWERSTAGE = 3;
     private static final int PURPLEANSWERSTAGE = 4;
-    private static final int RESULTSTAGE = 5;
+    private static final int TIMESUPSTAGE = 5;
+    private static final int RESULTSTAGE = 6;
 
     private int canvasW;
     private int canvasH;
@@ -291,6 +292,29 @@ public class MainView extends View {
     private Rect purplePlayerBtnSSrc;
     private Rect purplePlayerBtnSPos;
 
+    private Bitmap timesUpPic;
+    private Rect timesUpSrc;
+    private Rect timesUpPos;
+
+    private Bitmap redWinsPic;
+    private Bitmap blueWinsPic;
+    private Bitmap greenWinsPic;
+    private Bitmap purpleWinsPic;
+    private Bitmap itsADrawPic;
+    private Rect winsSrc;
+    private Rect winsPos;
+
+    private Bitmap playerIconPic;
+    private Rect playerIconSrc;
+    private Rect playerIconPos0;
+    private Rect playerIconPos1;
+    private Rect playerIconPos2;
+    private Rect playerIconPos3;
+    private Rect playerIconPos4;
+    private Rect playerIconPos5;
+    private Rect playerIconPos6;
+    private int playerIconH = 0;
+
     private Bitmap Pic;
     private Rect Src;
     private Rect Pos;
@@ -311,6 +335,7 @@ public class MainView extends View {
     private Paint white = new Paint();
     private Paint font = new Paint();
     private Paint tipFont = new Paint();
+    private Paint scoreFont = new Paint();
     private Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
     private Paint blackStroke = new Paint();
     private Paint coverPaint = new Paint();
@@ -342,6 +367,17 @@ public class MainView extends View {
     private float dx = 0;
     private float dy = 0;
     private float angle = 0;
+
+    private int timesUpCountDown = 80;
+
+    private int h0 = 0;
+    private int h1 = 0;
+    private int h2 = 0;
+    private int h3 = 0;
+    private int h4 = 0;
+    private int h5 = 0;
+    private int h6 = 0;
+
 
     public MainView(Context context) {
         super(context);
@@ -420,6 +456,11 @@ public class MainView extends View {
         tipFont.setColor(darkOrange.getColor());
         tipFont.setTextSize(50);
         tipFont.setTextAlign(Paint.Align.CENTER);
+
+        scoreFont.setTypeface(aldrich);
+        scoreFont.setColor(Color.WHITE);
+        scoreFont.setTextSize(50);
+        scoreFont.setTextAlign(Paint.Align.CENTER);
 
         for(int i = 0; i < drawViewPos2.length; i++){
             drawViewPos2[i] = new Rect(0,0,0,0);
@@ -609,9 +650,21 @@ public class MainView extends View {
         purplePlayerBtnSPic = BitmapFactory.decodeResource(getResources(), R.drawable.purples, opts);
         purplePlayerBtnSSrc = new Rect(0,0, purplePlayerBtnSPic.getWidth(), purplePlayerBtnSPic.getHeight());
 
+        timesUpPic = BitmapFactory.decodeResource(getResources(), R.drawable.timesup, opts);
+        timesUpSrc = new Rect(0,0, timesUpPic.getWidth(), timesUpPic.getHeight());
+
+        redWinsPic = BitmapFactory.decodeResource(getResources(), R.drawable.redwins, opts);
+        blueWinsPic = BitmapFactory.decodeResource(getResources(), R.drawable.bluewins, opts);
+        greenWinsPic = BitmapFactory.decodeResource(getResources(), R.drawable.greenwins, opts);
+        purpleWinsPic = BitmapFactory.decodeResource(getResources(), R.drawable.purplewins, opts);
+        itsADrawPic = BitmapFactory.decodeResource(getResources(), R.drawable.itsadraw, opts);
+        winsSrc = new Rect(0,0, redWinsPic.getWidth(), redWinsPic.getHeight());
+
+        playerIconPic = BitmapFactory.decodeResource(getResources(), R.drawable.playericon, opts);
+        playerIconSrc = new Rect(0,0, playerIconPic.getWidth(), playerIconPic.getHeight());
+
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
-
 
     }
 
@@ -1201,6 +1254,81 @@ public class MainView extends View {
         bottom = top + height;
         purplePlayerBtnSPos = new Rect(left, top, right, bottom);
 
+        width = w / 5;
+        height = (timesUpPic.getHeight() * width) / timesUpPic.getWidth();
+        left = w / 2 - width / 2;
+        top = h / 2 - height / 2;
+        right = left + width;
+        bottom = top + height;
+        timesUpPos = new Rect(left, top, right, bottom);
+
+        width = w / 2;
+        height = (redWinsPic.getHeight() * width) / redWinsPic.getWidth();
+        left = w / 2 - width / 2;
+        top = (backPos.top + backPos.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        winsPos = new Rect(left, top, right, bottom);
+
+        gap = w / 20;
+
+        width = w / 20;
+        height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
+        left = w / 2 - gap / 2 - width;
+        top = 500;
+        right = left + width;
+        bottom = top + height;
+        playerIconPos1 = new Rect(left, top, right, bottom);
+
+        width = w / 20;
+        height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
+        left = playerIconPos1.left - gap - width;
+        top = 500;
+        right = left + width;
+        bottom = top + height;
+        playerIconPos0 = new Rect(left, top, right, bottom);
+        playerIconH = height;
+
+        width = w / 20;
+        height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
+        left = w / 2 + gap / 2;
+        top = 500;
+        right = left + width;
+        bottom = top + height;
+        playerIconPos2 = new Rect(left, top, right, bottom);
+
+        width = w / 20;
+        height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
+        left = playerIconPos2.right + gap;
+        top = 500;
+        right = left + width;
+        bottom = top + height;
+        playerIconPos3 = new Rect(left, top, right, bottom);
+
+        width = w / 20;
+        height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
+        left = w / 2 - width / 2;
+        top = 500;
+        right = left + width;
+        bottom = top + height;
+        playerIconPos5 = new Rect(left, top, right, bottom);
+
+        width = w / 20;
+        height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
+        left = playerIconPos5.left - gap - width;
+        top = 500;
+        right = left + width;
+        bottom = top + height;
+        playerIconPos4 = new Rect(left, top, right, bottom);
+
+        width = w / 20;
+        height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
+        left = playerIconPos5.right + gap;
+        top = 500;
+        right = left + width;
+        bottom = top + height;
+        playerIconPos6 = new Rect(left, top, right, bottom);
+
 
     }
 
@@ -1208,6 +1336,8 @@ public class MainView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawRGB(255, 197, 128);
+
+        canvas.drawBitmap(settingPic, settingSrc, settingPos, null);
 
         switch (currPage){
             case MENUPAGE:
@@ -1318,22 +1448,12 @@ public class MainView extends View {
 
         }
 
-        canvas.drawBitmap(settingPic, settingSrc, settingPos, null);
-
         if(debugVisible){
             drawDebug(canvas);
         }
 
-
         forArduino();
 
-
-        canvas.drawText("R: " + gameManagerBattleMode.getRedScore(), redPlayerBtnSPos.right + 30, redPlayerBtnSPos.top, tipFont);
-        canvas.drawText("B: " + gameManagerBattleMode.getBlueScore(), bluePlayerBtnSPos.right + 30, bluePlayerBtnSPos.top, tipFont);
-        canvas.drawText("G: " + gameManagerBattleMode.getGreenScore(), greenPlayerBtnSPos.left - 30, greenPlayerBtnSPos.top, tipFont);
-        canvas.drawText("P: " + gameManagerBattleMode.getPurpleScore(), purplePlayerBtnSPos.left - 30, purplePlayerBtnSPos.top, tipFont);
-
-        Log.d("dsfsfsd", String.valueOf(answerCoolDown));
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -1868,14 +1988,31 @@ public class MainView extends View {
                 else{
                     answerCoolDown = 0;
                 }
-
                 break;
             case PURPLEANSWERSTAGE:
                 canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
                 canvas.drawRect(0, 0, canvasW, canvasH, purpleStroke);
                 canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
                 break;
-            case RESULTSTAGE:
+            case TIMESUPSTAGE:
+                canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
+                switch (playerNum){
+                    case 2:
+                        canvas.drawBitmap(redPlayerBtnLPic, redPlayerBtnLSrc, redPlayerBtnLPos, null);
+                        canvas.drawBitmap(bluePlayerBtnLPic, bluePlayerBtnLSrc, bluePlayerBtnLPos, null);
+                        break;
+                    case 3:
+                        canvas.drawBitmap(redPlayerBtnLPic, redPlayerBtnLSrc, redPlayerBtnLPos, null);
+                        canvas.drawBitmap(bluePlayerBtnLPic, bluePlayerBtnLSrc, bluePlayerBtnLPos, null);
+                        canvas.drawBitmap(greenPlayerBtnLPic, greenPlayerBtnLSrc, greenPlayerBtnLPos, null);
+                        break;
+                    case 4:
+                        canvas.drawBitmap(redPlayerBtnSPic, redPlayerBtnSSrc, redPlayerBtnSPos, null);
+                        canvas.drawBitmap(bluePlayerBtnSPic, bluePlayerBtnSSrc, bluePlayerBtnSPos, null);
+                        canvas.drawBitmap(greenPlayerBtnSPic, greenPlayerBtnSSrc, greenPlayerBtnSPos, null);
+                        canvas.drawBitmap(purplePlayerBtnSPic, purplePlayerBtnSSrc, purplePlayerBtnSPos, null);
+                        break;
+                }
                 break;
         }
 
@@ -1985,11 +2122,141 @@ public class MainView extends View {
 
         drawScoreAni(canvas);
 
-//        //go to result page untill the score ani end
-//        if(gameManagerBattleMode.getCurrQuestMode() == SPTYPE4 && (!gameManagerBattleMode.isAddScoreAni() || !gameManagerBattleMode.isDeductScoreAni())){
-//            GameManager_BattleMode.setCurrStage(RESULTSTAGE);
-//            GameManager_BattleMode.setCurrQuestMode(-1);
-//        }
+        switch (gameManagerBattleMode.getCurrStage()){
+            case TIMESUPSTAGE:
+                Paint bkg = new Paint();
+                bkg.setColor(Color.argb(100, 0, 0, 0));
+                canvas.drawRect(0, 0, canvasW, canvasH, bkg);
+                canvas.drawRect(0, canvasH / 4, canvasW, canvasH - canvasH / 4, white);
+                canvas.drawBitmap(timesUpPic, timesUpSrc, timesUpPos, null);
+                timesUpCountDown--;
+                if(timesUpCountDown <= 0){
+                    timesUpCountDown = 80;
+                    GameManager_BattleMode.setCurrStage(RESULTSTAGE);
+                }
+                break;
+            case RESULTSTAGE:
+                canvas.drawBitmap(backPic, backSrc, backPos, null);
+                switch (playerNum){
+                    case 2:
+                        if(gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getBlueScore()){
+                            canvas.drawBitmap(redWinsPic, winsSrc, winsPos, null);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() > gameManagerBattleMode.getRedScore()){
+                            canvas.drawBitmap(blueWinsPic, winsSrc, winsPos, null);
+                        }
+                        else{
+                            canvas.drawBitmap(itsADrawPic, winsSrc, winsPos, null);
+                        }
+                        h1 = (int)remap(gameManagerBattleMode.getRedScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos1.left, (canvasH - 200) - h1, playerIconPos1.right, canvasH - 200, red);
+                        playerIconPos1.top = (canvasH - 200) - h1 - 40 - playerIconH;
+                        playerIconPos1.bottom = playerIconPos1.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos1, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos1.centerX(), (canvasH - 200) + 60, scoreFont);
+
+
+                        h2 = (int)remap(gameManagerBattleMode.getBlueScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos2.left, (canvasH - 200) - h2, playerIconPos2.right, canvasH - 200, blue);
+                        playerIconPos2.top = (canvasH - 200) - h2 - 40 - playerIconH;
+                        playerIconPos2.bottom = playerIconPos2.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos2, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos2.centerX(), (canvasH - 200) + 60, scoreFont);
+                        break;
+                    case 3:
+                        if(gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getBlueScore() &&
+                                gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getGreenScore()){
+                            canvas.drawBitmap(redWinsPic, winsSrc, winsPos, null);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() > gameManagerBattleMode.getRedScore() &&
+                                gameManagerBattleMode.getBlueScore() > gameManagerBattleMode.getGreenScore()){
+                            canvas.drawBitmap(blueWinsPic, winsSrc, winsPos, null);
+                        }
+                        else if(gameManagerBattleMode.getGreenScore() > gameManagerBattleMode.getRedScore() &&
+                                gameManagerBattleMode.getGreenScore() > gameManagerBattleMode.getBlueScore()){
+                            canvas.drawBitmap(greenWinsPic, winsSrc, winsPos, null);
+                        }
+                        else{
+                            canvas.drawBitmap(itsADrawPic, winsSrc, winsPos, null);
+                        }
+                        h4 = (int)remap(gameManagerBattleMode.getRedScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos4.left, (canvasH - 200) - h4, playerIconPos4.right, canvasH - 200, red);
+                        playerIconPos4.top = (canvasH - 200) - h4 - 40 - playerIconH;
+                        playerIconPos4.bottom = playerIconPos4.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos4, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos4.centerX(), (canvasH - 200) + 60, scoreFont);
+
+                        h5 = (int)remap(gameManagerBattleMode.getBlueScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos5.left, (canvasH - 200) - h5, playerIconPos5.right, canvasH - 200, blue);
+                        playerIconPos5.top = (canvasH - 200) - h5 - 40 - playerIconH;
+                        playerIconPos5.bottom = playerIconPos5.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos5, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos5.centerX(), (canvasH - 200) + 60, scoreFont);
+
+                        h6 = (int)remap(gameManagerBattleMode.getGreenScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos6.left, (canvasH - 200) - h6, playerIconPos6.right, canvasH - 200, green);
+                        playerIconPos6.top = (canvasH - 200) - h6 - 40 - playerIconH;
+                        playerIconPos6.bottom = playerIconPos6.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos6, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos6.centerX(), (canvasH - 200) + 60, scoreFont);
+                        break;
+                    case 4:
+                        if(gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getBlueScore() &&
+                                gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getGreenScore() &&
+                                gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getPurpleScore()){
+                            canvas.drawBitmap(redWinsPic, winsSrc, winsPos, null);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() > gameManagerBattleMode.getRedScore() &&
+                                gameManagerBattleMode.getBlueScore() > gameManagerBattleMode.getGreenScore() &&
+                                gameManagerBattleMode.getBlueScore() > gameManagerBattleMode.getPurpleScore()){
+                            canvas.drawBitmap(blueWinsPic, winsSrc, winsPos, null);
+                        }
+                        else if(gameManagerBattleMode.getGreenScore() > gameManagerBattleMode.getRedScore() &&
+                                gameManagerBattleMode.getGreenScore() > gameManagerBattleMode.getBlueScore() &&
+                                gameManagerBattleMode.getGreenScore() > gameManagerBattleMode.getPurpleScore()){
+                            canvas.drawBitmap(greenWinsPic, winsSrc, winsPos, null);
+                        }
+                        else if(gameManagerBattleMode.getPurpleScore() > gameManagerBattleMode.getRedScore() &&
+                                gameManagerBattleMode.getPurpleScore() > gameManagerBattleMode.getBlueScore() &&
+                                gameManagerBattleMode.getPurpleScore() > gameManagerBattleMode.getGreenScore()){
+                            canvas.drawBitmap(purpleWinsPic, winsSrc, winsPos, null);
+                        }
+                        else{
+                            canvas.drawBitmap(itsADrawPic, winsSrc, winsPos, null);
+                        }
+                        h0 = (int)remap(gameManagerBattleMode.getRedScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos0.left, (canvasH - 200) - h0, playerIconPos0.right, canvasH - 200, red);
+                        playerIconPos0.top = (canvasH - 200) - h0 - 40 - playerIconH;
+                        playerIconPos0.bottom = playerIconPos0.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos0, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos0.centerX(), (canvasH - 200) + 60, scoreFont);
+
+                        h1 = (int)remap(gameManagerBattleMode.getBlueScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos1.left, (canvasH - 200) - h1, playerIconPos1.right, canvasH - 200, blue);
+                        playerIconPos1.top = (canvasH - 200) - h1 - 40 - playerIconH;
+                        playerIconPos1.bottom = playerIconPos1.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos1, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos1.centerX(), (canvasH - 200) + 60, scoreFont);
+
+
+                        h2 = (int)remap(gameManagerBattleMode.getGreenScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos2.left, (canvasH - 200) - h2, playerIconPos2.right, canvasH - 200, green);
+                        playerIconPos2.top = (canvasH - 200) - h2 - 40 - playerIconH;
+                        playerIconPos2.bottom = playerIconPos2.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos2, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos2.centerX(), (canvasH - 200) + 60, scoreFont);
+
+
+                        h3 = (int)remap(gameManagerBattleMode.getPurpleScore(), -6, 18, 0, (canvasH / 3) * 2);
+                        canvas.drawRect(playerIconPos3.left, (canvasH - 200) - h3, playerIconPos3.right, canvasH - 200, purple);
+                        playerIconPos3.top = (canvasH - 200) - h3 - 40 - playerIconH;
+                        playerIconPos3.bottom = playerIconPos3.top + playerIconH;
+                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos3, null);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getPurpleScore()), playerIconPos3.centerX(), (canvasH - 200) + 60, scoreFont);
+                        break;
+                }
+                break;
+        }
 
         if(gameManagerBattleMode.getRestart()){
             spType4PlayerChoice = 0;
@@ -2266,41 +2533,74 @@ public class MainView extends View {
     }
 
     private void drawScoreAni(Canvas canvas){
-        if(playerNum >= 2 && playerNum <= 3){
-            switch (gameManagerBattleMode.getCurrStage()){
-                case REDANSWERSTAGE:
-                    x1 = redPlayerBtnLPos.right;
-                    y1 = redPlayerBtnLPos.top + redPlayerBtnLPos.height() / 2;
-                    break;
-                case BLUEANSWERSTAGE:
-                    x1 = bluePlayerBtnLPos.left;
-                    y1 = bluePlayerBtnLPos.top + bluePlayerBtnLPos.height() / 2;
-                    break;
-                case GREENANSWERSTAGE:
-                    x1 = greenPlayerBtnLPos.left + greenPlayerBtnLPos.width() / 2;
-                    y1 = greenPlayerBtnLPos.top;
-                    break;
-            }
-        }
-        else if(playerNum == 4){
-            switch (gameManagerBattleMode.getCurrStage()){
-                case REDANSWERSTAGE:
-                    x1 = redPlayerBtnSPos.right;
-                    y1 = redPlayerBtnSPos.top + redPlayerBtnSPos.height() / 2;
-                    break;
-                case BLUEANSWERSTAGE:
-                    x1 = bluePlayerBtnSPos.right;
-                    y1 = bluePlayerBtnSPos.top + bluePlayerBtnSPos.height() / 2;
-                    break;
-                case GREENANSWERSTAGE:
-                    x1 = greenPlayerBtnSPos.left;
-                    y1 = greenPlayerBtnSPos.top + greenPlayerBtnSPos.height() / 2;
-                    break;
-                case PURPLEANSWERSTAGE:
-                    x1 = purplePlayerBtnSPos.left;
-                    y1 = purplePlayerBtnSPos.top + purplePlayerBtnSPos.height() / 2;
-                    break;
-            }
+
+        switch (playerNum){
+            case 2:
+                switch (gameManagerBattleMode.getCurrStage()){
+                    case REDANSWERSTAGE:
+                        x1 = redPlayerBtnLPos.right;
+                        y1 = redPlayerBtnLPos.top + redPlayerBtnLPos.height() / 2;
+                        x0 = answerPos.left + answerPos.width() / 2;
+                        y0 = answerPos.top;
+                        break;
+                    case BLUEANSWERSTAGE:
+                        x1 = bluePlayerBtnLPos.left;
+                        y1 = bluePlayerBtnLPos.top + bluePlayerBtnLPos.height() / 2;
+                        x0 = answerPos.left + answerPos.width() / 2;
+                        y0 = answerPos.top;
+                        break;
+                }
+                break;
+            case 3:
+                switch (gameManagerBattleMode.getCurrStage()){
+                    case REDANSWERSTAGE:
+                        x1 = redPlayerBtnLPos.right;
+                        y1 = redPlayerBtnLPos.top + redPlayerBtnLPos.height() / 2;
+                        x0 = x1 + 400;
+                        y0 = y1;
+                        break;
+                    case BLUEANSWERSTAGE:
+                        x1 = bluePlayerBtnLPos.left;
+                        y1 = bluePlayerBtnLPos.top + bluePlayerBtnLPos.height() / 2;
+                        x0 = x1 - 400;
+                        y0 = y1;
+                        break;
+                    case GREENANSWERSTAGE:
+                        x1 = greenPlayerBtnLPos.left + greenPlayerBtnLPos.width() / 2;
+                        y1 = greenPlayerBtnLPos.top;
+                        x0 = x1;
+                        y0 = y1 - 400;
+                        break;
+                }
+                break;
+            case 4:
+                switch (gameManagerBattleMode.getCurrStage()){
+                    case REDANSWERSTAGE:
+                        x1 = redPlayerBtnSPos.right;
+                        y1 = redPlayerBtnSPos.top + redPlayerBtnSPos.height() / 2;
+                        x0 = answerPos.left + answerPos.width() / 2;
+                        y0 = answerPos.top;
+                        break;
+                    case BLUEANSWERSTAGE:
+                        x1 = bluePlayerBtnSPos.right;
+                        y1 = bluePlayerBtnSPos.top + bluePlayerBtnSPos.height() / 2;
+                        x0 = answerPos.left + answerPos.width() / 2;
+                        y0 = answerPos.top;
+                        break;
+                    case GREENANSWERSTAGE:
+                        x1 = greenPlayerBtnSPos.left;
+                        y1 = greenPlayerBtnSPos.top + greenPlayerBtnSPos.height() / 2;
+                        x0 = answerPos.left + answerPos.width() / 2;
+                        y0 = answerPos.top;
+                        break;
+                    case PURPLEANSWERSTAGE:
+                        x1 = purplePlayerBtnSPos.left;
+                        y1 = purplePlayerBtnSPos.top + purplePlayerBtnSPos.height() / 2;
+                        x0 = answerPos.left + answerPos.width() / 2;
+                        y0 = answerPos.top;
+                        break;
+                }
+                break;
         }
 
         if(gameManagerBattleMode.isAddScoreAni()){
@@ -2603,6 +2903,7 @@ public class MainView extends View {
                                 playerNum = 4;
                                 currPage = HOWTOPAGE1;
                             }
+                            resetTimer();
                         }
                         else{
                             currPage = MENUPAGE;
@@ -2615,10 +2916,12 @@ public class MainView extends View {
                                     if(redPlayerBtnLPos.contains(x, y)){
                                         resetTimer();
                                         GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                        answerCoolDown = 0;
                                     }
                                     else if(bluePlayerBtnLPos.contains(x, y)){
                                         resetTimer();
                                         GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                        answerCoolDown = 0;
                                     }
                                 }
                                 break;
@@ -2645,18 +2948,22 @@ public class MainView extends View {
                                     if(redPlayerBtnSPos.contains(x, y)){
                                         resetTimer();
                                         GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                        answerCoolDown = 0;
                                     }
                                     else if(bluePlayerBtnSPos.contains(x, y)){
                                         resetTimer();
                                         GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                        answerCoolDown = 0;
                                     }
                                     else if(greenPlayerBtnSPos.contains(x, y)){
                                         resetTimer();
                                         GameManager_BattleMode.setCurrStage(GREENANSWERSTAGE);
+                                        answerCoolDown = 0;
                                     }
                                     else if(purplePlayerBtnSPos.contains(x, y)){
                                         resetTimer();
                                         GameManager_BattleMode.setCurrStage(PURPLEANSWERSTAGE);
+                                        answerCoolDown = 0;
                                     }
                                 }
                                 break;
@@ -2707,7 +3014,11 @@ public class MainView extends View {
                             }
                         }
 
-
+                        if(gameManagerBattleMode.getCurrStage() == RESULTSTAGE){
+                            if(backPos.contains(x, y)){
+                                gameManagerBattleMode.restart();
+                            }
+                        }
 
 
                         break;

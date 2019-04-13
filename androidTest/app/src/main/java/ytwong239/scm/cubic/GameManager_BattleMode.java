@@ -33,7 +33,8 @@ public class GameManager_BattleMode {
     private static final int BLUEANSWERSTAGE = 2;
     private static final int GREENANSWERSTAGE = 3;
     private static final int PURPLEANSWERSTAGE = 4;
-    private static final int RESULTSTAGE = 5;
+    private static final int TIMESUPSTAGE = 5;
+    private static final int RESULTSTAGE = 6;
     private static int currStage = QUESTSTAGE;
 
     private QuestionBank_2D3D questionBank2D3D = new QuestionBank_2D3D();
@@ -73,6 +74,7 @@ public class GameManager_BattleMode {
     private int purpleScore = 0;
     private static boolean addScoreAni = false;
     private static boolean deductScoreAni = false;
+
 
     public GameManager_BattleMode(){
 
@@ -488,8 +490,8 @@ public class GameManager_BattleMode {
                     }
                     deductScoreAni = true;
                 }
-//                currStage = RESULTSTAGE;
-//                currQuestMode = -1;
+                currStage = TIMESUPSTAGE;
+                currQuestMode = -1;
                 break;
         }
 
@@ -534,6 +536,17 @@ public class GameManager_BattleMode {
             playerSideView[i] = 0;
             playerTopView[i] = 0;
         }
+
+        redScore = 0;
+        blueScore = 0;
+        greenScore = 0;
+        purpleScore = 0;
+        addScoreAni = false;
+        deductScoreAni = false;
+        resetTimer10s = false;
+        resetTimer30s = false;
+
+        currStage = QUESTSTAGE;
 
         restart = true;
 
