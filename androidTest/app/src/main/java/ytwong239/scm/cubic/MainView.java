@@ -181,6 +181,7 @@ public class MainView extends View {
     private Bitmap answerPic;
     private Rect answerSrc;
     private Rect answerPos;
+    private int answerCoolDown = 2;
 
     private Bitmap modelPic;
     private Rect modelSrc;
@@ -333,6 +334,14 @@ public class MainView extends View {
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+
+    private float x0 = 0;
+    private float y0 = 0;
+    private float x1 = 0;
+    private float y1 = 0;
+    private float dx = 0;
+    private float dy = 0;
+    private float angle = 0;
 
     public MainView(Context context) {
         super(context);
@@ -865,6 +874,9 @@ public class MainView extends View {
         bottom = top + height;
         answerPos = new Rect(left, top, right, bottom);
 
+        x0 = answerPos.left + answerPos.width() / 2;
+        y0 = answerPos.top;
+
         gap = w / 15;
 
         width = w / 5;
@@ -1151,6 +1163,7 @@ public class MainView extends View {
         width = bluePlayerBtnLPos.height();
         height = (greenPlayerBtnLPic.getHeight() * width) / greenPlayerBtnLPic.getWidth();
         left = w / 2 - width / 2;
+        //left = 0;
         top = h - height;
         right = left + width;
         bottom = top + height;
@@ -1320,6 +1333,7 @@ public class MainView extends View {
         canvas.drawText("G: " + gameManagerBattleMode.getGreenScore(), greenPlayerBtnSPos.left - 30, greenPlayerBtnSPos.top, tipFont);
         canvas.drawText("P: " + gameManagerBattleMode.getPurpleScore(), purplePlayerBtnSPos.left - 30, purplePlayerBtnSPos.top, tipFont);
 
+        Log.d("dsfsfsd", String.valueOf(answerCoolDown));
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -1832,6 +1846,7 @@ public class MainView extends View {
                         canvas.drawBitmap(purplePlayerBtnSPic, purplePlayerBtnSSrc, purplePlayerBtnSPos, null);
                         break;
                 }
+                answerCoolDown = 2;
                 break;
             case REDANSWERSTAGE:
                 canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
@@ -1847,6 +1862,13 @@ public class MainView extends View {
                 canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
                 canvas.drawRect(0, 0, canvasW, canvasH, greenStroke);
                 canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+                if(answerCoolDown > 0){
+                    answerCoolDown--;
+                }
+                else{
+                    answerCoolDown = 0;
+                }
+
                 break;
             case PURPLEANSWERSTAGE:
                 canvas.drawBitmap(qTitlePic[gameManagerBattleMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
@@ -1958,6 +1980,17 @@ public class MainView extends View {
                 break;
         }
 
+        gameManagerBattleMode.setSpType4PlayerAns(spType4PlayerChoice);
+        updateGM();
+
+        drawScoreAni(canvas);
+
+//        //go to result page untill the score ani end
+//        if(gameManagerBattleMode.getCurrQuestMode() == SPTYPE4 && (!gameManagerBattleMode.isAddScoreAni() || !gameManagerBattleMode.isDeductScoreAni())){
+//            GameManager_BattleMode.setCurrStage(RESULTSTAGE);
+//            GameManager_BattleMode.setCurrQuestMode(-1);
+//        }
+
         if(gameManagerBattleMode.getRestart()){
             spType4PlayerChoice = 0;
             resetDrawView();
@@ -2000,9 +2033,9 @@ public class MainView extends View {
 
             canvas.drawText(String.valueOf((int)gameManagerBattleMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
 
-            timeRemapWidth = (int)remap(gameManagerBattleMode.getTimeLeft30s(), gameManagerBattleMode.getTotalTime30s(), -1, timeFullWidth, -1);
+            timeRemapWidth = (int)remap(gameManagerBattleMode.getTimeLeft30s(), gameManagerBattleMode.getTotalTime30s(), -2, timeFullWidth, -2);
 
-            if(timeRemapWidth == -1){
+            if(timeRemapWidth == 0){
                 timeCirR = 0;
                 timeRectPos.right = 0;
             }else{
@@ -2017,10 +2050,12 @@ public class MainView extends View {
 
         if(gameManagerBattleMode.getResetTimer10s()){
             resetTimer();
+            resetDrawView();
         }
 
         if(gameManagerBattleMode.getResetTimer30s()){
             resetTimer();
+            resetDrawView();
         }
 
     }
@@ -2077,7 +2112,7 @@ public class MainView extends View {
         canvas.drawBitmap(qModelBkgPic, qModelBkgSrc, qModelPos, null);
 
         //draw view word label
-        switch (gameManagerPracticeMode.getCurrQuestMode()){
+        switch (gameManagerBattleMode.getCurrQuestMode()){
             case DRAWFRONTVIEW:
                 canvas.drawBitmap(qFrontPic, qFrontSrc, drawViewFrontPos, null);
                 break;
@@ -2156,9 +2191,6 @@ public class MainView extends View {
 
         Paint paint = new Paint();
         switch (gameManagerBattleMode.getCurrStage()){
-            case QUESTSTAGE:
-                paint.setColor(white.getColor());
-                break;
             case REDANSWERSTAGE:
                 paint.setColor(red.getColor());
                 break;
@@ -2173,59 +2205,136 @@ public class MainView extends View {
                 break;
         }
 
-
         //player ans choice
-        switch (spType4PlayerChoice){
-            case 0:
-                Point a = new Point(spType4Pos0.left + spType4Pos0.width() / 2, spType4Pos0.bottom + 10);
-                Point b = new Point(a.x - 20, a.y + 30);
-                Point c = new Point(a.x + 20, a.y + 30);
-                Path path = new Path();
-                path.setFillType(Path.FillType.EVEN_ODD);
-                path.moveTo(b.x, b.y);
-                path.lineTo(c.x, c.y);
-                path.lineTo(a.x, a.y);
-                path.close();
-                canvas.drawPath(path, paint);
-                break;
-            case 1:
-                Point a1 = new Point(spType4Pos1.left + spType4Pos1.width() / 2, spType4Pos1.bottom + 10);
-                Point b1 = new Point(a1.x - 20, a1.y + 30);
-                Point c1 = new Point(a1.x + 20, a1.y + 30);
-                Path path1 = new Path();
-                path1.setFillType(Path.FillType.EVEN_ODD);
-                path1.moveTo(b1.x, b1.y);
-                path1.lineTo(c1.x, c1.y);
-                path1.lineTo(a1.x, a1.y);
-                path1.close();
-                canvas.drawPath(path1, paint);
-                break;
-            case 2:
-                Point a2 = new Point(spType4Pos2.left + spType4Pos2.width() / 2, spType4Pos2.bottom + 10);
-                Point b2 = new Point(a2.x - 20, a2.y + 30);
-                Point c2 = new Point(a2.x + 20, a2.y + 30);
-                Path path2 = new Path();
-                path2.setFillType(Path.FillType.EVEN_ODD);
-                path2.moveTo(b2.x, b2.y);
-                path2.lineTo(c2.x, c2.y);
-                path2.lineTo(a2.x, a2.y);
-                path2.close();
-                canvas.drawPath(path2, paint);
-                break;
-            case 3:
-                Point a3 = new Point(spType4Pos3.left + spType4Pos3.width() / 2, spType4Pos3.bottom + 10);
-                Point b3 = new Point(a3.x - 20, a3.y + 30);
-                Point c3 = new Point(a3.x + 20, a3.y + 30);
-                Path path3 = new Path();
-                path3.setFillType(Path.FillType.EVEN_ODD);
-                path3.moveTo(b3.x, b3.y);
-                path3.lineTo(c3.x, c3.y);
-                path3.lineTo(a3.x, a3.y);
-                path3.close();
-                canvas.drawPath(path3, paint);
-                break;
+        if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
+            switch (spType4PlayerChoice){
+                case 0:
+                    Point a = new Point(spType4Pos0.left + spType4Pos0.width() / 2, spType4Pos0.bottom + 10);
+                    Point b = new Point(a.x - 20, a.y + 30);
+                    Point c = new Point(a.x + 20, a.y + 30);
+                    Path path = new Path();
+                    path.setFillType(Path.FillType.EVEN_ODD);
+                    path.moveTo(b.x, b.y);
+                    path.lineTo(c.x, c.y);
+                    path.lineTo(a.x, a.y);
+                    path.close();
+                    canvas.drawPath(path, paint);
+                    break;
+                case 1:
+                    Point a1 = new Point(spType4Pos1.left + spType4Pos1.width() / 2, spType4Pos1.bottom + 10);
+                    Point b1 = new Point(a1.x - 20, a1.y + 30);
+                    Point c1 = new Point(a1.x + 20, a1.y + 30);
+                    Path path1 = new Path();
+                    path1.setFillType(Path.FillType.EVEN_ODD);
+                    path1.moveTo(b1.x, b1.y);
+                    path1.lineTo(c1.x, c1.y);
+                    path1.lineTo(a1.x, a1.y);
+                    path1.close();
+                    canvas.drawPath(path1, paint);
+                    break;
+                case 2:
+                    Point a2 = new Point(spType4Pos2.left + spType4Pos2.width() / 2, spType4Pos2.bottom + 10);
+                    Point b2 = new Point(a2.x - 20, a2.y + 30);
+                    Point c2 = new Point(a2.x + 20, a2.y + 30);
+                    Path path2 = new Path();
+                    path2.setFillType(Path.FillType.EVEN_ODD);
+                    path2.moveTo(b2.x, b2.y);
+                    path2.lineTo(c2.x, c2.y);
+                    path2.lineTo(a2.x, a2.y);
+                    path2.close();
+                    canvas.drawPath(path2, paint);
+                    break;
+                case 3:
+                    Point a3 = new Point(spType4Pos3.left + spType4Pos3.width() / 2, spType4Pos3.bottom + 10);
+                    Point b3 = new Point(a3.x - 20, a3.y + 30);
+                    Point c3 = new Point(a3.x + 20, a3.y + 30);
+                    Path path3 = new Path();
+                    path3.setFillType(Path.FillType.EVEN_ODD);
+                    path3.moveTo(b3.x, b3.y);
+                    path3.lineTo(c3.x, c3.y);
+                    path3.lineTo(a3.x, a3.y);
+                    path3.close();
+                    canvas.drawPath(path3, paint);
+                    break;
+            }
         }
 
+    }
+
+    private float dist(float x0, float y0, float x1, float y1){
+        return (float)Math.sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0));
+    }
+
+    private void drawScoreAni(Canvas canvas){
+        if(playerNum >= 2 && playerNum <= 3){
+            switch (gameManagerBattleMode.getCurrStage()){
+                case REDANSWERSTAGE:
+                    x1 = redPlayerBtnLPos.right;
+                    y1 = redPlayerBtnLPos.top + redPlayerBtnLPos.height() / 2;
+                    break;
+                case BLUEANSWERSTAGE:
+                    x1 = bluePlayerBtnLPos.left;
+                    y1 = bluePlayerBtnLPos.top + bluePlayerBtnLPos.height() / 2;
+                    break;
+                case GREENANSWERSTAGE:
+                    x1 = greenPlayerBtnLPos.left + greenPlayerBtnLPos.width() / 2;
+                    y1 = greenPlayerBtnLPos.top;
+                    break;
+            }
+        }
+        else if(playerNum == 4){
+            switch (gameManagerBattleMode.getCurrStage()){
+                case REDANSWERSTAGE:
+                    x1 = redPlayerBtnSPos.right;
+                    y1 = redPlayerBtnSPos.top + redPlayerBtnSPos.height() / 2;
+                    break;
+                case BLUEANSWERSTAGE:
+                    x1 = bluePlayerBtnSPos.right;
+                    y1 = bluePlayerBtnSPos.top + bluePlayerBtnSPos.height() / 2;
+                    break;
+                case GREENANSWERSTAGE:
+                    x1 = greenPlayerBtnSPos.left;
+                    y1 = greenPlayerBtnSPos.top + greenPlayerBtnSPos.height() / 2;
+                    break;
+                case PURPLEANSWERSTAGE:
+                    x1 = purplePlayerBtnSPos.left;
+                    y1 = purplePlayerBtnSPos.top + purplePlayerBtnSPos.height() / 2;
+                    break;
+            }
+        }
+
+        if(gameManagerBattleMode.isAddScoreAni()){
+            dx = x1 - x0;
+            dy = y1 - y0;
+            angle = (float)Math.atan2(dy, dx);
+
+            if(dist(x0, y0, x1, y1) > 35){
+                x0 += 35 * Math.cos(angle);
+                y0 += 35 * Math.sin(angle);
+                canvas.drawText("+3", x0, y0, font);
+            }
+            else{
+                GameManager_BattleMode.setAddScoreAniFalse();
+                x0 = answerPos.left + answerPos.width() / 2;
+                y0 = answerPos.top;
+            }
+        }
+        else if(gameManagerBattleMode.isDeductScoreAni()){
+            dx = x1 - x0;
+            dy = y1 - y0;
+            angle = (float)Math.atan2(dy, dx);
+
+            if(dist(x0, y0, x1, y1) > 35){
+                x0 += 35 * Math.cos(angle);
+                y0 += 35 * Math.sin(angle);
+                canvas.drawText("-1", x0, y0, font);
+            }
+            else{
+                GameManager_BattleMode.setDeductScoreAniFalse();
+                x0 = answerPos.left + answerPos.width() / 2;
+                y0 = answerPos.top;
+            }
+        }
     }
 
     private void drawDebug(Canvas canvas) {
@@ -2338,13 +2447,42 @@ public class MainView extends View {
                 break;
         }
 
+        switch (gameManagerBattleMode.getCurrQuestMode()){
+            case BUILD3DMODEL:
+                for(int i = 0; i < MAXGRIDSNUM; i++){
+                    for(int j = 0; j < MAXHEIGHTNUM; j++){
+                        if(questionBank2D3D.getIsCubePresent(i, j)){
+                            gameManagerBattleMode.setQuestIsCubePresentTrue(i, j);
+                        }
+                        else{
+                            gameManagerBattleMode.setQuestIsCubePresentFalse(i, j);
+                        }
+                    }
+                }
+                break;
+            case SPTYPE3:
+                for(int i = 0; i < MAXGRIDSNUM; i++){
+                    for(int j = 0; j < MAXHEIGHTNUM; j++){
+                        if(questionBank_spType3_ans.getIsCubePresent(i, j)){
+                            gameManagerBattleMode.setQuestIsCubePresentTrue(i, j);
+                        }
+                        else{
+                            gameManagerBattleMode.setQuestIsCubePresentFalse(i, j);
+                        }
+                    }
+                }
+                break;
+        }
+
         for(int i = 0; i < MAXGRIDSNUM; i++){
             for(int j = 0; j < MAXHEIGHTNUM; j++){
                 if(arduino.getIsCubePresent(i, j)){
                     gameManagerPracticeMode.setArdIsCubePresentTrue(i, j);
+                    gameManagerBattleMode.setArdIsCubePresentTrue(i, j);
                 }
                 else{
                     gameManagerPracticeMode.setArdIsCubePresentFalse(i, j);
+                    gameManagerBattleMode.setArdIsCubePresentFalse(i, j);
                 }
             }
         }
@@ -2489,10 +2627,12 @@ public class MainView extends View {
                                     if(redPlayerBtnLPos.contains(x, y)){
                                         resetTimer();
                                         GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                        answerCoolDown = 0;
                                     }
                                     else if(bluePlayerBtnLPos.contains(x, y)){
                                         resetTimer();
                                         GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                        answerCoolDown = 0;
                                     }
                                     else if(greenPlayerBtnLPos.contains(x, y)){
                                         resetTimer();
@@ -2560,6 +2700,10 @@ public class MainView extends View {
                                 else{
                                     detectionIsShown = false;
                                 }
+                            }
+
+                            if(answerPos.contains(x, y) && answerCoolDown <= 0){
+                                gameManagerBattleMode.compare();
                             }
                         }
 
@@ -2687,7 +2831,6 @@ public class MainView extends View {
                             currPage = HOWTOPAGE2;
                         }
                         break;
-
                 }
 
                 break;

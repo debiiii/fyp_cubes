@@ -23,7 +23,7 @@ public class GameManager_BattleMode {
     private static final int BUILD3DMODEL = 3;
     private static final int SPTYPE3 = 4;
     private static final int SPTYPE4 = 5;
-    private int currQuestMode = -1;
+    private static int currQuestMode = -1;
 
     private static final int MAXQUESTNUM = 6;
     private int currQuestNum = 0;
@@ -71,6 +71,8 @@ public class GameManager_BattleMode {
     private int blueScore = 0;
     private int greenScore = 0;
     private int purpleScore = 0;
+    private static boolean addScoreAni = false;
+    private static boolean deductScoreAni = false;
 
     public GameManager_BattleMode(){
 
@@ -152,7 +154,7 @@ public class GameManager_BattleMode {
                 currQuestMode = ran3Views.get(0);
                 OpenGLRenderer_Tips.setCurrQuestMode(ran3Views.get(0));
                 QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(0));
-                Log.d("ran2D3DQuest", "q0  " +  ran2D3DQuest.get(0));
+                Log.d("BM ran2D3DQuest", "q0  " +  ran2D3DQuest.get(0));
                 break;
             case 1:
                 currQuestMode = BUILD3DMODEL;
@@ -175,7 +177,7 @@ public class GameManager_BattleMode {
                 currQuestMode = ran3Views.get(1);
                 OpenGLRenderer_Tips.setCurrQuestMode(ran3Views.get(1));
                 QuestionBank_2D3D.setCurrQuestBank2D3DNum(ran2D3DQuest.get(3));
-                Log.d("ran2D3DQuest", "q3  " +  ran2D3DQuest.get(3));
+                Log.d("BM ran2D3DQuest", "q3  " +  ran2D3DQuest.get(3));
                 break;
             case 4:
                 currQuestMode = BUILD3DMODEL;
@@ -223,8 +225,41 @@ public class GameManager_BattleMode {
                     }
                 }
                 if(match == MAXGRIDSNUM){
-                    nextQ();
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore += 3;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore += 3;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore += 3;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore += 3;
+                            break;
+                    }
+                    addScoreAni = true;
                 }
+                else{
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore -= 1;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore -= 1;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore -= 1;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore -= 1;
+                            break;
+                    }
+                    deductScoreAni = false;
+                }
+                nextQ();
+                currStage = QUESTSTAGE;
                 break;
             case DRAWSIDEVIEW:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -236,8 +271,41 @@ public class GameManager_BattleMode {
                     }
                 }
                 if(match == MAXGRIDSNUM){
-                    nextQ();
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore += 3;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore += 3;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore += 3;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore += 3;
+                            break;
+                    }
+                    addScoreAni = true;
                 }
+                else{
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore -= 1;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore -= 1;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore -= 1;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore -= 1;
+                            break;
+                    }
+                    deductScoreAni = true;
+                }
+                nextQ();
+                currStage = QUESTSTAGE;
                 break;
             case DRAWTOPVIEW:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -249,10 +317,42 @@ public class GameManager_BattleMode {
                     }
                 }
                 if(match == MAXGRIDSNUM){
-                    nextQ();
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore += 3;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore += 3;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore += 3;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore += 3;
+                            break;
+                    }
+                    addScoreAni = true;
                 }
+                else{
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore -= 1;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore -= 1;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore -= 1;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore -= 1;
+                            break;
+                    }
+                    deductScoreAni = true;
+                }
+                nextQ();
+                currStage = QUESTSTAGE;
                 break;
-            //-----here------
             case BUILD3DMODEL:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
@@ -269,8 +369,41 @@ public class GameManager_BattleMode {
                 }
                 Log.d("match", String.valueOf(match));
                 if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
-                    nextQ();
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore += 3;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore += 3;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore += 3;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore += 3;
+                            break;
+                    }
+                    addScoreAni = true;
                 }
+                else{
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore -= 1;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore -= 1;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore -= 1;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore -= 1;
+                            break;
+                    }
+                    deductScoreAni = true;
+                }
+                nextQ();
+                currStage = QUESTSTAGE;
                 break;
             case SPTYPE3:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -284,14 +417,79 @@ public class GameManager_BattleMode {
                     }
                 }
                 if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
-                    nextQ();
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore += 3;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore += 3;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore += 3;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore += 3;
+                            break;
+                    }
+                    addScoreAni = true;
                 }
+                else{
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore -= 1;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore -= 1;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore -= 1;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore -= 1;
+                            break;
+                    }
+                    deductScoreAni = true;
+                }
+                nextQ();
+                currStage = QUESTSTAGE;
                 break;
-            //-----here-----
             case SPTYPE4:
                 if(spType4Ans == spType4PlayerAns){
-                    restart();
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore += 3;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore += 3;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore += 3;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore += 3;
+                            break;
+                    }
+                    addScoreAni = true;
                 }
+                else{
+                    switch (currStage){
+                        case REDANSWERSTAGE:
+                            redScore -= 1;
+                            break;
+                        case BLUEANSWERSTAGE:
+                            blueScore -= 1;
+                            break;
+                        case GREENANSWERSTAGE:
+                            greenScore -= 1;
+                            break;
+                        case PURPLEANSWERSTAGE:
+                            purpleScore -= 1;
+                            break;
+                    }
+                    deductScoreAni = true;
+                }
+//                currStage = RESULTSTAGE;
+//                currQuestMode = -1;
                 break;
         }
 
@@ -318,6 +516,7 @@ public class GameManager_BattleMode {
 
     public void restart(){
         countDownTimer30s.cancel();
+        countDownTimer10s.cancel();
 
         Collections.shuffle(ran2D3DQuest);
         Collections.shuffle(ran3Views);
@@ -357,45 +556,46 @@ public class GameManager_BattleMode {
 
         @Override
         public void onFinish() {
-            timeLeft30s = -1;
+            timeLeft30s = -2;
             countDownTimer30s.cancel();
             if(currStage >= REDANSWERSTAGE && currStage <= PURPLEANSWERSTAGE){
-                if(currQuestNum < MAXQUESTNUM - 1){
-                    switch (currStage){
-                        case REDANSWERSTAGE:
-                            redScore -= 1;
-                            break;
-                        case BLUEANSWERSTAGE:
-                            blueScore -= 1;
-                            break;
-                        case GREENANSWERSTAGE:
-                            greenScore -= 1;
-                            break;
-                        case PURPLEANSWERSTAGE:
-                            purpleScore -= 1;
-                            break;
-                    }
-                    nextQ();
-                    currStage = QUESTSTAGE;
-                }
-                else{
-                    switch (currStage){
-                        case REDANSWERSTAGE:
-                            redScore -= 1;
-                            break;
-                        case BLUEANSWERSTAGE:
-                            blueScore -= 1;
-                            break;
-                        case GREENANSWERSTAGE:
-                            greenScore -= 1;
-                            break;
-                        case PURPLEANSWERSTAGE:
-                            purpleScore -= 1;
-                            break;
-                    }
-                    currStage = RESULTSTAGE;
-                    currQuestMode = -1;
-                }
+//                if(currQuestNum < MAXQUESTNUM - 1){
+//                    switch (currStage){
+//                        case REDANSWERSTAGE:
+//                            redScore -= 1;
+//                            break;
+//                        case BLUEANSWERSTAGE:
+//                            blueScore -= 1;
+//                            break;
+//                        case GREENANSWERSTAGE:
+//                            greenScore -= 1;
+//                            break;
+//                        case PURPLEANSWERSTAGE:
+//                            purpleScore -= 1;
+//                            break;
+//                    }
+//                    nextQ();
+//                    currStage = QUESTSTAGE;
+//                }
+//                else{
+//                    switch (currStage){
+//                        case REDANSWERSTAGE:
+//                            redScore -= 1;
+//                            break;
+//                        case BLUEANSWERSTAGE:
+//                            blueScore -= 1;
+//                            break;
+//                        case GREENANSWERSTAGE:
+//                            greenScore -= 1;
+//                            break;
+//                        case PURPLEANSWERSTAGE:
+//                            purpleScore -= 1;
+//                            break;
+//                    }
+//                    currStage = RESULTSTAGE;
+//                    currQuestMode = -1;
+//                }
+                compare();
             }
         }
     };
@@ -501,5 +701,25 @@ public class GameManager_BattleMode {
 
     public int getPurpleScore(){
         return purpleScore;
+    }
+
+    public boolean isAddScoreAni(){
+        return addScoreAni;
+    }
+
+    public boolean isDeductScoreAni(){
+        return deductScoreAni;
+    }
+
+    public static void setAddScoreAniFalse(){
+        addScoreAni = false;
+    }
+
+    public static void setDeductScoreAniFalse(){
+        deductScoreAni = false;
+    }
+
+    public static void setCurrQuestMode(int val){
+        currQuestMode = val;
     }
 }
