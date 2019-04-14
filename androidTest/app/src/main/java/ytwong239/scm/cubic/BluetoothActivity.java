@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -44,8 +45,9 @@ public class BluetoothActivity extends AppCompatActivity {
     private final static int HOWTOPAGEBM2 = 10;
     private final static int HOWTOPAGEBM3 = 11;
     private final static int HOWTOPAGEBM4 = 12;
-    private final static int INFOPAGE = 13;
-    private final static int PUZZLEPAGE = 14;
+    private final static int PUZZLEPAGE = 13;
+    private final static int HOWTOPAGESETTING = 14;
+    private final static int CONTACTUSPAGE = 15;
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice bluetoothDevice;
@@ -94,6 +96,8 @@ public class BluetoothActivity extends AppCompatActivity {
 
     OpenGLSurfaceView_DetectionCheck openGLSurfaceView_detectionCheck;
     OpenGLRenderer_DetectionCheck openGLRenderer_detectionCheck;
+
+    MediaPlayer mediaPlayer;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -281,6 +285,11 @@ public class BluetoothActivity extends AppCompatActivity {
                 bluetoothAdapter.enable();
             }
         }
+
+        //music
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bkgmusic);
+        //mainView.music(mediaPlayer);
+        //mediaPlayer.start();
     }
 
 
@@ -300,6 +309,9 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_tips.onResume();
         openGLSurfaceView_detectionCheck.onResume();
 
+        if(mediaPlayer != null){
+            //mediaPlayer.start();
+        }
 
         bluetoothDevice = bluetoothAdapter.getRemoteDevice("98:D3:61:F9:48:D1");
 
@@ -329,10 +341,46 @@ public class BluetoothActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         switch (mainView.currPage){
+            case MENUPAGE:
+                finish();
+                break;
+            case BATTLENUMPAGE:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEPM1:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEPM2:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEPM3:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEPM4:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEPM5:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEBM1:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEBM2:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEBM3:
+                mainView.currPage = MENUPAGE;
+                break;
+            case HOWTOPAGEBM4:
+                mainView.currPage = MENUPAGE;
+                break;
             case PUZZLEPAGE:
                 mainView.currPage = MENUPAGE;
                 break;
-            case BATTLEGAMEPAGE:
+            case HOWTOPAGESETTING:
+                mainView.currPage = MENUPAGE;
+                break;
+            case CONTACTUSPAGE:
                 mainView.currPage = MENUPAGE;
                 break;
         }
@@ -354,12 +402,35 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_tips.onPause();
         openGLSurfaceView_detectionCheck.onPause();
 
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+            //mediaPlayer.release();
+        }
+
         try
         {
             //Don't leave Bluetooth sockets open when leaving activity
             bluetoothSocket.close();
         } catch (IOException e2) {
             //insert code to deal with this
+        }
+    }
+
+    @Override
+    public void onStop() {
+        if (mediaPlayer != null){
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null){
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
     }
 

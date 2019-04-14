@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -45,9 +46,11 @@ public class MainView extends View {
     private final static int HOWTOPAGEBM2 = 10;
     private final static int HOWTOPAGEBM3 = 11;
     private final static int HOWTOPAGEBM4 = 12;
-    private final static int INFOPAGE = 13;
-    private final static int PUZZLEPAGE = 14;
+    private final static int PUZZLEPAGE = 13;
+    private final static int HOWTOPAGESETTING = 14;
+    private final static int CONTACTUSPAGE = 15;
     protected int currPage = MENUPAGE;
+    private boolean isInGame = false;
 
     private static final int MAXQUESTNUM = 6;
 
@@ -72,6 +75,17 @@ public class MainView extends View {
     private static final int PURPLEANSWERSTAGE = 4;
     private static final int TIMESUPSTAGE = 5;
     private static final int RESULTSTAGE = 6;
+
+    private static final int PM1 = 0;
+    private static final int PM2 = 1;
+    private static final int PM3 = 2;
+    private static final int PM4 = 3;
+    private static final int PM5 = 4;
+    private static final int BM1 = 5;
+    private static final int BM2 = 6;
+    private static final int BM3 = 7;
+    private static final int BM4 = 8;
+    private int currHowToSetting = 0;
 
     private int canvasW;
     private int canvasH;
@@ -100,8 +114,35 @@ public class MainView extends View {
     private Rect disableSrc;
 
     private Bitmap settingPic;
+    private Bitmap settingCancelPic;
     private Rect settingSrc;
-    private Rect settingPos;
+    private Rect settingPos0;
+
+    private Bitmap settingHowToPic;
+    private Bitmap settingHvSoundPic;
+    private Bitmap settingNoSoundPic;
+    private Bitmap settingInfoPic;
+    private Bitmap settingLeavePic;
+    private Rect settingPos1;
+    private Rect settingPos2;
+    private Rect settingPos3;
+    private boolean settingIsShown = false;
+
+    private Bitmap contactUsTitlePic;
+    private Rect contactUsTitleSrc;
+    private Rect contactUsTitlePos;
+
+    private Bitmap contactUsPic;
+    private Rect contactUsSrc;
+    private Rect contactUsPos;
+
+    private Bitmap BModeTitlePic;
+    private Rect BModeTitleSrc;
+    private Rect BModeTitlePos;
+
+    private Bitmap PModeTitlePic;
+    private Rect PModeTitleSrc;
+    private Rect PModeTitlePos;
 
     private Bitmap backPic;
     private Rect backSrc;
@@ -421,6 +462,7 @@ public class MainView extends View {
     private int h5 = 0;
     private int h6 = 0;
 
+    private boolean musicIsPlay = true;
 
     public MainView(Context context) {
         super(context);
@@ -436,6 +478,7 @@ public class MainView extends View {
 
         sharedPreferences = context.getSharedPreferences(String.valueOf(R.string.app_name), Context.MODE_PRIVATE);
         Puzzle.setPlayedRound(sharedPreferences.getInt(String.valueOf(R.integer.playedRound), 0));
+
     }
 
     public MainView(Context context, @Nullable AttributeSet attrs) {
@@ -557,7 +600,25 @@ public class MainView extends View {
         disableSrc = new Rect(0,0, disablePic.getWidth(), disablePic.getHeight());
 
         settingPic = BitmapFactory.decodeResource(getResources(), R.drawable.setting, opts);
+        settingCancelPic = BitmapFactory.decodeResource(getResources(), R.drawable.settingcancel, opts);
+        settingHowToPic = BitmapFactory.decodeResource(getResources(), R.drawable.settinghowto, opts);
+        settingHvSoundPic = BitmapFactory.decodeResource(getResources(), R.drawable.settinghvsound, opts);
+        settingNoSoundPic = BitmapFactory.decodeResource(getResources(), R.drawable.settingnosound, opts);
+        settingInfoPic = BitmapFactory.decodeResource(getResources(), R.drawable.settinginfo, opts);
+        settingLeavePic = BitmapFactory.decodeResource(getResources(), R.drawable.settingleave, opts);
         settingSrc = new Rect(0,0, settingPic.getWidth(), settingPic.getHeight());
+
+        contactUsTitlePic = BitmapFactory.decodeResource(getResources(), R.drawable.contactustitle, opts);
+        contactUsTitleSrc = new Rect(0,0, contactUsTitlePic.getWidth(), contactUsTitlePic.getHeight());
+
+        contactUsPic = BitmapFactory.decodeResource(getResources(), R.drawable.contactus, opts);
+        contactUsSrc = new Rect(0,0, contactUsPic.getWidth(), contactUsPic.getHeight());
+
+        PModeTitlePic = BitmapFactory.decodeResource(getResources(), R.drawable.practicemodetitle, opts);
+        PModeTitleSrc = new Rect(0,0, PModeTitlePic.getWidth(), PModeTitlePic.getHeight());
+
+        BModeTitlePic = BitmapFactory.decodeResource(getResources(), R.drawable.battlemodetitle, opts);
+        BModeTitleSrc = new Rect(0,0, BModeTitlePic.getWidth(), BModeTitlePic.getHeight());
 
         backPic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         backSrc = new Rect(0,0, backPic.getWidth(), backPic.getHeight());
@@ -807,12 +868,36 @@ public class MainView extends View {
         top = 30;
         right = left + width;
         bottom = top + height;
-        settingPos = new Rect(left, top, right, bottom);
+        settingPos0 = new Rect(left, top, right, bottom);
+
+        width = w / 12;
+        height = (settingPic.getHeight() * width) / settingPic.getWidth();
+        left = settingPos0.left - 100 - width;
+        top = settingPos0.top;
+        right = left + width;
+        bottom = top + height;
+        settingPos1 = new Rect(left, top, right, bottom);
+
+        width = w / 12;
+        height = (settingPic.getHeight() * width) / settingPic.getWidth();
+        left = settingPos0.left;
+        top = settingPos0.bottom + 100;
+        right = left + width;
+        bottom = top + height;
+        settingPos3 = new Rect(left, top, right, bottom);
+
+        width = w / 12;
+        height = (settingPic.getHeight() * width) / settingPic.getWidth();
+        left = settingPos1.right - 70;
+        top = settingPos3.top - width + 70;
+        right = left + width;
+        bottom = top + height;
+        settingPos2 = new Rect(left, top, right, bottom);
 
         width = w / 13;
         height = (backPic.getHeight() * width) / backPic.getWidth();
         left = 30;
-        top = (settingPos.top + settingPos.height() / 2) - height / 2;
+        top = (settingPos0.top + settingPos0.height() / 2) - height / 2;
         right = left + width;
         bottom = top + height;
         backPos = new Rect(left, top, right, bottom);
@@ -820,7 +905,7 @@ public class MainView extends View {
         width = w / 3 + w / 30;
         height = (howToTitlePic.getHeight() * width) / howToTitlePic.getWidth();
         left = w / 2 - width / 2;
-        top = (settingPos.top + settingPos.height() / 2) - height / 2;
+        top = (settingPos0.top + settingPos0.height() / 2) - height / 2;
         right = left + width;
         bottom = top + height;
         howToTitlePos = new Rect(left, top, right, bottom);
@@ -923,7 +1008,7 @@ public class MainView extends View {
 
         width = w / 6 + w / 40;
         height = (nextPic.getHeight() * width) / nextPic.getWidth();
-        left = settingPos.left - width + 20;
+        left = settingPos0.left - width + 20;
         top = h - height - 50;
         right = left + width;
         bottom = top + height;
@@ -1014,7 +1099,7 @@ public class MainView extends View {
         width = w / 2 + w / 4;
         height = (qTitlePic[0].getHeight() * width) / qTitlePic[0].getWidth();
         left = w / 2 - width / 2;
-        top = settingPos.top + settingPos.height() / 2;
+        top = settingPos0.top + settingPos0.height() / 2;
         right = left + width;
         bottom = top + height;
         qTitlePos = new Rect(left, top, right, bottom);
@@ -1311,7 +1396,7 @@ public class MainView extends View {
         width = w / 2;
         height = (puzzleTitlePic1.getHeight() * width) / puzzleTitlePic1.getWidth();
         left = w / 2 - width / 2;
-        top = (settingPos.top + settingPos.height() / 2) - height / 2;
+        top = (settingPos0.top + settingPos0.height() / 2) - height / 2;
         right = left + width;
         bottom = top + height;
         puzzleTitlePos1 = new Rect(left, top, right, bottom);
@@ -1495,6 +1580,37 @@ public class MainView extends View {
         bottom = top + height;
         playerIconPos6 = new Rect(left, top, right, bottom);
 
+        width = w / 15;
+        height = (PModeTitlePic.getHeight() * width) / PModeTitlePic.getWidth();
+        left = 0;
+        top = h / 2 - height / 2;
+        right = left + width;
+        bottom = top + height;
+        PModeTitlePos = new Rect(left, top, right, bottom);
+
+        width = w / 15;
+        height = (BModeTitlePic.getHeight() * width) / BModeTitlePic.getWidth();
+        left = w - width;
+        top = h / 2 - height / 2;
+        right = left + width;
+        bottom = top + height;
+        BModeTitlePos = new Rect(left, top, right, bottom);
+
+        height = howToTitlePos.height();
+        width = (contactUsTitlePic.getWidth() * height) / contactUsTitlePic.getHeight();
+        left = w / 2 - width / 2;
+        top = (settingPos0.top + settingPos0.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        contactUsTitlePos = new Rect(left, top, right, bottom);
+
+        width = w / 2 + w / 3;
+        height = (contactUsPic.getHeight() * width) / contactUsPic.getWidth();
+        left = w / 2 - width / 2;
+        top = h / 2 - height / 2 + w / 30;
+        right = left + width;
+        bottom = top + height;
+        contactUsPos = new Rect(left, top, right, bottom);
 
     }
 
@@ -1502,8 +1618,6 @@ public class MainView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawRGB(255, 197, 128);
-
-        canvas.drawBitmap(settingPic, settingSrc, settingPos, null);
 
         switch (currPage){
             case MENUPAGE:
@@ -1668,19 +1782,6 @@ public class MainView extends View {
                 OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawHowToBMPage4(canvas);
                 break;
-            case INFOPAGE:
-                OpenGLRenderer_3DModel.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                OpenGLRenderer_SPType4_Base.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
-                OpenGLRenderer_Tips.setCanDraw(false);
-                OpenGLRenderer_DetectionCheck.setCanDraw(false);
-                break;
             case PUZZLEPAGE:
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
@@ -1695,6 +1796,34 @@ public class MainView extends View {
                 OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawPuzzlePage(canvas);
                 break;
+            case HOWTOPAGESETTING:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawHowToSettingPage(canvas);
+                break;
+            case CONTACTUSPAGE:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawContactUsPage(canvas);
+                break;
 
         }
 
@@ -1704,6 +1833,34 @@ public class MainView extends View {
 
         forArduino();
 
+        drawSettingPage(canvas);
+
+    }
+
+    private void drawSettingPage(Canvas canvas){
+
+        if(!settingIsShown){
+            canvas.drawBitmap(settingPic, settingSrc, settingPos0, null);
+        }
+        if(settingIsShown){
+            Paint whitebkg = new Paint();
+            whitebkg.setColor(Color.argb(100, 255, 255, 255));
+            canvas.drawRect(0, 0, canvasW, canvasH, whitebkg);
+            canvas.drawBitmap(settingCancelPic, settingSrc, settingPos0, null);
+            if(musicIsPlay){
+                canvas.drawBitmap(settingNoSoundPic, settingSrc, settingPos1, null);
+            }
+            else if(!musicIsPlay){
+                canvas.drawBitmap(settingHvSoundPic, settingSrc, settingPos1, null);
+            }
+            if(!isInGame){
+                canvas.drawBitmap(settingHowToPic, settingSrc, settingPos2, null);
+            }
+            else if(isInGame){
+                canvas.drawBitmap(settingLeavePic, settingSrc, settingPos2, null);
+            }
+            canvas.drawBitmap(settingInfoPic, settingSrc, settingPos3, null);
+        }
     }
 
     private void drawMenuPage(Canvas canvas){
@@ -1872,6 +2029,121 @@ public class MainView extends View {
         canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot9Pos, null);
     }
 
+    private void drawHowToSettingPage(Canvas canvas){
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
+
+        canvas.drawBitmap(BModeTitlePic, BModeTitleSrc, BModeTitlePos, null);
+        canvas.drawBitmap(PModeTitlePic, PModeTitleSrc, PModeTitlePos, null);
+
+        if(currHowToSetting >= PM1 && currHowToSetting <= PM5){
+            Point a = new Point(PModeTitlePos.right + 30, PModeTitlePos.top + PModeTitlePos.height() / 2);
+            Point b = new Point(a.x + 30, a.y - 20);
+            Point c = new Point(a.x + 30, a.y + 20);
+            Path path = new Path();
+            path.setFillType(Path.FillType.EVEN_ODD);
+            path.moveTo(b.x, b.y);
+            path.lineTo(c.x, c.y);
+            path.lineTo(a.x, a.y);
+            path.close();
+            canvas.drawPath(path, darkOrange);
+        }
+        else if(currHowToSetting >= BM1 && currHowToSetting <= BM4){
+            Point a = new Point(BModeTitlePos.left - 30, BModeTitlePos.top + BModeTitlePos.height() / 2);
+            Point b = new Point(a.x - 30, a.y - 20);
+            Point c = new Point(a.x - 30, a.y + 20);
+            Path path = new Path();
+            path.setFillType(Path.FillType.EVEN_ODD);
+            path.moveTo(b.x, b.y);
+            path.lineTo(c.x, c.y);
+            path.lineTo(a.x, a.y);
+            path.close();
+            canvas.drawPath(path, darkOrange);
+        }
+
+        switch (currHowToSetting){
+            case PM1:
+                canvas.drawBitmap(howTo1Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howTo1WordPic, howTo1WordSrc, howTo1WordPos, null);
+                canvas.drawBitmap(dotOrangePic, dotOrangeSrc, dot1Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot2Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot3Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot4Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot5Pos, null);
+                break;
+            case PM2:
+                canvas.drawBitmap(howTo2Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howTo2WordPic, howTo2WordSrc, howTo2WordPos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot1Pos, null);
+                canvas.drawBitmap(dotOrangePic, dotOrangeSrc, dot2Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot3Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot4Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot5Pos, null);
+                break;
+            case PM3:
+                canvas.drawBitmap(howTo3Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howTo3WordPic, howTo3WordSrc, howTo3WordPos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot1Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot2Pos, null);
+                canvas.drawBitmap(dotOrangePic, dotOrangeSrc, dot3Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot4Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot5Pos, null);
+                break;
+            case PM4:
+                canvas.drawBitmap(howTo4Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howTo4WordPic1, howTo4WordSrc1, howTo4WordPos1, null);
+                canvas.drawBitmap(howTo4WordPic2, howTo4WordSrc2, howTo4WordPos2, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot1Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot2Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot3Pos, null);
+                canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot4Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot5Pos, null);
+                break;
+            case PM5:
+                canvas.drawBitmap(howTo5Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howTo5WordPic, howTo5WordSrc, howTo5WordPos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot1Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot2Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot3Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot4Pos, null);
+                canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot5Pos, null);
+                break;
+            case BM1:
+                canvas.drawBitmap(howToBM1Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howToBM1WordPic1, howToBM1WordSrc1, howToBM1WordPos1, null);
+                canvas.drawBitmap(howToBM1WordPic2, howToBM1WordSrc2, howToBM1WordPos2, null);
+                canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot6Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot7Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot8Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot9Pos, null);
+                break;
+            case BM2:
+                canvas.drawBitmap(howToBM2Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howToBM2WordPic, howToBM2WordSrc, howToBM2WordPos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot6Pos, null);
+                canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot7Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot8Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot9Pos, null);
+                break;
+            case BM3:
+                canvas.drawBitmap(howToBM3Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howToBM3WordPic, howToBM3WordSrc, howToBM3WordPos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot6Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot7Pos, null);
+                canvas.drawBitmap(dotOrangePic, dotOrangeSrc, dot8Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot9Pos, null);
+                break;
+            case BM4:
+                canvas.drawBitmap(howTo5Pic, howToSrc, howToPos, null);
+                canvas.drawBitmap(howToBM4WordPic, howToBM4WordSrc, howToBM4WordPos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot6Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot7Pos, null);
+                canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot8Pos, null);
+                canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot9Pos, null);
+                break;
+        }
+
+    }
 
     private void drawPracticeGamePage(Canvas canvas){
 
@@ -1883,7 +2155,12 @@ public class MainView extends View {
 
         switch (gameManagerPracticeMode.getCurrQuestMode()){
             case DRAWFRONTVIEW:
-                OpenGLRenderer_3DModel.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                }
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
@@ -1896,7 +2173,12 @@ public class MainView extends View {
                 drawModelPracticeMode(canvas);
                 break;
             case DRAWSIDEVIEW:
-                OpenGLRenderer_3DModel.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                }
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
@@ -1909,7 +2191,12 @@ public class MainView extends View {
                 drawModelPracticeMode(canvas);
                 break;
             case DRAWTOPVIEW:
-                OpenGLRenderer_3DModel.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                }
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
@@ -1937,9 +2224,16 @@ public class MainView extends View {
                 break;
             case SPTYPE3:
                 OpenGLRenderer_3DModel.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base0.setCanDraw(true);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(true);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_SPType3_Base0.setCanDraw(true);
+                    OpenGLRenderer_SPType3_Base1.setCanDraw(true);
+                    OpenGLRenderer_SPType3_Quest.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                }
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
@@ -1954,11 +2248,20 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                OpenGLRenderer_SPType4_Base.setCanDraw(true);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_SPType4_Base.setCanDraw(true);
+                    OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
+                    OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
+                    OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
+                    OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                }
                 canvas.drawBitmap(selectAnsPic, qTitleSrc, qTitlePos, null);
                 drawSpType4PracticeMode(canvas);
                 break;
@@ -1972,6 +2275,10 @@ public class MainView extends View {
         drawTip(canvas);
 
         //restart the game
+        PMrestart();
+    }
+
+    private void PMrestart(){
         if(gameManagerPracticeMode.getRestart()){
             //save data
             Puzzle.setPlayedRound(puzzle.getPlayedRound() + 1);
@@ -1982,11 +2289,15 @@ public class MainView extends View {
             spType4PlayerChoice = 0;
             resetDrawView();
             resetTimer();
+
+            OpenGLRenderer_Tips.setCanDraw(false);
+            OpenGLRenderer_DetectionCheck.setCanDraw(false);
+
+            isInGame = false;
+
             currPage = MENUPAGE;
             gameManagerPracticeMode.setRestartFalse();
         }
-
-
     }
 
     private void drawTimerPracticeMode(Canvas canvas){
@@ -2372,7 +2683,12 @@ public class MainView extends View {
 
         switch (gameManagerBattleMode.getCurrQuestMode()){
             case DRAWFRONTVIEW:
-                OpenGLRenderer_3DModel.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                }
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
@@ -2385,7 +2701,12 @@ public class MainView extends View {
                 drawModelBattleMode(canvas);
                 break;
             case DRAWSIDEVIEW:
-                OpenGLRenderer_3DModel.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                }
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
@@ -2398,7 +2719,12 @@ public class MainView extends View {
                 drawModelBattleMode(canvas);
                 break;
             case DRAWTOPVIEW:
-                OpenGLRenderer_3DModel.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                }
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
@@ -2428,9 +2754,16 @@ public class MainView extends View {
                 break;
             case SPTYPE3:
                 OpenGLRenderer_3DModel.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base0.setCanDraw(true);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(true);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_SPType3_Base0.setCanDraw(true);
+                    OpenGLRenderer_SPType3_Base1.setCanDraw(true);
+                    OpenGLRenderer_SPType3_Quest.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                }
                 OpenGLRenderer_SPType4_Base.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
                 OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
@@ -2447,11 +2780,20 @@ public class MainView extends View {
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                 OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                OpenGLRenderer_SPType4_Base.setCanDraw(true);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
+                if(!settingIsShown){
+                    OpenGLRenderer_SPType4_Base.setCanDraw(true);
+                    OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
+                    OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
+                    OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
+                    OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
+                }
+                else if(settingIsShown){
+                    OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                }
                 canvas.drawBitmap(selectAnsPic, qTitleSrc, qTitlePos, null);
                 drawSpType4BattleMode(canvas);
                 break;
@@ -2609,14 +2951,22 @@ public class MainView extends View {
                 break;
         }
 
+        //restart the game
+        BMrestart();
+
+    }
+
+    private void BMrestart(){
         if(gameManagerBattleMode.getRestart()){
             spType4PlayerChoice = 0;
             resetDrawView();
             resetTimer();
+
+            isInGame = false;
+
             currPage = MENUPAGE;
             gameManagerBattleMode.setRestartFalse();
         }
-
     }
 
     private void drawTimerBattleMode(Canvas canvas){
@@ -3067,7 +3417,7 @@ public class MainView extends View {
                 canvas.drawRect(puzzleCoverPos[i], coverPaint);
             }
         }
-
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
     }
 
     private void updateGM(){
@@ -3139,6 +3489,12 @@ public class MainView extends View {
         }
     }
 
+    private void drawContactUsPage(Canvas canvas){
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(contactUsTitlePic, contactUsTitleSrc, contactUsTitlePos, null);
+        canvas.drawBitmap(contactUsPic, contactUsSrc, contactUsPos, null);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
@@ -3147,183 +3503,33 @@ public class MainView extends View {
         switch (event.getActionMasked()){
             case MotionEvent.ACTION_DOWN:
 
-                switch (currPage){
-                    case MENUPAGE:
-                        if(practiceModePos.contains(x, y)){
-                            playerNum = 1;
-                            currPage = HOWTOPAGEPM1;
-                        }
-                        else if(battleModePos.contains(x, y)){
-                            currPage = BATTLENUMPAGE;
-                        }
-                        else if(puzzleModePos.contains(x, y)){
-                            currPage = PUZZLEPAGE;
-                        }
-                        break;
-                    case PRACTICEGAMEPAGE:
-                        if(answerPos.contains(x, y )){
-                            if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM){
-                                gameManagerPracticeMode.setSpType4PlayerAns(spType4PlayerChoice);
-                                updateGM();
-                                gameManagerPracticeMode.compare();
-                                resetDrawView();
+                if(!settingIsShown){
+                    switch (currPage){
+                        case MENUPAGE:
+                            if(practiceModePos.contains(x, y)){
+                                playerNum = 1;
+                                currPage = HOWTOPAGEPM1;
                             }
-                        }
-
-                        if(gameManagerPracticeMode.getCurrQuestMode() == DRAWFRONTVIEW ||
-                                gameManagerPracticeMode.getCurrQuestMode() == DRAWSIDEVIEW ||
-                                gameManagerPracticeMode.getCurrQuestMode() == DRAWTOPVIEW){
-                            for(int i = 0; i < drawViewPos2.length; i++){
-                                if(drawViewPos2[i].contains(x, y)){
-                                    drawViewTouchCount = 0;
-                                    drawViewTouch[i] = !drawViewTouch[i];
+                            else if(battleModePos.contains(x, y)){
+                                currPage = BATTLENUMPAGE;
+                            }
+                            else if(puzzleModePos.contains(x, y)){
+                                currPage = PUZZLEPAGE;
+                            }
+                            break;
+                        case PRACTICEGAMEPAGE:
+                            if(answerPos.contains(x, y )){
+                                if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM){
+                                    gameManagerPracticeMode.setSpType4PlayerAns(spType4PlayerChoice);
+                                    updateGM();
+                                    gameManagerPracticeMode.compare();
+                                    resetDrawView();
                                 }
                             }
-                        }
 
-                        if(gameManagerPracticeMode.getCurrQuestMode() == SPTYPE4){
-                            if(spType4Pos0.contains(x, y)){
-                                spType4PlayerChoice = 0;
-                            }
-                            else if(spType4Pos1.contains(x, y)){
-                                spType4PlayerChoice = 1;
-                            }
-                            else if(spType4Pos2.contains(x, y)){
-                                spType4PlayerChoice = 2;
-                            }
-                            else if(spType4Pos3.contains(x, y)){
-                                spType4PlayerChoice = 3;
-                            }
-                        }
-
-                        if(timeRemapWidth == -1 && tipIconPos.contains(x, y)){
-                            tipIsShown = true;
-                        }
-
-                        if(timeRemapWidth == -1 && tipIsShown){
-                            if(tipBoxPos.contains(x, y)){
-                                tipIsShown = true;
-                            }
-                            else{
-                                tipIsShown = false;
-                            }
-                        }
-
-                        if(detectionIconPos.contains(x, y)){
-                            detectionIsShown = true;
-                        }
-
-                        if(detectionIsShown){
-                            if(detectionBoxPos.contains(x, y)){
-                                detectionIsShown = true;
-                            }
-                            else{
-                                detectionIsShown = false;
-                            }
-                        }
-
-                        //------debug use-------
-                        if(x < canvasW && x > canvasW - 200 && y > canvasH / 2 - 200 && y < canvasH / 2 + 200){
-                            if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM - 1){
-                                gameManagerPracticeMode.nextQ();
-                                resetDrawView();
-                                resetTimer();
-                            }
-                            else{
-                                resetDrawView();
-                                resetTimer();
-                                gameManagerPracticeMode.restart();
-                                currPage = MENUPAGE;
-                            }
-                        }
-                        //-----------------------
-
-
-                        break;
-                    case BATTLENUMPAGE:
-                        if(battleModeNumPos.contains(x, y)){
-                            if(player2Pos.contains(x, y)){
-                                playerNum = 2;
-                                currPage = HOWTOPAGEBM1;
-                            }
-                            else if(player3Pos.contains(x, y)){
-                                playerNum = 3;
-                                currPage = HOWTOPAGEBM1;
-                            }
-                            else if(player4Pos.contains(x, y)){
-                                playerNum = 4;
-                                currPage = HOWTOPAGEBM1;
-                            }
-                            resetTimer();
-                        }
-                        else{
-                            currPage = MENUPAGE;
-                        }
-                        break;
-                    case BATTLEGAMEPAGE:
-                        switch (playerNum){
-                            case 2:
-                                if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
-                                    if(redPlayerBtnLPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
-                                        answerCoolDown = 0;
-                                    }
-                                    else if(bluePlayerBtnLPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
-                                        answerCoolDown = 0;
-                                    }
-                                }
-                                break;
-                            case 3:
-                                if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
-                                    if(redPlayerBtnLPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
-                                        answerCoolDown = 0;
-                                    }
-                                    else if(bluePlayerBtnLPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
-                                        answerCoolDown = 0;
-                                    }
-                                    else if(greenPlayerBtnLPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(GREENANSWERSTAGE);
-                                    }
-                                }
-                                break;
-                            case 4:
-                                if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
-                                    if(redPlayerBtnSPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
-                                        answerCoolDown = 0;
-                                    }
-                                    else if(bluePlayerBtnSPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
-                                        answerCoolDown = 0;
-                                    }
-                                    else if(greenPlayerBtnSPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(GREENANSWERSTAGE);
-                                        answerCoolDown = 0;
-                                    }
-                                    else if(purplePlayerBtnSPos.contains(x, y)){
-                                        resetTimer();
-                                        GameManager_BattleMode.setCurrStage(PURPLEANSWERSTAGE);
-                                        answerCoolDown = 0;
-                                    }
-                                }
-                                break;
-                        }
-
-                        if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
-                            if(gameManagerBattleMode.getCurrQuestMode() == DRAWFRONTVIEW ||
-                                    gameManagerBattleMode.getCurrQuestMode() == DRAWSIDEVIEW ||
-                                    gameManagerBattleMode.getCurrQuestMode() == DRAWTOPVIEW){
+                            if(gameManagerPracticeMode.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                    gameManagerPracticeMode.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                    gameManagerPracticeMode.getCurrQuestMode() == DRAWTOPVIEW){
                                 for(int i = 0; i < drawViewPos2.length; i++){
                                     if(drawViewPos2[i].contains(x, y)){
                                         drawViewTouchCount = 0;
@@ -3332,7 +3538,7 @@ public class MainView extends View {
                                 }
                             }
 
-                            if(gameManagerBattleMode.getCurrQuestMode() == SPTYPE4){
+                            if(gameManagerPracticeMode.getCurrQuestMode() == SPTYPE4){
                                 if(spType4Pos0.contains(x, y)){
                                     spType4PlayerChoice = 0;
                                 }
@@ -3344,6 +3550,19 @@ public class MainView extends View {
                                 }
                                 else if(spType4Pos3.contains(x, y)){
                                     spType4PlayerChoice = 3;
+                                }
+                            }
+
+                            if(timeRemapWidth == -1 && tipIconPos.contains(x, y)){
+                                tipIsShown = true;
+                            }
+
+                            if(timeRemapWidth == -1 && tipIsShown){
+                                if(tipBoxPos.contains(x, y)){
+                                    tipIsShown = true;
+                                }
+                                else{
+                                    tipIsShown = false;
                                 }
                             }
 
@@ -3360,125 +3579,334 @@ public class MainView extends View {
                                 }
                             }
 
-                            if(answerPos.contains(x, y) && answerCoolDown <= 0){
-                                gameManagerBattleMode.compare();
+                            //------debug use-------
+                            if(x < canvasW && x > canvasW - 200 && y > canvasH / 2 - 200 && y < canvasH / 2 + 200){
+                                if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM - 1){
+                                    gameManagerPracticeMode.nextQ();
+                                    resetDrawView();
+                                    resetTimer();
+                                }
+                                else{
+                                    resetDrawView();
+                                    resetTimer();
+                                    gameManagerPracticeMode.restart();
+                                    currPage = MENUPAGE;
+                                }
                             }
-                        }
+                            //-----------------------
 
-                        if(gameManagerBattleMode.getCurrStage() == RESULTSTAGE){
+
+                            break;
+                        case BATTLENUMPAGE:
+                            if(battleModeNumPos.contains(x, y)){
+                                if(player2Pos.contains(x, y)){
+                                    playerNum = 2;
+                                    currPage = HOWTOPAGEBM1;
+                                }
+                                else if(player3Pos.contains(x, y)){
+                                    playerNum = 3;
+                                    currPage = HOWTOPAGEBM1;
+                                }
+                                else if(player4Pos.contains(x, y)){
+                                    playerNum = 4;
+                                    currPage = HOWTOPAGEBM1;
+                                }
+                                resetTimer();
+                            }
+                            else{
+                                currPage = MENUPAGE;
+                            }
+                            break;
+                        case BATTLEGAMEPAGE:
+                            switch (playerNum){
+                                case 2:
+                                    if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
+                                        if(redPlayerBtnLPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                            answerCoolDown = 0;
+                                        }
+                                        else if(bluePlayerBtnLPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                            answerCoolDown = 0;
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
+                                        if(redPlayerBtnLPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                            answerCoolDown = 0;
+                                        }
+                                        else if(bluePlayerBtnLPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                            answerCoolDown = 0;
+                                        }
+                                        else if(greenPlayerBtnLPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(GREENANSWERSTAGE);
+                                        }
+                                    }
+                                    break;
+                                case 4:
+                                    if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
+                                        if(redPlayerBtnSPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(REDANSWERSTAGE);
+                                            answerCoolDown = 0;
+                                        }
+                                        else if(bluePlayerBtnSPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(BLUEANSWERSTAGE);
+                                            answerCoolDown = 0;
+                                        }
+                                        else if(greenPlayerBtnSPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(GREENANSWERSTAGE);
+                                            answerCoolDown = 0;
+                                        }
+                                        else if(purplePlayerBtnSPos.contains(x, y)){
+                                            resetTimer();
+                                            GameManager_BattleMode.setCurrStage(PURPLEANSWERSTAGE);
+                                            answerCoolDown = 0;
+                                        }
+                                    }
+                                    break;
+                            }
+
+                            if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
+                                if(gameManagerBattleMode.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                        gameManagerBattleMode.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                        gameManagerBattleMode.getCurrQuestMode() == DRAWTOPVIEW){
+                                    for(int i = 0; i < drawViewPos2.length; i++){
+                                        if(drawViewPos2[i].contains(x, y)){
+                                            drawViewTouchCount = 0;
+                                            drawViewTouch[i] = !drawViewTouch[i];
+                                        }
+                                    }
+                                }
+
+                                if(gameManagerBattleMode.getCurrQuestMode() == SPTYPE4){
+                                    if(spType4Pos0.contains(x, y)){
+                                        spType4PlayerChoice = 0;
+                                    }
+                                    else if(spType4Pos1.contains(x, y)){
+                                        spType4PlayerChoice = 1;
+                                    }
+                                    else if(spType4Pos2.contains(x, y)){
+                                        spType4PlayerChoice = 2;
+                                    }
+                                    else if(spType4Pos3.contains(x, y)){
+                                        spType4PlayerChoice = 3;
+                                    }
+                                }
+
+                                if(detectionIconPos.contains(x, y)){
+                                    detectionIsShown = true;
+                                }
+
+                                if(detectionIsShown){
+                                    if(detectionBoxPos.contains(x, y)){
+                                        detectionIsShown = true;
+                                    }
+                                    else{
+                                        detectionIsShown = false;
+                                    }
+                                }
+
+                                if(answerPos.contains(x, y) && answerCoolDown <= 0){
+                                    gameManagerBattleMode.compare();
+                                }
+                            }
+
+                            if(gameManagerBattleMode.getCurrStage() == RESULTSTAGE){
+                                if(backPos.contains(x, y)){
+                                    gameManagerBattleMode.restart();
+                                }
+                            }
+
+
+                            break;
+                        case HOWTOPAGEPM1:
                             if(backPos.contains(x, y)){
-                                gameManagerBattleMode.restart();
+                                currPage = MENUPAGE;
                             }
-                        }
+                            else if(skipPos.contains(x, y)){
+                                currPage = PRACTICEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = HOWTOPAGEPM2;
+                            }
+                            break;
+                        case HOWTOPAGEPM2:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            else if(skipPos.contains(x, y)){
+                                currPage = PRACTICEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = HOWTOPAGEPM3;
+                            }
+                            break;
+                        case HOWTOPAGEPM3:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            else if(skipPos.contains(x, y)){
+                                currPage = PRACTICEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = HOWTOPAGEPM4;
+                            }
+                            break;
+                        case HOWTOPAGEPM4:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            else if(skipPos.contains(x, y)){
+                                currPage = PRACTICEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = HOWTOPAGEPM5;
+                            }
+                            break;
+                        case HOWTOPAGEPM5:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            else if(skipPos.contains(x, y)){
+                                currPage = PRACTICEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = PRACTICEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            break;
+                        case HOWTOPAGEBM1:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            else if(skipPos.contains(x, y)){
+                                currPage = BATTLEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = HOWTOPAGEBM2;
+                            }
+                            break;
+                        case HOWTOPAGEBM2:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            else if(skipPos.contains(x, y)){
+                                currPage = BATTLEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = HOWTOPAGEBM3;
+                            }
+                            break;
+                        case HOWTOPAGEBM3:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            else if(skipPos.contains(x, y)){
+                                currPage = BATTLEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = HOWTOPAGEBM4;
+                            }
+                            break;
+                        case HOWTOPAGEBM4:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            else if(skipPos.contains(x, y)){
+                                currPage = BATTLEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            else if(nextPos.contains(x, y)){
+                                currPage = BATTLEGAMEPAGE;
+                                isInGame = true;
+                            }
+                            break;
+                        case PUZZLEPAGE:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            break;
+                        case HOWTOPAGESETTING:
+                            if(PModeTitlePos.contains(x, y)){
+                                currHowToSetting = PM1;
+                            }
+                            else if(BModeTitlePos.contains(x, y)){
+                                currHowToSetting = BM1;
+                            }
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            break;
+                        case CONTACTUSPAGE:
+                            if(backPos.contains(x, y)){
+                                currPage = MENUPAGE;
+                            }
+                            break;
 
+                    }
 
-                        break;
-                    case HOWTOPAGEPM1:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = PRACTICEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGEPM2;
-                        }
-                        break;
-                    case HOWTOPAGEPM2:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = PRACTICEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGEPM3;
-                        }
-                        break;
-                    case HOWTOPAGEPM3:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = PRACTICEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGEPM4;
-                        }
-                        break;
-                    case HOWTOPAGEPM4:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = PRACTICEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGEPM5;
-                        }
-                        break;
-                    case HOWTOPAGEPM5:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = PRACTICEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = PRACTICEGAMEPAGE;
-                        }
-                        break;
-                    case HOWTOPAGEBM1:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = BATTLEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGEBM2;
-                        }
-                        break;
-                    case HOWTOPAGEBM2:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = BATTLEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGEBM3;
-                        }
-                        break;
-                    case HOWTOPAGEBM3:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = BATTLEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGEBM4;
-                        }
-                        break;
-                    case HOWTOPAGEBM4:
-                        if(backPos.contains(x, y)){
-                            currPage = MENUPAGE;
-                        }
-                        else if(skipPos.contains(x, y)){
-                            currPage = BATTLEGAMEPAGE;
-                        }
-                        else if(nextPos.contains(x, y)){
-                            currPage = BATTLEGAMEPAGE;
-                        }
-                        break;
-                    case INFOPAGE:
-                        break;
-
+                    if(settingPos0.contains(x, y)){
+                        settingIsShown = true;
+                    }
                 }
+                else if(settingIsShown){
+                    if(settingPos0.contains(x, y)){
+                        settingIsShown = false;
+                    }
 
-                if(settingPos.contains(x, y)){
-                    Log.d("adfd", "setting");
+
+                    if(settingPos1.contains(x, y) && musicIsPlay){
+                        musicIsPlay = false;
+                    }
+//                    else if(settingPos1.contains(x, y) && !musicIsPlay){
+//                        musicIsPlay = true;
+//                    }
+
+                    if(settingPos2.contains(x, y)){
+                        if(!isInGame){
+                            settingIsShown = false;
+                            currPage = HOWTOPAGESETTING;
+                        }
+                        else if(isInGame){
+                            gameManagerPracticeMode.restart();
+                            PMrestart();
+                            gameManagerBattleMode.restart();
+                            BMrestart();
+                            settingIsShown = false;
+                            currPage = MENUPAGE;
+                        }
+                    }
+
+                    if(settingPos3.contains(x, y)){
+                        if(isInGame){
+                            gameManagerPracticeMode.restart();
+                            PMrestart();
+                            gameManagerBattleMode.restart();
+                            BMrestart();
+                        }
+                        settingIsShown = false;
+                        currPage = CONTACTUSPAGE;
+                    }
+
                 }
 
                 //swipe
@@ -3493,98 +3921,165 @@ public class MainView extends View {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                switch (currPage){
-                    case PRACTICEGAMEPAGE:
-                        if(gameManagerPracticeMode.getCurrQuestMode() == DRAWFRONTVIEW ||
-                                gameManagerPracticeMode.getCurrQuestMode() == DRAWSIDEVIEW ||
-                                gameManagerPracticeMode.getCurrQuestMode() == DRAWTOPVIEW){
-                            for(int i = 0; i < drawViewPos2.length; i++){
-                                if(drawViewPos2[i].contains(x, y)){
-                                    drawViewTouchCount++;
-                                }
-                            }
-                        }
-                        break;
-                    case BATTLEGAMEPAGE:
-                        if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE) {
-                            if(gameManagerBattleMode.getCurrQuestMode() == DRAWFRONTVIEW ||
-                                    gameManagerBattleMode.getCurrQuestMode() == DRAWSIDEVIEW ||
-                                    gameManagerBattleMode.getCurrQuestMode() == DRAWTOPVIEW){
+                if(!settingIsShown){
+                    switch (currPage){
+                        case PRACTICEGAMEPAGE:
+                            if(gameManagerPracticeMode.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                    gameManagerPracticeMode.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                    gameManagerPracticeMode.getCurrQuestMode() == DRAWTOPVIEW){
                                 for(int i = 0; i < drawViewPos2.length; i++){
                                     if(drawViewPos2[i].contains(x, y)){
                                         drawViewTouchCount++;
                                     }
                                 }
                             }
-                        }
-                        break;
+                            break;
+                        case BATTLEGAMEPAGE:
+                            if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE) {
+                                if(gameManagerBattleMode.getCurrQuestMode() == DRAWFRONTVIEW ||
+                                        gameManagerBattleMode.getCurrQuestMode() == DRAWSIDEVIEW ||
+                                        gameManagerBattleMode.getCurrQuestMode() == DRAWTOPVIEW){
+                                    for(int i = 0; i < drawViewPos2.length; i++){
+                                        if(drawViewPos2[i].contains(x, y)){
+                                            drawViewTouchCount++;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                    }
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
-                switch (currPage){
-                    case HOWTOPAGEPM1:
-                        if(lastX - x > 100){
-                            currPage = HOWTOPAGEPM2;
-                        }
-                        break;
-                    case HOWTOPAGEPM2:
-                        if(x - lastX > 100){
-                            currPage = HOWTOPAGEPM1;
-                        }
-                        if(lastX - x > 100){
-                            currPage = HOWTOPAGEPM3;
-                        }
-                        break;
-                    case HOWTOPAGEPM3:
-                        if(x - lastX > 100){
-                            currPage = HOWTOPAGEPM2;
-                        }
-                        if(lastX - x > 100){
-                            currPage = HOWTOPAGEPM4;
-                        }
-                        break;
-                    case HOWTOPAGEPM4:
-                        if(x - lastX > 100){
-                            currPage = HOWTOPAGEPM3;
-                        }
-                        if(lastX - x > 100){
-                            currPage = HOWTOPAGEPM5;
-                        }
-                        break;
-                    case HOWTOPAGEPM5:
-                        if(x - lastX > 100){
-                            currPage = HOWTOPAGEPM4;
-                        }
-                        break;
-                    case HOWTOPAGEBM1:
-                        if(lastX - x > 100){
-                            currPage = HOWTOPAGEBM2;
-                        }
-                        break;
-                    case HOWTOPAGEBM2:
-                        if(x - lastX > 100){
-                            currPage = HOWTOPAGEBM1;
-                        }
-                        if(lastX - x > 100){
-                            currPage = HOWTOPAGEBM3;
-                        }
-                        break;
-                    case HOWTOPAGEBM3:
-                        if(x - lastX > 100){
-                            currPage = HOWTOPAGEBM2;
-                        }
-                        if(lastX - x > 100){
-                            currPage = HOWTOPAGEBM4;
-                        }
-                        break;
-                    case HOWTOPAGEBM4:
-                        if(x - lastX > 100){
-                            currPage = HOWTOPAGEBM3;
-                        }
-                        break;
+                if(!settingIsShown){
+                    switch (currPage){
+                        case HOWTOPAGEPM1:
+                            if(lastX - x > 100){
+                                currPage = HOWTOPAGEPM2;
+                            }
+                            break;
+                        case HOWTOPAGEPM2:
+                            if(x - lastX > 100){
+                                currPage = HOWTOPAGEPM1;
+                            }
+                            if(lastX - x > 100){
+                                currPage = HOWTOPAGEPM3;
+                            }
+                            break;
+                        case HOWTOPAGEPM3:
+                            if(x - lastX > 100){
+                                currPage = HOWTOPAGEPM2;
+                            }
+                            if(lastX - x > 100){
+                                currPage = HOWTOPAGEPM4;
+                            }
+                            break;
+                        case HOWTOPAGEPM4:
+                            if(x - lastX > 100){
+                                currPage = HOWTOPAGEPM3;
+                            }
+                            if(lastX - x > 100){
+                                currPage = HOWTOPAGEPM5;
+                            }
+                            break;
+                        case HOWTOPAGEPM5:
+                            if(x - lastX > 100){
+                                currPage = HOWTOPAGEPM4;
+                            }
+                            break;
+                        case HOWTOPAGEBM1:
+                            if(lastX - x > 100){
+                                currPage = HOWTOPAGEBM2;
+                            }
+                            break;
+                        case HOWTOPAGEBM2:
+                            if(x - lastX > 100){
+                                currPage = HOWTOPAGEBM1;
+                            }
+                            if(lastX - x > 100){
+                                currPage = HOWTOPAGEBM3;
+                            }
+                            break;
+                        case HOWTOPAGEBM3:
+                            if(x - lastX > 100){
+                                currPage = HOWTOPAGEBM2;
+                            }
+                            if(lastX - x > 100){
+                                currPage = HOWTOPAGEBM4;
+                            }
+                            break;
+                        case HOWTOPAGEBM4:
+                            if(x - lastX > 100){
+                                currPage = HOWTOPAGEBM3;
+                            }
+                            break;
+                        case HOWTOPAGESETTING:
+                            switch (currHowToSetting){
+                                case PM1:
+                                    if(lastX - x > 100){
+                                        currHowToSetting = PM2;
+                                    }
+                                    break;
+                                case PM2:
+                                    if(x - lastX > 100){
+                                        currHowToSetting = PM1;
+                                    }
+                                    if(lastX - x > 100){
+                                        currHowToSetting = PM3;
+                                    }
+                                    break;
+                                case PM3:
+                                    if(x - lastX > 100){
+                                        currHowToSetting = PM2;
+                                    }
+                                    if(lastX - x > 100){
+                                        currHowToSetting = PM4;
+                                    }
+                                    break;
+                                case PM4:
+                                    if(x - lastX > 100){
+                                        currHowToSetting = PM3;
+                                    }
+                                    if(lastX - x > 100){
+                                        currHowToSetting = PM5;
+                                    }
+                                    break;
+                                case PM5:
+                                    if(x - lastX > 100){
+                                        currHowToSetting = PM4;
+                                    }
+                                    break;
+                                case BM1:
+                                    if(lastX - x > 100){
+                                        currHowToSetting = BM2;
+                                    }
+                                    break;
+                                case BM2:
+                                    if(x - lastX > 100){
+                                        currHowToSetting = BM1;
+                                    }
+                                    if(lastX - x > 100){
+                                        currHowToSetting = BM3;
+                                    }
+                                    break;
+                                case BM3:
+                                    if(x - lastX > 100){
+                                        currHowToSetting = BM2;
+                                    }
+                                    if(lastX - x > 100){
+                                        currHowToSetting = BM4;
+                                    }
+                                    break;
+                                case BM4:
+                                    if(x - lastX > 100){
+                                        currHowToSetting = BM3;
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
                 }
-
                 break;
         }
 
@@ -3640,6 +4135,26 @@ public class MainView extends View {
             howTo3Pic.recycle();
             howTo3Pic = null;
         }
+        if(howTo4Pic != null && !howTo4Pic.isRecycled()){
+            howTo4Pic.recycle();
+            howTo4Pic = null;
+        }
+        if(howTo5Pic != null && !howTo5Pic.isRecycled()){
+            howTo5Pic.recycle();
+            howTo5Pic = null;
+        }
+        if(howToBM1Pic != null && !howToBM1Pic.isRecycled()){
+            howToBM1Pic.recycle();
+            howToBM1Pic = null;
+        }
+        if(howToBM2Pic != null && !howToBM2Pic.isRecycled()){
+            howToBM2Pic.recycle();
+            howToBM2Pic = null;
+        }
+        if(howToBM3Pic != null && !howToBM3Pic.isRecycled()){
+            howToBM3Pic.recycle();
+            howToBM3Pic = null;
+        }
         if(howTo1WordPic != null && !howTo1WordPic.isRecycled()){
             howTo1WordPic.recycle();
             howTo1WordPic = null;
@@ -3651,6 +4166,38 @@ public class MainView extends View {
         if(howTo3WordPic != null && !howTo3WordPic.isRecycled()){
             howTo3WordPic.recycle();
             howTo3WordPic = null;
+        }
+        if(howTo4WordPic1 != null && !howTo4WordPic1.isRecycled()){
+            howTo4WordPic1.recycle();
+            howTo4WordPic1 = null;
+        }
+        if(howTo4WordPic2 != null && !howTo4WordPic2.isRecycled()){
+            howTo4WordPic2.recycle();
+            howTo4WordPic2 = null;
+        }
+        if(howTo5WordPic != null && !howTo5WordPic.isRecycled()){
+            howTo5WordPic.recycle();
+            howTo5WordPic = null;
+        }
+        if(howToBM1WordPic1 != null && !howToBM1WordPic1.isRecycled()){
+            howToBM1WordPic1.recycle();
+            howToBM1WordPic1 = null;
+        }
+        if(howToBM1WordPic2 != null && !howToBM1WordPic2.isRecycled()){
+            howToBM1WordPic2.recycle();
+            howToBM1WordPic2 = null;
+        }
+        if(howToBM2WordPic != null && !howToBM2WordPic.isRecycled()){
+            howToBM2WordPic.recycle();
+            howToBM2WordPic = null;
+        }
+        if(howToBM3WordPic != null && !howToBM3WordPic.isRecycled()){
+            howToBM3WordPic.recycle();
+            howToBM3WordPic = null;
+        }
+        if(howToBM4WordPic != null && !howToBM4WordPic.isRecycled()){
+            howToBM4WordPic.recycle();
+            howToBM4WordPic = null;
         }
         if(nextPic != null && !nextPic.isRecycled()){
             nextPic.recycle();
@@ -3738,6 +4285,10 @@ public class MainView extends View {
             spType3Q2Pic.recycle();
             spType3Q2Pic = null;
         }
+        if(qSpType3BkgPic != null && !qSpType3BkgPic.isRecycled()){
+            qSpType3BkgPic.recycle();
+            qSpType3BkgPic = null;
+        }
         if(tipIconPic != null && !tipIconPic.isRecycled()){
             tipIconPic.recycle();
             tipIconPic = null;
@@ -3745,6 +4296,10 @@ public class MainView extends View {
         if(tipBoxPic != null && !tipBoxPic.isRecycled()){
             tipBoxPic.recycle();
             tipBoxPic = null;
+        }
+        if(tipBoxPic2 != null && !tipBoxPic2.isRecycled()){
+            tipBoxPic2.recycle();
+            tipBoxPic2 = null;
         }
         if(detectionIconPic != null && !detectionIconPic.isRecycled()){
             detectionIconPic.recycle();
@@ -3773,6 +4328,62 @@ public class MainView extends View {
         if(puzzleTitlePic3 != null && !puzzleTitlePic3.isRecycled()){
             puzzleTitlePic3.recycle();
             puzzleTitlePic3 = null;
+        }
+        if(redPlayerBtnLPic != null && !redPlayerBtnLPic.isRecycled()){
+            redPlayerBtnLPic.recycle();
+            redPlayerBtnLPic = null;
+        }
+        if(bluePlayerBtnLPic != null && !bluePlayerBtnLPic.isRecycled()){
+            bluePlayerBtnLPic.recycle();
+            bluePlayerBtnLPic = null;
+        }
+        if(greenPlayerBtnLPic != null && !greenPlayerBtnLPic.isRecycled()){
+            greenPlayerBtnLPic.recycle();
+            greenPlayerBtnLPic = null;
+        }
+        if(redPlayerBtnSPic != null && !redPlayerBtnSPic.isRecycled()){
+            redPlayerBtnSPic.recycle();
+            redPlayerBtnSPic = null;
+        }
+        if(bluePlayerBtnSPic != null && !bluePlayerBtnSPic.isRecycled()){
+            bluePlayerBtnSPic.recycle();
+            bluePlayerBtnSPic = null;
+        }
+        if(greenPlayerBtnSPic != null && !greenPlayerBtnSPic.isRecycled()){
+            greenPlayerBtnSPic.recycle();
+            greenPlayerBtnSPic = null;
+        }
+        if(purplePlayerBtnSPic != null && !purplePlayerBtnSPic.isRecycled()){
+            purplePlayerBtnSPic.recycle();
+            purplePlayerBtnSPic = null;
+        }
+        if(timesUpPic != null && !timesUpPic.isRecycled()){
+            timesUpPic.recycle();
+            timesUpPic = null;
+        }
+        if(redWinsPic != null && !redWinsPic.isRecycled()){
+            redWinsPic.recycle();
+            redWinsPic = null;
+        }
+        if(blueWinsPic != null && !blueWinsPic.isRecycled()){
+            blueWinsPic.recycle();
+            blueWinsPic = null;
+        }
+        if(greenWinsPic != null && !greenWinsPic.isRecycled()){
+            greenWinsPic.recycle();
+            greenWinsPic = null;
+        }
+        if(purpleWinsPic != null && !purpleWinsPic.isRecycled()){
+            purpleWinsPic.recycle();
+            purpleWinsPic = null;
+        }
+        if(itsADrawPic != null && !itsADrawPic.isRecycled()){
+            itsADrawPic.recycle();
+            itsADrawPic = null;
+        }
+        if(playerIconPic != null && !playerIconPic.isRecycled()){
+            playerIconPic.recycle();
+            playerIconPic = null;
         }
 
     }
