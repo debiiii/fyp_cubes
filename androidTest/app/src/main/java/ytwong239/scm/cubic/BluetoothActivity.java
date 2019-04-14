@@ -35,11 +35,17 @@ public class BluetoothActivity extends AppCompatActivity {
     private final static int PRACTICEGAMEPAGE = 1;
     private final static int BATTLENUMPAGE = 2;
     private final static int BATTLEGAMEPAGE = 3;
-    private final static int HOWTOPAGE1 = 4;
-    private final static int HOWTOPAGE2 = 5;
-    private final static int HOWTOPAGE3 = 6;
-    private final static int INFOPAGE = 7;
-    private final static int PUZZLEPAGE = 8;
+    private final static int HOWTOPAGEPM1 = 4;
+    private final static int HOWTOPAGEPM2 = 5;
+    private final static int HOWTOPAGEPM3 = 6;
+    private final static int HOWTOPAGEPM4 = 7;
+    private final static int HOWTOPAGEPM5 = 8;
+    private final static int HOWTOPAGEBM1 = 9;
+    private final static int HOWTOPAGEBM2 = 10;
+    private final static int HOWTOPAGEBM3 = 11;
+    private final static int HOWTOPAGEBM4 = 12;
+    private final static int INFOPAGE = 13;
+    private final static int PUZZLEPAGE = 14;
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice bluetoothDevice;

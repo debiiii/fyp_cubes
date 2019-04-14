@@ -36,11 +36,17 @@ public class MainView extends View {
     private final static int PRACTICEGAMEPAGE = 1;
     private final static int BATTLENUMPAGE = 2;
     private final static int BATTLEGAMEPAGE = 3;
-    private final static int HOWTOPAGE1 = 4;
-    private final static int HOWTOPAGE2 = 5;
-    private final static int HOWTOPAGE3 = 6;
-    private final static int INFOPAGE = 7;
-    private final static int PUZZLEPAGE = 8;
+    private final static int HOWTOPAGEPM1 = 4;
+    private final static int HOWTOPAGEPM2 = 5;
+    private final static int HOWTOPAGEPM3 = 6;
+    private final static int HOWTOPAGEPM4 = 7;
+    private final static int HOWTOPAGEPM5 = 8;
+    private final static int HOWTOPAGEBM1 = 9;
+    private final static int HOWTOPAGEBM2 = 10;
+    private final static int HOWTOPAGEBM3 = 11;
+    private final static int HOWTOPAGEBM4 = 12;
+    private final static int INFOPAGE = 13;
+    private final static int PUZZLEPAGE = 14;
     protected int currPage = MENUPAGE;
 
     private static final int MAXQUESTNUM = 6;
@@ -106,16 +112,15 @@ public class MainView extends View {
     private Rect howToTitlePos;
 
     private Bitmap howTo1Pic;
-    private Rect howTo1Src;
-    private Rect howTo1Pos;
-
     private Bitmap howTo2Pic;
-    private Rect howTo2Src;
-    private Rect howTo2Pos;
-
     private Bitmap howTo3Pic;
-    private Rect howTo3Src;
-    private Rect howTo3Pos;
+    private Bitmap howTo4Pic;
+    private Bitmap howTo5Pic;
+    private Bitmap howToBM1Pic;
+    private Bitmap howToBM2Pic;
+    private Bitmap howToBM3Pic;
+    private Rect howToSrc;
+    private Rect howToPos;
 
     private Bitmap howTo1WordPic;
     private Rect howTo1WordSrc;
@@ -128,6 +133,38 @@ public class MainView extends View {
     private Bitmap howTo3WordPic;
     private Rect howTo3WordSrc;
     private Rect howTo3WordPos;
+
+    private Bitmap howTo4WordPic1;
+    private Rect howTo4WordSrc1;
+    private Rect howTo4WordPos1;
+
+    private Bitmap howTo4WordPic2;
+    private Rect howTo4WordSrc2;
+    private Rect howTo4WordPos2;
+
+    private Bitmap howTo5WordPic;
+    private Rect howTo5WordSrc;
+    private Rect howTo5WordPos;
+
+    private Bitmap howToBM1WordPic1;
+    private Rect howToBM1WordSrc1;
+    private Rect howToBM1WordPos1;
+
+    private Bitmap howToBM1WordPic2;
+    private Rect howToBM1WordSrc2;
+    private Rect howToBM1WordPos2;
+
+    private Bitmap howToBM2WordPic;
+    private Rect howToBM2WordSrc;
+    private Rect howToBM2WordPos;
+
+    private Bitmap howToBM3WordPic;
+    private Rect howToBM3WordSrc;
+    private Rect howToBM3WordPos;
+
+    private Bitmap howToBM4WordPic;
+    private Rect howToBM4WordSrc;
+    private Rect howToBM4WordPos;
 
     private Bitmap nextPic;
     private Rect nextSrc;
@@ -144,6 +181,12 @@ public class MainView extends View {
     private Rect dot1Pos;
     private Rect dot2Pos;
     private Rect dot3Pos;
+    private Rect dot4Pos;
+    private Rect dot5Pos;
+    private Rect dot6Pos;
+    private Rect dot7Pos;
+    private Rect dot8Pos;
+    private Rect dot9Pos;
 
     private Bitmap[] qTitlePic = new Bitmap[MAXQUESTNUM];
     private Bitmap form3dmodelPic;
@@ -523,13 +566,14 @@ public class MainView extends View {
         howToTitleSrc = new Rect(0,0, howToTitlePic.getWidth(), howToTitlePic.getHeight());
 
         howTo1Pic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay1, opts);
-        howTo1Src = new Rect(0,0, howTo1Pic.getWidth(), howTo1Pic.getHeight());
-
         howTo2Pic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay2, opts);
-        howTo2Src = new Rect(0,0, howTo2Pic.getWidth(), howTo2Pic.getHeight());
-
         howTo3Pic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay3, opts);
-        howTo3Src = new Rect(0,0, howTo3Pic.getWidth(), howTo3Pic.getHeight());
+        howTo4Pic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay4, opts);
+        howTo5Pic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay5, opts);
+        howToBM1Pic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplaybm1, opts);
+        howToBM2Pic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplaybm2, opts);
+        howToBM3Pic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplaybm3, opts);
+        howToSrc = new Rect(0,0, howTo1Pic.getWidth(), howTo1Pic.getHeight());
 
         howTo1WordPic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay1word, opts);
         howTo1WordSrc = new Rect(0,0, howTo1WordPic.getWidth(), howTo1WordPic.getHeight());
@@ -539,6 +583,30 @@ public class MainView extends View {
 
         howTo3WordPic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay3word, opts);
         howTo3WordSrc = new Rect(0,0, howTo3WordPic.getWidth(), howTo3WordPic.getHeight());
+
+        howTo4WordPic1 = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay4word1, opts);
+        howTo4WordSrc1 = new Rect(0,0, howTo4WordPic1.getWidth(), howTo4WordPic1.getHeight());
+
+        howTo4WordPic2 = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay4word2, opts);
+        howTo4WordSrc2 = new Rect(0,0, howTo4WordPic2.getWidth(), howTo4WordPic2.getHeight());
+
+        howTo5WordPic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplay5word, opts);
+        howTo5WordSrc = new Rect(0,0, howTo5WordPic.getWidth(), howTo5WordPic.getHeight());
+
+        howToBM1WordPic1 = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplaybm1word1, opts);
+        howToBM1WordSrc1= new Rect(0,0, howToBM1WordPic1.getWidth(), howToBM1WordPic1.getHeight());
+
+        howToBM1WordPic2 = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplaybm1word2, opts);
+        howToBM1WordSrc2= new Rect(0,0, howToBM1WordPic2.getWidth(), howToBM1WordPic2.getHeight());
+
+        howToBM2WordPic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplaybm2word, opts);
+        howToBM2WordSrc= new Rect(0,0, howToBM2WordPic.getWidth(), howToBM2WordPic.getHeight());
+
+        howToBM3WordPic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplaybm3word, opts);
+        howToBM3WordSrc= new Rect(0,0, howToBM3WordPic.getWidth(), howToBM3WordPic.getHeight());
+
+        howToBM4WordPic = BitmapFactory.decodeResource(getResources(), R.drawable.howtoplaybm4word, opts);
+        howToBM4WordSrc= new Rect(0,0, howToBM4WordPic.getWidth(), howToBM4WordPic.getHeight());
 
         nextPic = BitmapFactory.decodeResource(getResources(), R.drawable.next, opts);
         nextSrc = new Rect(0,0, nextPic.getWidth(), nextPic.getHeight());
@@ -763,28 +831,12 @@ public class MainView extends View {
         top = h / 2 - height / 2 - h / 20;
         right = left + width;
         bottom = top + height;
-        howTo1Pos = new Rect(left, top, right, bottom);
-
-        height = h / 2;
-        width = (howTo2Pic.getWidth() * height) / howTo2Pic.getHeight();
-        left = w / 2 - width / 2;
-        top = h / 2 - height / 2 - h / 20;
-        right = left + width;
-        bottom = top + height;
-        howTo2Pos = new Rect(left, top, right, bottom);
-
-        height = h / 2;
-        width = (howTo3Pic.getWidth() * height) / howTo3Pic.getHeight();
-        left = w / 2 - width / 2;
-        top = h / 2 - height / 2 - h / 20;
-        right = left + width;
-        bottom = top + height;
-        howTo3Pos = new Rect(left, top, right, bottom);
+        howToPos = new Rect(left, top, right, bottom);
 
         height = h / 23;
         width = (howTo1WordPic.getWidth() * height) / howTo1WordPic.getHeight();
         left = w / 2 - width / 2;
-        top = howTo1Pos.bottom + h / 20;
+        top = howToPos.bottom + h / 20;
         right = left + width;
         bottom = top + height;
         howTo1WordPos = new Rect(left, top, right, bottom);
@@ -792,7 +844,7 @@ public class MainView extends View {
         height = h / 23;
         width = (howTo2WordPic.getWidth() * height) / howTo2WordPic.getHeight();
         left = w / 2 - width / 2;
-        top = howTo2Pos.bottom + h / 20;
+        top = howToPos.bottom + h / 20;
         right = left + width;
         bottom = top + height;
         howTo2WordPos = new Rect(left, top, right, bottom);
@@ -800,10 +852,74 @@ public class MainView extends View {
         height = h / 23;
         width = (howTo3WordPic.getWidth() * height) / howTo3WordPic.getHeight();
         left = w / 2 - width / 2;
-        top = howTo3Pos.bottom + h / 20;
+        top = howToPos.bottom + h / 20;
         right = left + width;
         bottom = top + height;
         howTo3WordPos = new Rect(left, top, right, bottom);
+
+        height = h / 23;
+        width = (howTo4WordPic1.getWidth() * height) / howTo4WordPic1.getHeight();
+        left = w / 2 - width / 2;
+        top = howToPos.bottom + h / 40;
+        right = left + width;
+        bottom = top + height;
+        howTo4WordPos1 = new Rect(left, top, right, bottom);
+
+        height = h / 23;
+        width = (howTo4WordPic2.getWidth() * height) / howTo4WordPic2.getHeight();
+        left = w / 2 - width / 2;
+        top = howTo4WordPos1.bottom + h / 60;
+        right = left + width;
+        bottom = top + height;
+        howTo4WordPos2 = new Rect(left, top, right, bottom);
+
+        height = h / 23;
+        width = (howTo5WordPic.getWidth() * height) / howTo5WordPic.getHeight();
+        left = w / 2 - width / 2;
+        top = howToPos.bottom + h / 20;
+        right = left + width;
+        bottom = top + height;
+        howTo5WordPos = new Rect(left, top, right, bottom);
+
+        height = h / 23;
+        width = (howToBM1WordPic1.getWidth() * height) / howToBM1WordPic1.getHeight();
+        left = w / 2 - width / 2;
+        top = howToPos.bottom + h / 40;
+        right = left + width;
+        bottom = top + height;
+        howToBM1WordPos1 = new Rect(left, top, right, bottom);
+
+        height = h / 23;
+        width = (howToBM1WordPic2.getWidth() * height) / howToBM1WordPic2.getHeight();
+        left = w / 2 - width / 2;
+        top = howToBM1WordPos1.bottom + h / 60;
+        right = left + width;
+        bottom = top + height;
+        howToBM1WordPos2 = new Rect(left, top, right, bottom);
+
+        height = h / 23;
+        width = (howToBM2WordPic.getWidth() * height) / howToBM2WordPic.getHeight();
+        left = w / 2 - width / 2;
+        top = howToPos.bottom + h / 20;
+        right = left + width;
+        bottom = top + height;
+        howToBM2WordPos = new Rect(left, top, right, bottom);
+
+        height = h / 23;
+        width = (howToBM3WordPic.getWidth() * height) / howToBM3WordPic.getHeight();
+        left = w / 2 - width / 2;
+        top = howToPos.bottom + h / 20;
+        right = left + width;
+        bottom = top + height;
+        howToBM3WordPos = new Rect(left, top, right, bottom);
+
+        height = h / 23;
+        width = (howToBM4WordPic.getWidth() * height) / howToBM4WordPic.getHeight();
+        left = w / 2 - width / 2;
+        top = howToPos.bottom + h / 20;
+        right = left + width;
+        bottom = top + height;
+        howToBM4WordPos = new Rect(left, top, right, bottom);
 
         width = w / 6 + w / 40;
         height = (nextPic.getHeight() * width) / nextPic.getWidth();
@@ -821,9 +937,19 @@ public class MainView extends View {
         bottom = top + height;
         skipPos= new Rect(left, top, right, bottom);
 
+        gap = w / 50;
+
         width = w / 60;
         height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
         left = w / 2 - width / 2;
+        top = (nextPos.top + nextPos.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        dot3Pos = new Rect(left, top, right, bottom);
+
+        width = w / 60;
+        height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
+        left = dot3Pos.left - gap - width;
         top = (nextPos.top + nextPos.height() / 2) - height / 2;
         right = left + width;
         bottom = top + height;
@@ -831,7 +957,7 @@ public class MainView extends View {
 
         width = w / 60;
         height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
-        left = dot2Pos.left - w / 50 - width;
+        left = dot2Pos.left - gap - width;
         top = (nextPos.top + nextPos.height() / 2) - height / 2;
         right = left + width;
         bottom = top + height;
@@ -839,11 +965,51 @@ public class MainView extends View {
 
         width = w / 60;
         height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
-        left = dot2Pos.right + w / 50;
+        left = dot3Pos.right + gap;
         top = (nextPos.top + nextPos.height() / 2) - height / 2;
         right = left + width;
         bottom = top + height;
-        dot3Pos = new Rect(left, top, right, bottom);
+        dot4Pos = new Rect(left, top, right, bottom);
+
+        width = w / 60;
+        height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
+        left = dot4Pos.right + gap;
+        top = (nextPos.top + nextPos.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        dot5Pos = new Rect(left, top, right, bottom);
+
+        width = w / 60;
+        height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
+        left = w / 2 - gap / 2 - width;
+        top = (nextPos.top + nextPos.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        dot7Pos = new Rect(left, top, right, bottom);
+
+        width = w / 60;
+        height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
+        left = dot7Pos.left - gap - width;
+        top = (nextPos.top + nextPos.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        dot6Pos = new Rect(left, top, right, bottom);
+
+        width = w / 60;
+        height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
+        left = w / 2 + gap / 2;
+        top = (nextPos.top + nextPos.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        dot8Pos = new Rect(left, top, right, bottom);
+
+        width = w / 60;
+        height = (dotWhitePic.getHeight() * width) / dotWhitePic.getWidth();
+        left = dot8Pos.right + gap;
+        top = (nextPos.top + nextPos.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        dot9Pos = new Rect(left, top, right, bottom);
 
         width = w / 2 + w / 4;
         height = (qTitlePic[0].getHeight() * width) / qTitlePic[0].getWidth();
@@ -1376,7 +1542,7 @@ public class MainView extends View {
                 OpenGLRenderer_DetectionCheck.setCanDraw(false);
                 drawBattleGamePage(canvas);
                 break;
-            case HOWTOPAGE1:
+            case HOWTOPAGEPM1:
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
@@ -1388,9 +1554,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
                 OpenGLRenderer_DetectionCheck.setCanDraw(false);
-                drawHowToPage1(canvas);
+                drawHowToPMPage1(canvas);
                 break;
-            case HOWTOPAGE2:
+            case HOWTOPAGEPM2:
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
@@ -1402,9 +1568,9 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
                 OpenGLRenderer_DetectionCheck.setCanDraw(false);
-                drawHowToPage2(canvas);
+                drawHowToPMPage2(canvas);
                 break;
-            case HOWTOPAGE3:
+            case HOWTOPAGEPM3:
                 OpenGLRenderer_3DModel.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                 OpenGLRenderer_SPType3_Base1.setCanDraw(false);
@@ -1416,7 +1582,91 @@ public class MainView extends View {
                 OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
                 OpenGLRenderer_Tips.setCanDraw(false);
                 OpenGLRenderer_DetectionCheck.setCanDraw(false);
-                drawHowToPage3(canvas);
+                drawHowToPMPage3(canvas);
+                break;
+            case HOWTOPAGEPM4:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawHowToPMPage4(canvas);
+                break;
+            case HOWTOPAGEPM5:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawHowToPMPage5(canvas);
+                break;
+            case HOWTOPAGEBM1:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawHowToBMPage1(canvas);
+                break;
+            case HOWTOPAGEBM2:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawHowToBMPage2(canvas);
+                break;
+            case HOWTOPAGEBM3:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawHowToBMPage3(canvas);
+                break;
+            case HOWTOPAGEBM4:
+                OpenGLRenderer_3DModel.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                OpenGLRenderer_Tips.setCanDraw(false);
+                OpenGLRenderer_DetectionCheck.setCanDraw(false);
+                drawHowToBMPage4(canvas);
                 break;
             case INFOPAGE:
                 OpenGLRenderer_3DModel.setCanDraw(false);
@@ -1480,11 +1730,11 @@ public class MainView extends View {
 //        canvas.drawRect(player4Pos,p3);
     }
 
-    private void drawHowToPage1(Canvas canvas){
+    private void drawHowToPMPage1(Canvas canvas){
         canvas.drawBitmap(backPic, backSrc, backPos, null);
         canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
 
-        canvas.drawBitmap(howTo1Pic, howTo1Src, howTo1Pos, null);
+        canvas.drawBitmap(howTo1Pic, howToSrc, howToPos, null);
         canvas.drawBitmap(howTo1WordPic, howTo1WordSrc, howTo1WordPos, null);
 
         canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
@@ -1492,13 +1742,15 @@ public class MainView extends View {
         canvas.drawBitmap(dotOrangePic, dotOrangeSrc, dot1Pos, null);
         canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot2Pos, null);
         canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot3Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot4Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot5Pos, null);
     }
 
-    private void drawHowToPage2(Canvas canvas){
+    private void drawHowToPMPage2(Canvas canvas){
         canvas.drawBitmap(backPic, backSrc, backPos, null);
         canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
 
-        canvas.drawBitmap(howTo2Pic, howTo2Src, howTo2Pos, null);
+        canvas.drawBitmap(howTo2Pic, howToSrc, howToPos, null);
         canvas.drawBitmap(howTo2WordPic, howTo2WordSrc, howTo2WordPos, null);
 
         canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
@@ -1506,13 +1758,15 @@ public class MainView extends View {
         canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot1Pos, null);
         canvas.drawBitmap(dotOrangePic, dotOrangeSrc, dot2Pos, null);
         canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot3Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot4Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot5Pos, null);
     }
 
-    private void drawHowToPage3(Canvas canvas){
+    private void drawHowToPMPage3(Canvas canvas){
         canvas.drawBitmap(backPic, backSrc, backPos, null);
         canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
 
-        canvas.drawBitmap(howTo3Pic, howTo3Src, howTo3Pos, null);
+        canvas.drawBitmap(howTo3Pic, howToSrc, howToPos, null);
         canvas.drawBitmap(howTo3WordPic, howTo3WordSrc, howTo3WordPos, null);
 
         canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
@@ -1520,7 +1774,104 @@ public class MainView extends View {
         canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot1Pos, null);
         canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot2Pos, null);
         canvas.drawBitmap(dotOrangePic, dotOrangeSrc, dot3Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot4Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot5Pos, null);
     }
+
+    private void drawHowToPMPage4(Canvas canvas){
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
+
+        canvas.drawBitmap(howTo4Pic, howToSrc, howToPos, null);
+        canvas.drawBitmap(howTo4WordPic1, howTo4WordSrc1, howTo4WordPos1, null);
+        canvas.drawBitmap(howTo4WordPic2, howTo4WordSrc2, howTo4WordPos2, null);
+
+        canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
+        canvas.drawBitmap(skipPic, skipSrc, skipPos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot1Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot2Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot3Pos, null);
+        canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot4Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot5Pos, null);
+    }
+
+    private void drawHowToPMPage5(Canvas canvas){
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
+
+        canvas.drawBitmap(howTo5Pic, howToSrc, howToPos, null);
+        canvas.drawBitmap(howTo5WordPic, howTo5WordSrc, howTo5WordPos, null);
+
+        canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
+        canvas.drawBitmap(skipPic, skipSrc, skipPos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot1Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot2Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot3Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot4Pos, null);
+        canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot5Pos, null);
+    }
+
+    private void drawHowToBMPage1(Canvas canvas){
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
+
+        canvas.drawBitmap(howToBM1Pic, howToSrc, howToPos, null);
+        canvas.drawBitmap(howToBM1WordPic1, howToBM1WordSrc1, howToBM1WordPos1, null);
+        canvas.drawBitmap(howToBM1WordPic2, howToBM1WordSrc2, howToBM1WordPos2, null);
+
+        canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
+        canvas.drawBitmap(skipPic, skipSrc, skipPos, null);
+        canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot6Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot7Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot8Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot9Pos, null);
+    }
+
+    private void drawHowToBMPage2(Canvas canvas){
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
+
+        canvas.drawBitmap(howToBM2Pic, howToSrc, howToPos, null);
+        canvas.drawBitmap(howToBM2WordPic, howToBM2WordSrc, howToBM2WordPos, null);
+
+        canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
+        canvas.drawBitmap(skipPic, skipSrc, skipPos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot6Pos, null);
+        canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot7Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot8Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot9Pos, null);
+    }
+
+    private void drawHowToBMPage3(Canvas canvas){
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
+
+        canvas.drawBitmap(howToBM3Pic, howToSrc, howToPos, null);
+        canvas.drawBitmap(howToBM3WordPic, howToBM3WordSrc, howToBM3WordPos, null);
+
+        canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
+        canvas.drawBitmap(skipPic, skipSrc, skipPos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot6Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot7Pos, null);
+        canvas.drawBitmap(dotOrangePic, dotOrangeSrc, dot8Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot9Pos, null);
+    }
+
+    private void drawHowToBMPage4(Canvas canvas){
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(howToTitlePic, howToTitleSrc, howToTitlePos, null);
+
+        canvas.drawBitmap(howTo5Pic, howToSrc, howToPos, null);
+        canvas.drawBitmap(howToBM4WordPic, howToBM4WordSrc, howToBM4WordPos, null);
+
+        canvas.drawBitmap(nextPic, nextSrc, nextPos, null);
+        canvas.drawBitmap(skipPic, skipSrc, skipPos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot6Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotWhiteSrc, dot7Pos, null);
+        canvas.drawBitmap(dotWhitePic, dotOrangeSrc, dot8Pos, null);
+        canvas.drawBitmap(dotOrangePic, dotWhiteSrc, dot9Pos, null);
+    }
+
 
     private void drawPracticeGamePage(Canvas canvas){
 
@@ -2800,7 +3151,7 @@ public class MainView extends View {
                     case MENUPAGE:
                         if(practiceModePos.contains(x, y)){
                             playerNum = 1;
-                            currPage = HOWTOPAGE1;
+                            currPage = HOWTOPAGEPM1;
                         }
                         else if(battleModePos.contains(x, y)){
                             currPage = BATTLENUMPAGE;
@@ -2893,15 +3244,15 @@ public class MainView extends View {
                         if(battleModeNumPos.contains(x, y)){
                             if(player2Pos.contains(x, y)){
                                 playerNum = 2;
-                                currPage = HOWTOPAGE1;
+                                currPage = HOWTOPAGEBM1;
                             }
                             else if(player3Pos.contains(x, y)){
                                 playerNum = 3;
-                                currPage = HOWTOPAGE1;
+                                currPage = HOWTOPAGEBM1;
                             }
                             else if(player4Pos.contains(x, y)){
                                 playerNum = 4;
-                                currPage = HOWTOPAGE1;
+                                currPage = HOWTOPAGEBM1;
                             }
                             resetTimer();
                         }
@@ -3022,57 +3373,103 @@ public class MainView extends View {
 
 
                         break;
-                    case HOWTOPAGE1:
+                    case HOWTOPAGEPM1:
                         if(backPos.contains(x, y)){
                             currPage = MENUPAGE;
                         }
                         else if(skipPos.contains(x, y)){
-                            if(playerNum == 1){
-                                currPage = PRACTICEGAMEPAGE;
-                            }
-                            else{
-                                currPage = BATTLEGAMEPAGE;
-                            }
+                            currPage = PRACTICEGAMEPAGE;
                         }
                         else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGE2;
+                            currPage = HOWTOPAGEPM2;
                         }
                         break;
-                    case HOWTOPAGE2:
+                    case HOWTOPAGEPM2:
                         if(backPos.contains(x, y)){
                             currPage = MENUPAGE;
                         }
                         else if(skipPos.contains(x, y)){
-                            if(playerNum == 1){
-                                currPage = PRACTICEGAMEPAGE;
-                            }
-                            else{
-                                currPage = BATTLEGAMEPAGE;
-                            }
+                            currPage = PRACTICEGAMEPAGE;
                         }
                         else if(nextPos.contains(x, y)){
-                            currPage = HOWTOPAGE3;
+                            currPage = HOWTOPAGEPM3;
                         }
                         break;
-                    case HOWTOPAGE3:
+                    case HOWTOPAGEPM3:
                         if(backPos.contains(x, y)){
                             currPage = MENUPAGE;
                         }
                         else if(skipPos.contains(x, y)){
-                            if(playerNum == 1){
-                                currPage = PRACTICEGAMEPAGE;
-                            }
-                            else{
-                                currPage = BATTLEGAMEPAGE;
-                            }
+                            currPage = PRACTICEGAMEPAGE;
                         }
                         else if(nextPos.contains(x, y)){
-                            if(playerNum == 1){
-                                currPage = PRACTICEGAMEPAGE;
-                            }
-                            else{
-                                currPage = BATTLEGAMEPAGE;
-                            }
+                            currPage = HOWTOPAGEPM4;
+                        }
+                        break;
+                    case HOWTOPAGEPM4:
+                        if(backPos.contains(x, y)){
+                            currPage = MENUPAGE;
+                        }
+                        else if(skipPos.contains(x, y)){
+                            currPage = PRACTICEGAMEPAGE;
+                        }
+                        else if(nextPos.contains(x, y)){
+                            currPage = HOWTOPAGEPM5;
+                        }
+                        break;
+                    case HOWTOPAGEPM5:
+                        if(backPos.contains(x, y)){
+                            currPage = MENUPAGE;
+                        }
+                        else if(skipPos.contains(x, y)){
+                            currPage = PRACTICEGAMEPAGE;
+                        }
+                        else if(nextPos.contains(x, y)){
+                            currPage = PRACTICEGAMEPAGE;
+                        }
+                        break;
+                    case HOWTOPAGEBM1:
+                        if(backPos.contains(x, y)){
+                            currPage = MENUPAGE;
+                        }
+                        else if(skipPos.contains(x, y)){
+                            currPage = BATTLEGAMEPAGE;
+                        }
+                        else if(nextPos.contains(x, y)){
+                            currPage = HOWTOPAGEBM2;
+                        }
+                        break;
+                    case HOWTOPAGEBM2:
+                        if(backPos.contains(x, y)){
+                            currPage = MENUPAGE;
+                        }
+                        else if(skipPos.contains(x, y)){
+                            currPage = BATTLEGAMEPAGE;
+                        }
+                        else if(nextPos.contains(x, y)){
+                            currPage = HOWTOPAGEBM3;
+                        }
+                        break;
+                    case HOWTOPAGEBM3:
+                        if(backPos.contains(x, y)){
+                            currPage = MENUPAGE;
+                        }
+                        else if(skipPos.contains(x, y)){
+                            currPage = BATTLEGAMEPAGE;
+                        }
+                        else if(nextPos.contains(x, y)){
+                            currPage = HOWTOPAGEBM4;
+                        }
+                        break;
+                    case HOWTOPAGEBM4:
+                        if(backPos.contains(x, y)){
+                            currPage = MENUPAGE;
+                        }
+                        else if(skipPos.contains(x, y)){
+                            currPage = BATTLEGAMEPAGE;
+                        }
+                        else if(nextPos.contains(x, y)){
+                            currPage = BATTLEGAMEPAGE;
                         }
                         break;
                     case INFOPAGE:
@@ -3087,9 +3484,11 @@ public class MainView extends View {
                 //swipe
                 lastX = x;
 
+                //------debug use-------
                 if(x > canvasW / 2 - 200 && x < canvasW / 2 + 200 && y > 0 && y < 200){
                     debugVisible = !debugVisible;
                 }
+                //----------------------
 
                 break;
 
@@ -3124,22 +3523,64 @@ public class MainView extends View {
 
             case MotionEvent.ACTION_UP:
                 switch (currPage){
-                    case HOWTOPAGE1:
+                    case HOWTOPAGEPM1:
                         if(lastX - x > 100){
-                            currPage = HOWTOPAGE2;
+                            currPage = HOWTOPAGEPM2;
                         }
                         break;
-                    case HOWTOPAGE2:
-                        if(x - lastX> 100){
-                            currPage = HOWTOPAGE1;
-                        }
-                        if(lastX - x > 100){
-                            currPage = HOWTOPAGE3;
-                        }
-                        break;
-                    case HOWTOPAGE3:
+                    case HOWTOPAGEPM2:
                         if(x - lastX > 100){
-                            currPage = HOWTOPAGE2;
+                            currPage = HOWTOPAGEPM1;
+                        }
+                        if(lastX - x > 100){
+                            currPage = HOWTOPAGEPM3;
+                        }
+                        break;
+                    case HOWTOPAGEPM3:
+                        if(x - lastX > 100){
+                            currPage = HOWTOPAGEPM2;
+                        }
+                        if(lastX - x > 100){
+                            currPage = HOWTOPAGEPM4;
+                        }
+                        break;
+                    case HOWTOPAGEPM4:
+                        if(x - lastX > 100){
+                            currPage = HOWTOPAGEPM3;
+                        }
+                        if(lastX - x > 100){
+                            currPage = HOWTOPAGEPM5;
+                        }
+                        break;
+                    case HOWTOPAGEPM5:
+                        if(x - lastX > 100){
+                            currPage = HOWTOPAGEPM4;
+                        }
+                        break;
+                    case HOWTOPAGEBM1:
+                        if(lastX - x > 100){
+                            currPage = HOWTOPAGEBM2;
+                        }
+                        break;
+                    case HOWTOPAGEBM2:
+                        if(x - lastX > 100){
+                            currPage = HOWTOPAGEBM1;
+                        }
+                        if(lastX - x > 100){
+                            currPage = HOWTOPAGEBM3;
+                        }
+                        break;
+                    case HOWTOPAGEBM3:
+                        if(x - lastX > 100){
+                            currPage = HOWTOPAGEBM2;
+                        }
+                        if(lastX - x > 100){
+                            currPage = HOWTOPAGEBM4;
+                        }
+                        break;
+                    case HOWTOPAGEBM4:
+                        if(x - lastX > 100){
+                            currPage = HOWTOPAGEBM3;
                         }
                         break;
                 }

@@ -572,42 +572,6 @@ public class GameManager_BattleMode {
             timeLeft30s = -2;
             countDownTimer30s.cancel();
             if(currStage >= REDANSWERSTAGE && currStage <= PURPLEANSWERSTAGE){
-//                if(currQuestNum < MAXQUESTNUM - 1){
-//                    switch (currStage){
-//                        case REDANSWERSTAGE:
-//                            redScore -= 1;
-//                            break;
-//                        case BLUEANSWERSTAGE:
-//                            blueScore -= 1;
-//                            break;
-//                        case GREENANSWERSTAGE:
-//                            greenScore -= 1;
-//                            break;
-//                        case PURPLEANSWERSTAGE:
-//                            purpleScore -= 1;
-//                            break;
-//                    }
-//                    nextQ();
-//                    currStage = QUESTSTAGE;
-//                }
-//                else{
-//                    switch (currStage){
-//                        case REDANSWERSTAGE:
-//                            redScore -= 1;
-//                            break;
-//                        case BLUEANSWERSTAGE:
-//                            blueScore -= 1;
-//                            break;
-//                        case GREENANSWERSTAGE:
-//                            greenScore -= 1;
-//                            break;
-//                        case PURPLEANSWERSTAGE:
-//                            purpleScore -= 1;
-//                            break;
-//                    }
-//                    currStage = RESULTSTAGE;
-//                    currQuestMode = -1;
-//                }
                 compare();
             }
         }
@@ -641,7 +605,7 @@ public class GameManager_BattleMode {
                     nextQ();
                 }
                 else{
-                    currStage = RESULTSTAGE;
+                    currStage = TIMESUPSTAGE;
                     currQuestMode = -1;
                 }
             }
