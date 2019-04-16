@@ -57,6 +57,12 @@ public class GameManager_PracticeMode {
     private static boolean[][] questIsCubePresent = new boolean[MAXGRIDSNUM][MAXHEIGHTNUM];
     private static boolean[][] ardIsCubePresent = new boolean[MAXGRIDSNUM][MAXHEIGHTNUM];
 
+    private static float totalTimePause = 0;
+    private float timeLeftPause = 0;
+    private boolean timerPauseIsRunning = false;
+
+    private static boolean canGetPuzzle = false;
+
     public GameManager_PracticeMode(){
 
         for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -275,6 +281,7 @@ public class GameManager_PracticeMode {
             //-----here-----
             case SPTYPE4:
                 if(spType4Ans == spType4PlayerAns){
+                    canGetPuzzle = true;
                     restart();
                 }
                 break;
@@ -350,13 +357,43 @@ public class GameManager_PracticeMode {
     public float getTimeLeft30s(){
         return timeLeft30s;
     }
-
     public float getTotalTime30s(){
         return totalTime30s;
     }
-
     public boolean getResetTimer(){
         return resetTimer;
+    }
+
+//    CountDownTimer countDownTimerPause = new CountDownTimer((long) timeLeft30s, 1000) {
+//        @Override
+//        public void onTick(long millisUntilFinished) {
+//            timeLeftPause = millisUntilFinished;
+//            timerPauseIsRunning = true;
+//            Log.d("dsfdsf", "dfdsfd     " + String.valueOf(timeLeftPause));
+//        }
+//
+//        @Override
+//        public void onFinish() {
+//            timeLeftPause = 0;
+//            timerPauseIsRunning = false;
+//            countDownTimerPause.cancel();
+//        }
+//    };
+
+    public static void setTotalTimePause(float val){
+        totalTimePause = val;
+    }
+
+    public float getTotalTimePause(){
+        return totalTimePause;
+    }
+
+    public float getTimeLeftPause(){
+        return timeLeftPause;
+    }
+
+    public boolean getTimerPauseIsRunning(){
+        return timerPauseIsRunning;
     }
 
     public static void setSpType4PlayerAns(int val){
@@ -389,5 +426,13 @@ public class GameManager_PracticeMode {
 
     public static void setArdIsCubePresentFalse(int grid, int height){
         ardIsCubePresent[grid][height] = false;
+    }
+
+    public boolean isCanGetPuzzle(){
+        return canGetPuzzle;
+    }
+
+    public static void setCanGetPuzzleFalse(){
+        canGetPuzzle = false;
     }
 }

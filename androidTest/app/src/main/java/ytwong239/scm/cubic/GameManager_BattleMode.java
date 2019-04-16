@@ -52,9 +52,9 @@ public class GameManager_BattleMode {
     private Integer[] playerSideView = new Integer[MAXGRIDSNUM];
     private Integer[] playerTopView = new Integer[MAXGRIDSNUM];
 
-    private float totalTime30s = 30000;
-    private float timeLeft30s = 0;
-    private boolean resetTimer30s = false;
+    private float totalTime120s = 120000;
+    private float timeLeft120s = 0;
+    private boolean resetTimer120s = false;
 
     private float totalTime10s = 10000;
     private float timeLeft10s = 0;
@@ -517,7 +517,7 @@ public class GameManager_BattleMode {
     }
 
     public void restart(){
-        countDownTimer30s.cancel();
+        countDownTimer120s.cancel();
         countDownTimer10s.cancel();
 
         Collections.shuffle(ran2D3DQuest);
@@ -544,7 +544,7 @@ public class GameManager_BattleMode {
         addScoreAni = false;
         deductScoreAni = false;
         resetTimer10s = false;
-        resetTimer30s = false;
+        resetTimer120s = false;
 
         currStage = QUESTSTAGE;
 
@@ -560,33 +560,33 @@ public class GameManager_BattleMode {
         return this.currQuestMode;
     }
 
-    CountDownTimer countDownTimer30s = new CountDownTimer((long)totalTime30s, 1000) {
+    CountDownTimer countDownTimer120s = new CountDownTimer((long)totalTime120s, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            timeLeft30s = millisUntilFinished;
-            resetTimer30s = false;
+            timeLeft120s = millisUntilFinished;
+            resetTimer120s = false;
         }
 
         @Override
         public void onFinish() {
-            timeLeft30s = -2;
-            countDownTimer30s.cancel();
+            timeLeft120s = -2;
+            countDownTimer120s.cancel();
             if(currStage >= REDANSWERSTAGE && currStage <= PURPLEANSWERSTAGE){
                 compare();
             }
         }
     };
 
-    public float getTimeLeft30s(){
-        return timeLeft30s;
+    public float getTimeLeft120s(){
+        return timeLeft120s;
     }
 
-    public float getTotalTime30s(){
-        return totalTime30s;
+    public float getTotalTime120s(){
+        return totalTime120s;
     }
 
-    public boolean getResetTimer30s(){
-        return resetTimer30s;
+    public boolean getResetTimer120s(){
+        return resetTimer120s;
     }
 
     CountDownTimer countDownTimer10s = new CountDownTimer((long)totalTime10s, 1000) {

@@ -262,6 +262,7 @@ public class MainView extends View {
     private int timeCurrWidth;
     private int timeRemapWidth;
     private boolean timeSetDone = false;
+    private boolean timePauseSetDone = false;
 
     private Bitmap answerPic;
     private Rect answerSrc;
@@ -2281,10 +2282,14 @@ public class MainView extends View {
     private void PMrestart(){
         if(gameManagerPracticeMode.getRestart()){
             //save data
-            Puzzle.setPlayedRound(puzzle.getPlayedRound() + 1);
-            editor = sharedPreferences.edit();
-            editor.putInt(String.valueOf(R.integer.playedRound), puzzle.getPlayedRound());
-            editor.commit();
+            if(gameManagerPracticeMode.isCanGetPuzzle()){
+                Puzzle.setPlayedRound(puzzle.getPlayedRound() + 1);
+                editor = sharedPreferences.edit();
+                editor.putInt(String.valueOf(R.integer.playedRound), puzzle.getPlayedRound());
+                editor.commit();
+                GameManager_PracticeMode.setCanGetPuzzleFalse();
+            }
+
 
             spType4PlayerChoice = 0;
             resetDrawView();
@@ -2306,8 +2311,30 @@ public class MainView extends View {
             timeSetDone = true;
         }
 
-        canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
+//        if(settingIsShown){
+//            gameManagerPracticeMode.countDownTimer30s.cancel();
+//            //GameManager_PracticeMode.setTotalTimePause(gameManagerPracticeMode.getTimeLeft30s());
+//            //gameManagerPracticeMode.countDownTimerPause.start();
+//            timePauseSetDone = true;
+//        }
+//
+//        if(!settingIsShown && !gameManagerPracticeMode.getTimerPauseIsRunning() && timePauseSetDone){
+//            gameManagerPracticeMode.countDownTimerPause.start();
+//            timePauseSetDone = false;
+//            //Log.d("fsf", "fdsf");
+//        }
+//
+//        if(!gameManagerPracticeMode.getTimerPauseIsRunning()){
+//            canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
+//            timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeft30s(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
+//        }
+//        else if(gameManagerPracticeMode.getTimerPauseIsRunning()){
+//            canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeftPause() / 1000), timeTxtX, timeTxtY, font);
+//            timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeftPause(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
+//            Log.d("111111", "1111");
+//        }
 
+        canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
         timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeft30s(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
 
         //--more smooth timer. but will faster than word--
@@ -2995,13 +3022,13 @@ public class MainView extends View {
         }
         else if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
             if(!timeSetDone){
-                gameManagerBattleMode.countDownTimer30s.start();
+                gameManagerBattleMode.countDownTimer120s.start();
                 timeSetDone = true;
             }
 
-            canvas.drawText(String.valueOf((int)gameManagerBattleMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
+            canvas.drawText(String.valueOf((int)gameManagerBattleMode.getTimeLeft120s() / 1000), timeTxtX, timeTxtY, font);
 
-            timeRemapWidth = (int)remap(gameManagerBattleMode.getTimeLeft30s(), gameManagerBattleMode.getTotalTime30s(), -2, timeFullWidth, -2);
+            timeRemapWidth = (int)remap(gameManagerBattleMode.getTimeLeft120s(), gameManagerBattleMode.getTotalTime120s(), -2, timeFullWidth, -2);
 
             if(timeRemapWidth == 0){
                 timeCirR = 0;
@@ -3021,7 +3048,7 @@ public class MainView extends View {
             resetDrawView();
         }
 
-        if(gameManagerBattleMode.getResetTimer30s()){
+        if(gameManagerBattleMode.getResetTimer120s()){
             resetTimer();
             resetDrawView();
         }
