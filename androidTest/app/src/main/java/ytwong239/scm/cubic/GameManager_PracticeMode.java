@@ -45,9 +45,11 @@ public class GameManager_PracticeMode {
     private Integer[] playerSideView = new Integer[MAXGRIDSNUM];
     private Integer[] playerTopView = new Integer[MAXGRIDSNUM];
 
-    private float totalTime30s = 30000;
-    private float timeLeft30s = 0;
+    private CountDownTimer countDownTimer30s;
+    private static final long TOTALTIME30S = 30000;
+    private long timeLeft30s = TOTALTIME30S;
     private boolean resetTimer = false;
+    private boolean timer30sIsRunning;
 
     private int spType4Ans = 0;
     private static int spType4PlayerAns = 0;
@@ -56,10 +58,6 @@ public class GameManager_PracticeMode {
 
     private static boolean[][] questIsCubePresent = new boolean[MAXGRIDSNUM][MAXHEIGHTNUM];
     private static boolean[][] ardIsCubePresent = new boolean[MAXGRIDSNUM][MAXHEIGHTNUM];
-
-    private static float totalTimePause = 0;
-    private float timeLeftPause = 0;
-    private boolean timerPauseIsRunning = false;
 
     private static boolean canGetPuzzle = false;
 
@@ -109,6 +107,7 @@ public class GameManager_PracticeMode {
         Collections.shuffle(ranSpType4Rotate);
 
         randQuest();
+
     }
 
     public void setPlayerFrontView(int grid){
@@ -292,6 +291,7 @@ public class GameManager_PracticeMode {
     public void nextQ(){
 
         countDownTimer30s.cancel();
+        timer30sIsRunning = false;
         resetTimer = true;
 
         currQuestNum++;
@@ -304,12 +304,15 @@ public class GameManager_PracticeMode {
             playerTopView[i] = 0;
         }
 
-        countDownTimer30s.start();
+        timeLeft30s = TOTALTIME30S;
+        timer30sStart();
 
     }
 
     public void restart(){
         countDownTimer30s.cancel();
+        timer30sIsRunning = false;
+        timeLeft30s = TOTALTIME30S;
 
         Collections.shuffle(ran2D3DQuest);
         Collections.shuffle(ran3Views);
@@ -340,60 +343,40 @@ public class GameManager_PracticeMode {
         return this.currQuestMode;
     }
 
-    CountDownTimer countDownTimer30s = new CountDownTimer((long)totalTime30s, 1000) {
-        @Override
-        public void onTick(long millisUntilFinished) {
-            timeLeft30s = millisUntilFinished;
-            resetTimer = false;
-        }
+    public void timer30sStart(){
+        resetTimer = false;
+        countDownTimer30s = new CountDownTimer(timeLeft30s, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeft30s = millisUntilFinished;
+            }
 
-        @Override
-        public void onFinish() {
-            timeLeft30s = -1;
-            countDownTimer30s.cancel();
-        }
-    };
+            @Override
+            public void onFinish() {
+                timeLeft30s = -1;
+                timer30sIsRunning = false;
+            }
+        }.start();
 
-    public float getTimeLeft30s(){
+        timer30sIsRunning = true;
+    }
+
+    public void timer30sPause(){
+        countDownTimer30s.cancel();
+        timer30sIsRunning = false;
+    }
+
+    public long getTimeLeft30s(){
         return timeLeft30s;
     }
-    public float getTotalTime30s(){
-        return totalTime30s;
+    public long getTotalTime30s(){
+        return TOTALTIME30S;
     }
     public boolean getResetTimer(){
         return resetTimer;
     }
-
-//    CountDownTimer countDownTimerPause = new CountDownTimer((long) timeLeft30s, 1000) {
-//        @Override
-//        public void onTick(long millisUntilFinished) {
-//            timeLeftPause = millisUntilFinished;
-//            timerPauseIsRunning = true;
-//            Log.d("dsfdsf", "dfdsfd     " + String.valueOf(timeLeftPause));
-//        }
-//
-//        @Override
-//        public void onFinish() {
-//            timeLeftPause = 0;
-//            timerPauseIsRunning = false;
-//            countDownTimerPause.cancel();
-//        }
-//    };
-
-    public static void setTotalTimePause(float val){
-        totalTimePause = val;
-    }
-
-    public float getTotalTimePause(){
-        return totalTimePause;
-    }
-
-    public float getTimeLeftPause(){
-        return timeLeftPause;
-    }
-
-    public boolean getTimerPauseIsRunning(){
-        return timerPauseIsRunning;
+    public boolean getTimer30sIsRunning(){
+        return timer30sIsRunning;
     }
 
     public static void setSpType4PlayerAns(int val){

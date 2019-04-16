@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -262,7 +263,6 @@ public class MainView extends View {
     private int timeCurrWidth;
     private int timeRemapWidth;
     private boolean timeSetDone = false;
-    private boolean timePauseSetDone = false;
 
     private Bitmap answerPic;
     private Rect answerSrc;
@@ -2305,37 +2305,52 @@ public class MainView extends View {
         }
     }
 
+
+    private static final long TOTALTIME = 30000;
+    private long timeleft = TOTALTIME;
+    private boolean timer30sCancelDone = false;
+    private boolean timerPauseCanStart = false;
+    private int currTimer = 0;
+    private long temp;
+    CountDownTimer countDownTimer30s;
+    private boolean timerIsRunning;
+
+    private void timerStart(){
+        countDownTimer30s = new CountDownTimer(timeleft, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeleft = millisUntilFinished;
+            }
+
+            @Override
+            public void onFinish() {
+                timeleft = -1;
+                timerIsRunning = false;
+            }
+        }.start();
+
+        timerIsRunning = true;
+    }
+
+    private void timerPause(){
+        countDownTimer30s.cancel();
+        timerIsRunning = false;
+    }
+
+
     private void drawTimerPracticeMode(Canvas canvas){
         if(!timeSetDone){
-            gameManagerPracticeMode.countDownTimer30s.start();
+            gameManagerPracticeMode.timer30sStart();
             timeSetDone = true;
         }
 
-//        if(settingIsShown){
-//            gameManagerPracticeMode.countDownTimer30s.cancel();
-//            //GameManager_PracticeMode.setTotalTimePause(gameManagerPracticeMode.getTimeLeft30s());
-//            //gameManagerPracticeMode.countDownTimerPause.start();
-//            timePauseSetDone = true;
-//        }
-//
-//        if(!settingIsShown && !gameManagerPracticeMode.getTimerPauseIsRunning() && timePauseSetDone){
-//            gameManagerPracticeMode.countDownTimerPause.start();
-//            timePauseSetDone = false;
-//            //Log.d("fsf", "fdsf");
-//        }
-//
-//        if(!gameManagerPracticeMode.getTimerPauseIsRunning()){
-//            canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
-//            timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeft30s(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
-//        }
-//        else if(gameManagerPracticeMode.getTimerPauseIsRunning()){
-//            canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeftPause() / 1000), timeTxtX, timeTxtY, font);
-//            timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeftPause(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
-//            Log.d("111111", "1111");
-//        }
 
         canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
         timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeft30s(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
+
+
+        //canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
+        //timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeft30s(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
 
         //--more smooth timer. but will faster than word--
 //        if(timeCurrWidth > timeRemapWidth){
@@ -2373,6 +2388,7 @@ public class MainView extends View {
         canvas.drawCircle(timeCirX2, timeCirY2, timeCirR, white);
         canvas.drawRect(timeRectPos, white);
     }
+
 
     private float remap(float value, float from1, float to1, float from2, float to2){
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
@@ -3611,7 +3627,7 @@ public class MainView extends View {
                                 if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM - 1){
                                     gameManagerPracticeMode.nextQ();
                                     resetDrawView();
-                                    resetTimer();
+                                    //resetTimer();
                                 }
                                 else{
                                     resetDrawView();
@@ -3900,7 +3916,6 @@ public class MainView extends View {
                         settingIsShown = false;
                     }
 
-
                     if(settingPos1.contains(x, y) && musicIsPlay){
                         musicIsPlay = false;
                     }
@@ -3934,6 +3949,17 @@ public class MainView extends View {
                         currPage = CONTACTUSPAGE;
                     }
 
+                }
+
+
+                if(settingPos0.contains(x, y) && currPage == PRACTICEGAMEPAGE){
+                    if(gameManagerPracticeMode.getTimer30sIsRunning()){
+                        gameManagerPracticeMode.timer30sPause();
+                    }
+                    else{
+                        gameManagerPracticeMode.timer30sStart();
+                    }
+                    Log.d("touch", "touch    " + gameManagerPracticeMode.getTimer30sIsRunning());
                 }
 
                 //swipe
