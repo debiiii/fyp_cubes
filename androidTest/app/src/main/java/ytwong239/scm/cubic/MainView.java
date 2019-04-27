@@ -429,6 +429,7 @@ public class MainView extends View {
     private Paint font = new Paint();
     private Paint tipFont = new Paint();
     private Paint scoreFont = new Paint();
+    private Paint scoreGameFont = new Paint();
     private Paint drawViewPaint[] = new Paint[MAXGRIDSNUM];
     private Paint blackStroke = new Paint();
     private Paint coverPaint = new Paint();
@@ -556,6 +557,11 @@ public class MainView extends View {
         scoreFont.setColor(Color.WHITE);
         scoreFont.setTextSize(50);
         scoreFont.setTextAlign(Paint.Align.CENTER);
+
+        scoreGameFont.setTypeface(aldrich);
+        scoreGameFont.setColor(Color.WHITE);
+        scoreGameFont.setTextSize(70);
+        scoreGameFont.setTextAlign(Paint.Align.CENTER);
 
         for(int i = 0; i < drawViewPos2.length; i++){
             drawViewPos2[i] = new Rect(0,0,0,0);
@@ -2321,7 +2327,7 @@ public class MainView extends View {
                 GameManager_PracticeMode.setCanGetPuzzleFalse();
             }
 
-
+            tipIsShown = false;
             spType4PlayerChoice = 0;
             resetDrawView();
             resetTimer();
@@ -2372,6 +2378,7 @@ public class MainView extends View {
 
         if(gameManagerPracticeMode.getResetTimer()){
             //close the tips and detection check when next question
+            tipIsShown = false;
             OpenGLRenderer_Tips.setCanDraw(false);
             OpenGLRenderer_DetectionCheck.setCanDraw(false);
             resetTimer();
@@ -2619,6 +2626,9 @@ public class MainView extends View {
                 OpenGLRenderer_Tips.setCanDraw(false);
             }
         }
+        else {
+            OpenGLRenderer_Tips.setCanDraw(false);
+        }
 
     }
 
@@ -2653,17 +2663,50 @@ public class MainView extends View {
                     case 2:
                         canvas.drawBitmap(redPlayerBtnLPic, redPlayerBtnLSrc, redPlayerBtnLPos, null);
                         canvas.drawBitmap(bluePlayerBtnLPic, bluePlayerBtnLSrc, bluePlayerBtnLPos, null);
+                        canvas.save();
+                        canvas.rotate(90, redPlayerBtnLPos.centerX() - canvasW / 50, redPlayerBtnLPos.centerY() + canvasH / 20);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), redPlayerBtnLPos.centerX() - canvasW / 50, redPlayerBtnLPos.centerY() + canvasH / 20, scoreGameFont);
+                        canvas.restore();
+                        canvas.save();
+                        canvas.rotate(-90, bluePlayerBtnLPos.centerX() + canvasW / 50, bluePlayerBtnLPos.centerY() - canvasH / 20);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), bluePlayerBtnLPos.centerX() + canvasW / 50, bluePlayerBtnLPos.centerY() - canvasH / 20, scoreGameFont);
+                        canvas.restore();
                         break;
                     case 3:
                         canvas.drawBitmap(redPlayerBtnLPic, redPlayerBtnLSrc, redPlayerBtnLPos, null);
                         canvas.drawBitmap(bluePlayerBtnLPic, bluePlayerBtnLSrc, bluePlayerBtnLPos, null);
                         canvas.drawBitmap(greenPlayerBtnLPic, greenPlayerBtnLSrc, greenPlayerBtnLPos, null);
+                        canvas.save();
+                        canvas.rotate(90, redPlayerBtnLPos.centerX() - canvasW / 50, redPlayerBtnLPos.centerY() + canvasH / 20);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), redPlayerBtnLPos.centerX() - canvasW / 50, redPlayerBtnLPos.centerY() + canvasH / 20, scoreGameFont);
+                        canvas.restore();
+                        canvas.save();
+                        canvas.rotate(-90, bluePlayerBtnLPos.centerX() + canvasW / 50, bluePlayerBtnLPos.centerY() - canvasH / 20);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), bluePlayerBtnLPos.centerX() + canvasW / 50, bluePlayerBtnLPos.centerY() - canvasH / 20, scoreGameFont);
+                        canvas.restore();
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getGreenScore()), greenPlayerBtnLPos.centerX() + canvasW / 50, greenPlayerBtnLPos.centerY() + canvasH / 30, scoreGameFont);
                         break;
                     case 4:
                         canvas.drawBitmap(redPlayerBtnSPic, redPlayerBtnSSrc, redPlayerBtnSPos, null);
                         canvas.drawBitmap(bluePlayerBtnSPic, bluePlayerBtnSSrc, bluePlayerBtnSPos, null);
                         canvas.drawBitmap(greenPlayerBtnSPic, greenPlayerBtnSSrc, greenPlayerBtnSPos, null);
                         canvas.drawBitmap(purplePlayerBtnSPic, purplePlayerBtnSSrc, purplePlayerBtnSPos, null);
+                        canvas.save();
+                        canvas.rotate(90, redPlayerBtnSPos.centerX() - canvasW / 50, redPlayerBtnSPos.centerY() + canvasH / 30);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), redPlayerBtnSPos.centerX() - canvasW / 50, redPlayerBtnSPos.centerY() + canvasH / 30, scoreGameFont);
+                        canvas.restore();
+                        canvas.save();
+                        canvas.rotate(90, bluePlayerBtnSPos.centerX() - canvasW / 50, bluePlayerBtnSPos.centerY() + canvasH / 30);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), bluePlayerBtnSPos.centerX() - canvasW / 50, bluePlayerBtnSPos.centerY() + canvasH / 30, scoreGameFont);
+                        canvas.restore();
+                        canvas.save();
+                        canvas.rotate(-90, greenPlayerBtnSPos.centerX() + canvasW / 50, greenPlayerBtnSPos.centerY() - canvasH / 30);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getGreenScore()), greenPlayerBtnSPos.centerX() + canvasW / 50, greenPlayerBtnSPos.centerY() - canvasH / 40, scoreGameFont);
+                        canvas.restore();
+                        canvas.save();
+                        canvas.rotate(-90, purplePlayerBtnSPos.centerX() + canvasW / 50, purplePlayerBtnSPos.centerY() - canvasH / 30);
+                        canvas.drawText(String.valueOf(gameManagerBattleMode.getPurpleScore()), purplePlayerBtnSPos.centerX() + canvasW / 50, purplePlayerBtnSPos.centerY() - canvasH / 40, scoreGameFont);
+                        canvas.restore();
                         break;
                 }
                 answerCoolDown = 2;
@@ -2851,7 +2894,7 @@ public class MainView extends View {
         gameManagerBattleMode.setSpType4PlayerAns(spType4PlayerChoice);
         updateGM();
 
-        drawScoreAni(canvas);
+        //drawScoreAni(canvas);
 
         switch (gameManagerBattleMode.getCurrStage()){
             case TIMESUPSTAGE:

@@ -552,10 +552,12 @@ public class GameManager_BattleMode {
     }
 
     public void restart(){
-        countDownTimer120s.cancel();
-        timer120sIsRunning = false;
-        timeLeft120s = totalTime120s;
-        timer120sFinished = false;
+        if(countDownTimer120s != null){
+            countDownTimer120s.cancel();
+            timer120sIsRunning = false;
+            timeLeft120s = totalTime120s;
+            timer120sFinished = false;
+        }
 
         countDownTimer10s.cancel();
         timer10sIsRunning = false;
