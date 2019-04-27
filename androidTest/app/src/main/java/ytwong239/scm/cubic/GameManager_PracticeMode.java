@@ -242,7 +242,6 @@ public class GameManager_PracticeMode {
                     nextQ();
                 }
                 break;
-            //-----here------
             case BUILD3DMODEL:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
                     for(int j = 0; j < MAXHEIGHTNUM; j++){
@@ -277,7 +276,6 @@ public class GameManager_PracticeMode {
                     nextQ();
                 }
                 break;
-            //-----here-----
             case SPTYPE4:
                 if(spType4Ans == spType4PlayerAns){
                     canGetPuzzle = true;

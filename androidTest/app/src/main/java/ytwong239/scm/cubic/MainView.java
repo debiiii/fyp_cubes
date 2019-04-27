@@ -2305,52 +2305,14 @@ public class MainView extends View {
         }
     }
 
-
-    private static final long TOTALTIME = 30000;
-    private long timeleft = TOTALTIME;
-    private boolean timer30sCancelDone = false;
-    private boolean timerPauseCanStart = false;
-    private int currTimer = 0;
-    private long temp;
-    CountDownTimer countDownTimer30s;
-    private boolean timerIsRunning;
-
-    private void timerStart(){
-        countDownTimer30s = new CountDownTimer(timeleft, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timeleft = millisUntilFinished;
-            }
-
-            @Override
-            public void onFinish() {
-                timeleft = -1;
-                timerIsRunning = false;
-            }
-        }.start();
-
-        timerIsRunning = true;
-    }
-
-    private void timerPause(){
-        countDownTimer30s.cancel();
-        timerIsRunning = false;
-    }
-
-
     private void drawTimerPracticeMode(Canvas canvas){
         if(!timeSetDone){
             gameManagerPracticeMode.timer30sStart();
             timeSetDone = true;
         }
 
-
         canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
         timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeft30s(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
-
-
-        //canvas.drawText(String.valueOf((int)gameManagerPracticeMode.getTimeLeft30s() / 1000), timeTxtX, timeTxtY, font);
-        //timeRemapWidth = (int)remap(gameManagerPracticeMode.getTimeLeft30s(), gameManagerPracticeMode.getTotalTime30s(), -1, timeFullWidth, -1);
 
         //--more smooth timer. but will faster than word--
 //        if(timeCurrWidth > timeRemapWidth){
@@ -3012,10 +2974,12 @@ public class MainView extends View {
         }
     }
 
+    private boolean isSkipDone = false;
+
     private void drawTimerBattleMode(Canvas canvas){
         if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
             if(!timeSetDone){
-                gameManagerBattleMode.countDownTimer10s.start();
+                gameManagerBattleMode.timer10sStart();
                 timeSetDone = true;
             }
 
@@ -3035,10 +2999,20 @@ public class MainView extends View {
             canvas.drawCircle(timeCirX2, timeCirY2, timeCirR, white);
             canvas.drawRect(timeRectPos, white);
 
+            if(gameManagerBattleMode.getTimer10sFinished()){
+                if(gameManagerBattleMode.getCurrQuestNum() < MAXQUESTNUM - 1){
+                    gameManagerBattleMode.skip();
+                }
+                else{
+                    GameManager_BattleMode.setCurrStage(TIMESUPSTAGE);
+                    GameManager_BattleMode.setCurrQuestMode(-1);
+                }
+            }
+
         }
         else if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
             if(!timeSetDone){
-                gameManagerBattleMode.countDownTimer120s.start();
+                gameManagerBattleMode.timer120sStart();
                 timeSetDone = true;
             }
 
@@ -3057,6 +3031,10 @@ public class MainView extends View {
             canvas.drawCircle(timeCirX1, timeCirY1, timeCirR, white);
             canvas.drawCircle(timeCirX2, timeCirY2, timeCirR, white);
             canvas.drawRect(timeRectPos, white);
+
+            if(gameManagerBattleMode.getTimer120sFinished()){
+                gameManagerBattleMode.compare();
+            }
         }
 
         if(gameManagerBattleMode.getResetTimer10s()){
@@ -3066,6 +3044,10 @@ public class MainView extends View {
 
         if(gameManagerBattleMode.getResetTimer120s()){
             resetTimer();
+            resetDrawView();
+        }
+
+        if(gameManagerBattleMode.getCurrQuestNum() == 2){
             resetDrawView();
         }
 
@@ -3929,10 +3911,14 @@ public class MainView extends View {
                             currPage = HOWTOPAGESETTING;
                         }
                         else if(isInGame){
-                            gameManagerPracticeMode.restart();
-                            PMrestart();
-                            gameManagerBattleMode.restart();
-                            BMrestart();
+                            if(playerNum == 1){
+                                gameManagerPracticeMode.restart();
+                                PMrestart();
+                            }
+                            else{
+                                gameManagerBattleMode.restart();
+                                BMrestart();
+                            }
                             settingIsShown = false;
                             currPage = MENUPAGE;
                         }
@@ -3940,10 +3926,14 @@ public class MainView extends View {
 
                     if(settingPos3.contains(x, y)){
                         if(isInGame){
-                            gameManagerPracticeMode.restart();
-                            PMrestart();
-                            gameManagerBattleMode.restart();
-                            BMrestart();
+                            if(playerNum == 1){
+                                gameManagerPracticeMode.restart();
+                                PMrestart();
+                            }
+                            else{
+                                gameManagerBattleMode.restart();
+                                BMrestart();
+                            }
                         }
                         settingIsShown = false;
                         currPage = CONTACTUSPAGE;
@@ -3951,7 +3941,7 @@ public class MainView extends View {
 
                 }
 
-
+                //practice mode: pause and play the timer
                 if(settingPos0.contains(x, y) && currPage == PRACTICEGAMEPAGE){
                     if(gameManagerPracticeMode.getTimer30sIsRunning()){
                         gameManagerPracticeMode.timer30sPause();
@@ -3959,7 +3949,26 @@ public class MainView extends View {
                     else{
                         gameManagerPracticeMode.timer30sStart();
                     }
-                    Log.d("touch", "touch    " + gameManagerPracticeMode.getTimer30sIsRunning());
+                }
+
+                //battle mode: pause and play the timer
+                if(settingPos0.contains(x, y) && currPage == BATTLEGAMEPAGE){
+                    if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
+                        if(gameManagerBattleMode.getTimer10sIsRunning()){
+                            gameManagerBattleMode.timer10sPause();
+                        }
+                        else{
+                            gameManagerBattleMode.timer10sStart();
+                        }
+                    }
+                    else if(gameManagerBattleMode.getCurrStage() >= REDANSWERSTAGE && gameManagerBattleMode.getCurrStage() <= PURPLEANSWERSTAGE){
+                        if(gameManagerBattleMode.getTimer120sIsRunning()){
+                            gameManagerBattleMode.timer120sPause();
+                        }
+                        else{
+                            gameManagerBattleMode.timer120sStart();
+                        }
+                    }
                 }
 
                 //swipe

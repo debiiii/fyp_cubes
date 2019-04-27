@@ -53,11 +53,11 @@ public class GameManager_BattleMode {
     private Integer[] playerTopView = new Integer[MAXGRIDSNUM];
 
     private float totalTime120s = 120000;
-    private float timeLeft120s = 0;
+    private float timeLeft120s = totalTime120s;
     private boolean resetTimer120s = false;
 
     private float totalTime10s = 10000;
-    private float timeLeft10s = 0;
+    private float timeLeft10s = totalTime10s;
     private boolean resetTimer10s = false;
 
     private int spType4Ans = 0;
@@ -75,6 +75,13 @@ public class GameManager_BattleMode {
     private static boolean addScoreAni = false;
     private static boolean deductScoreAni = false;
 
+    private CountDownTimer countDownTimer10s;
+    private boolean timer10sIsRunning = false;
+    private boolean timer10sFinished = false;
+
+    private CountDownTimer countDownTimer120s;
+    private boolean timer120sIsRunning = false;
+    private boolean timer120sFinished = false;
 
     public GameManager_BattleMode(){
 
@@ -497,10 +504,12 @@ public class GameManager_BattleMode {
 
     }
 
-    public void nextQ(){
-
+    public void skip(){
         countDownTimer10s.cancel();
+        timer10sIsRunning = false;
+        timeLeft10s = totalTime10s;
         resetTimer10s = true;
+        timer10sFinished = false;
 
         currQuestNum++;
 
@@ -512,13 +521,46 @@ public class GameManager_BattleMode {
             playerTopView[i] = 0;
         }
 
-        countDownTimer10s.start();
 
+        timer10sStart();
+    }
+
+    public void nextQ(){
+        countDownTimer120s.cancel();
+        timer120sIsRunning = false;
+        timeLeft120s = totalTime120s;
+        //resetTimer120s = true;
+        timer120sFinished = false;
+
+        countDownTimer10s.cancel();
+        timer10sIsRunning = false;
+        timeLeft10s = totalTime10s;
+        resetTimer10s = true;
+        timer10sFinished = false;
+
+        currQuestNum++;
+
+        randQuest();
+
+        for(int i = 0; i < MAXGRIDSNUM; i++){
+            playerFrontView[i] = 0;
+            playerSideView[i] = 0;
+            playerTopView[i] = 0;
+        }
+
+        timer10sStart();
     }
 
     public void restart(){
         countDownTimer120s.cancel();
+        timer120sIsRunning = false;
+        timeLeft120s = totalTime120s;
+        timer120sFinished = false;
+
         countDownTimer10s.cancel();
+        timer10sIsRunning = false;
+        timeLeft10s = totalTime10s;
+        timer10sFinished = false;
 
         Collections.shuffle(ran2D3DQuest);
         Collections.shuffle(ran3Views);
@@ -560,22 +602,75 @@ public class GameManager_BattleMode {
         return this.currQuestMode;
     }
 
-    CountDownTimer countDownTimer120s = new CountDownTimer((long)totalTime120s, 1000) {
-        @Override
-        public void onTick(long millisUntilFinished) {
-            timeLeft120s = millisUntilFinished;
-            resetTimer120s = false;
-        }
+    //-------10s timer-------
 
-        @Override
-        public void onFinish() {
-            timeLeft120s = -2;
-            countDownTimer120s.cancel();
-            if(currStage >= REDANSWERSTAGE && currStage <= PURPLEANSWERSTAGE){
-                compare();
+    public void timer10sStart(){
+        resetTimer10s = false;
+        countDownTimer10s = new CountDownTimer((long)timeLeft10s, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeft10s = millisUntilFinished;
             }
-        }
-    };
+
+            @Override
+            public void onFinish() {
+                timeLeft10s = -1;
+                timer10sIsRunning = false;
+                timer10sFinished = true;
+            }
+        }.start();
+        timer10sIsRunning = true;
+    }
+
+    public void timer10sPause(){
+        countDownTimer10s.cancel();
+        timer10sIsRunning = false;
+    }
+
+    public float getTimeLeft10s(){
+        return timeLeft10s;
+    }
+
+    public float getTotalTime10s(){
+        return totalTime10s;
+    }
+
+    public boolean getResetTimer10s(){
+        return resetTimer10s;
+    }
+
+    public boolean getTimer10sFinished(){
+        return timer10sFinished;
+    }
+
+    public boolean getTimer10sIsRunning(){
+        return timer10sIsRunning;
+    }
+
+    //-------120s timer-------
+
+    public void timer120sStart(){
+        resetTimer120s = false;
+        countDownTimer120s = new CountDownTimer((long)timeLeft120s, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeft120s = millisUntilFinished;
+            }
+
+            @Override
+            public void onFinish() {
+                timeLeft120s = -2;
+                timer120sIsRunning = false;
+                timer120sFinished = true;
+            }
+        }.start();
+        timer120sIsRunning = true;
+    }
+
+    public void timer120sPause(){
+        countDownTimer120s.cancel();
+        timer120sIsRunning = false;
+    }
 
     public float getTimeLeft120s(){
         return timeLeft120s;
@@ -589,39 +684,12 @@ public class GameManager_BattleMode {
         return resetTimer120s;
     }
 
-    CountDownTimer countDownTimer10s = new CountDownTimer((long)totalTime10s, 1000) {
-        @Override
-        public void onTick(long millisUntilFinished) {
-            timeLeft10s = millisUntilFinished;
-            resetTimer10s = false;
-        }
-
-        @Override
-        public void onFinish() {
-            timeLeft10s = -1;
-            countDownTimer10s.cancel();
-            if(currStage == QUESTSTAGE){
-                if(currQuestNum < MAXQUESTNUM - 1){
-                    nextQ();
-                }
-                else{
-                    currStage = TIMESUPSTAGE;
-                    currQuestMode = -1;
-                }
-            }
-        }
-    };
-
-    public float getTimeLeft10s(){
-        return timeLeft10s;
+    public boolean getTimer120sFinished(){
+        return timer120sFinished;
     }
 
-    public float getTotalTime10s(){
-        return totalTime10s;
-    }
-
-    public boolean getResetTimer10s(){
-        return resetTimer10s;
+    public boolean getTimer120sIsRunning(){
+        return timer120sIsRunning;
     }
 
     public static void setSpType4PlayerAns(int val){
