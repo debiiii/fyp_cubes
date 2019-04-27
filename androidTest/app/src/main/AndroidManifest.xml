@@ -18,6 +18,7 @@
             android:name=".SplashScreenActivity"
             android:noHistory="true"
             android:screenOrientation="landscape">
+
         </activity>
         <activity
             android:name=".TurnOnBluetoothActivity"

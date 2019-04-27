@@ -305,6 +305,14 @@ public class MainView extends View {
     private Rect spType3Q2Src;
     private Rect spType3Q2Pos;
 
+    private Bitmap spType3Q3Pic;
+    private Rect spType3Q3Src;
+    private Rect spType3Q3Pos;
+
+    private Bitmap spType3Q4Pic;
+    private Rect spType3Q4Src;
+    private Rect spType3Q4Pos;
+
     private Bitmap qSpType3BkgPic;
     private Rect qspType3BkgSrc;
     private Rect spType3Pos_base0;
@@ -725,6 +733,12 @@ public class MainView extends View {
 
         spType3Q2Pic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype3question2, opts);
         spType3Q2Src = new Rect(0,0, spType3Q2Pic.getWidth(), spType3Q2Pic.getHeight());
+
+        spType3Q3Pic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype3question3, opts);
+        spType3Q3Src = new Rect(0,0, spType3Q3Pic.getWidth(), spType3Q3Pic.getHeight());
+
+        spType3Q4Pic = BitmapFactory.decodeResource(getResources(), R.drawable.sptype3question4, opts);
+        spType3Q4Src = new Rect(0,0, spType3Q4Pic.getWidth(), spType3Q4Pic.getHeight());
 
         qSpType3BkgPic = BitmapFactory.decodeResource(getResources(), R.drawable.modelbkg_noword, opts);
         qspType3BkgSrc = new Rect(0,0, qSpType3BkgPic.getWidth(), qSpType3BkgPic.getHeight());
@@ -1299,16 +1313,16 @@ public class MainView extends View {
         spType4QPos = new Rect(left, top, right, bottom);
 
         height = h / 22;
-        width = (spType3Q0Pic.getWidth() * height) / spType3Q0Pic.getHeight();
+        width = (spType3Q1Pic.getWidth() * height) / spType3Q1Pic.getHeight();
         left = w / 2 - width / 2;
         top = h / 2 - height / 2 - w / 13;
         right = left + width;
         bottom = top + height;
-        spType3Q0Pos = new Rect(left, top, right, bottom);
+        spType3Q1Pos = new Rect(left, top, right, bottom);
 
         width = w / 7;
         height = (666 * width) / 666;
-        left = spType3Q0Pos.left - w / 40 - width;
+        left = spType3Q1Pos.left - w / 40 - width;
         top = h / 2 - height / 2 - w / 13;
         right = left + width;
         bottom = top + height;
@@ -1316,7 +1330,7 @@ public class MainView extends View {
 
         width = w / 7;
         height = (666 * width) / 666;
-        left = spType3Q0Pos.right + w / 40;
+        left = spType3Q1Pos.right + w / 40;
         top = h / 2 - height / 2 - w / 13;
         right = left + width;
         bottom = top + height;
@@ -1325,26 +1339,43 @@ public class MainView extends View {
         width = w / 7;
         height = (666 * width) / 666;
         left = w / 2 - width / 2;
-        top = spType3Q0Pos.bottom + w / 35;
+        top = spType3Q1Pos.bottom + w / 35;
         right = left + width;
         bottom = top + height;
         spType3Pos_quest = new Rect(left, top, right, bottom);
 
-        width = w / 4;
-        height = (spType3Q1Pic.getHeight() * width) / spType3Q1Pic.getWidth();
+        height = h / 22;
+        width = (spType3Q0Pic.getWidth() * height) / spType3Q0Pic.getHeight();
+        left = spType3Pos_base0.left - w / 30 - width;
+        top = h / 2 - height / 2 - w / 13;
+        right = left + width;
+        bottom = top + height;
+        spType3Q0Pos = new Rect(left, top, right, bottom);
+
+        height = h / 22;
+        width = (spType3Q2Pic.getWidth() * height) / spType3Q2Pic.getHeight();
+        left = spType3Pos_base1.right + w / 50;
+        top = h / 2 - height / 2 - w / 13;
+        right = left + width;
+        bottom = top + height;
+        spType3Q2Pos = new Rect(left, top, right, bottom);
+
+        height = h / 22;
+        width = (spType3Q3Pic.getWidth() * height) / spType3Q3Pic.getHeight();
+        left = qTitlePos.left + ((spType3Pos_quest.left - qTitlePos.left) / 2) - width / 2;
         left = spType3Pos_quest.left - w / 40 - width;
         top = (spType3Pos_quest.top + spType3Pos_quest.height() / 2) - height / 2 + h / 30;
         right = left + width;
         bottom = top + height;
-        spType3Q1Pos = new Rect(left, top, right, bottom);
+        spType3Q3Pos = new Rect(left, top, right, bottom);
 
         height = h / 22;
-        width = (spType3Q2Pic.getWidth() * height) / spType3Q2Pic.getHeight();
+        width = (spType3Q4Pic.getWidth() * height) / spType3Q4Pic.getHeight();
         left = spType3Pos_quest.right + w / 40;
         top = (spType3Pos_quest.top + spType3Pos_quest.height() / 2) - height / 2 + h / 30;
         right = left + width;
         bottom = top + height;
-        spType3Q2Pos = new Rect(left, top, right, bottom);
+        spType3Q4Pos = new Rect(left, top, right, bottom);
 
         width = w / 4;
         height = (tipBoxPic.getHeight() * width) / tipBoxPic.getWidth();
@@ -2472,6 +2503,8 @@ public class MainView extends View {
         canvas.drawBitmap(spType3Q0Pic, spType3Q0Src, spType3Q0Pos, null);
         canvas.drawBitmap(spType3Q1Pic, spType3Q1Src, spType3Q1Pos, null);
         canvas.drawBitmap(spType3Q2Pic, spType3Q2Src, spType3Q2Pos, null);
+        canvas.drawBitmap(spType3Q3Pic, spType3Q3Src, spType3Q3Pos, null);
+        canvas.drawBitmap(spType3Q4Pic, spType3Q4Src, spType3Q4Pos, null);
 
         //sp type 3 pic
         canvas.drawBitmap(qSpType3BkgPic, qspType3BkgSrc, spType3Pos_base0, null);
@@ -2973,8 +3006,6 @@ public class MainView extends View {
             gameManagerBattleMode.setRestartFalse();
         }
     }
-
-    private boolean isSkipDone = false;
 
     private void drawTimerBattleMode(Canvas canvas){
         if(gameManagerBattleMode.getCurrStage() == QUESTSTAGE){
@@ -4346,6 +4377,14 @@ public class MainView extends View {
         if(spType3Q2Pic != null && !spType3Q2Pic.isRecycled()){
             spType3Q2Pic.recycle();
             spType3Q2Pic = null;
+        }
+        if(spType3Q3Pic != null && !spType3Q3Pic.isRecycled()){
+            spType3Q3Pic.recycle();
+            spType3Q3Pic = null;
+        }
+        if(spType3Q4Pic != null && !spType3Q4Pic.isRecycled()){
+            spType3Q4Pic.recycle();
+            spType3Q4Pic = null;
         }
         if(qSpType3BkgPic != null && !qSpType3BkgPic.isRecycled()){
             qSpType3BkgPic.recycle();
