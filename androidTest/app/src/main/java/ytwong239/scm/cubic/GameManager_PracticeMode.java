@@ -189,7 +189,7 @@ public class GameManager_PracticeMode {
                 for(int i = 0; i < 4; i++){
                     if(ranSpType4Choice.get(i) == 0){
                         spType4Ans = i;
-                        Log.d("dsfsff", String.valueOf(i));
+                        Log.d("PMdsfsff", String.valueOf(i));
                         break;
                     }
                 }

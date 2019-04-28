@@ -1873,6 +1873,8 @@ public class MainView extends View {
 
         drawSettingPage(canvas);
 
+        puzzle.update();
+
     }
 
     private void drawSettingPage(Canvas canvas){
@@ -1905,6 +1907,9 @@ public class MainView extends View {
         canvas.drawBitmap(practiceModePic, practiceModeSrc, practiceModePos, null);
         canvas.drawBitmap(battleModePic, battleModeSrc, battleModePos, null);
         canvas.drawBitmap(puzzleModePic, puzzleModeSrc, puzzleModePos, null);
+        if(puzzle.isShowNoti()){
+            canvas.drawCircle(puzzleModePos.right - puzzleModePos.width() / 10, puzzleModePos.top + puzzleModePos.width() / 10, 25, red);
+        }
     }
 
     private void drawBattleNumPage(Canvas canvas){
@@ -1912,6 +1917,9 @@ public class MainView extends View {
         canvas.drawBitmap(disablePic, disableSrc, practiceModePos, null);
         canvas.drawBitmap(battleModeNumPic, battleModeNumSrc, battleModeNumPos, null);
         canvas.drawBitmap(puzzleModePic, puzzleModeSrc, puzzleModePos, null);
+        if(puzzle.isShowNoti()){
+            canvas.drawCircle(puzzleModePos.right, puzzleModePos.top, 50, red);
+        }
         canvas.drawBitmap(disablePic, disableSrc, puzzleModePos, null);
 
 //        Paint p = new Paint();
@@ -3505,7 +3513,6 @@ public class MainView extends View {
     }
 
     private void drawPuzzlePage(Canvas canvas){
-        puzzle.update();
         canvas.drawBitmap(puzzleTitlePic1, puzzleTitleSrc1, puzzleTitlePos1, null);
         canvas.drawBitmap(puzzleTitlePic2, puzzleTitleSrc2, puzzleTitlePos2, null);
         canvas.drawText(String.valueOf(puzzle.getPlayedRound()), canvasW /2, puzzleTitlePos1.bottom + canvasH / 15, font);
@@ -3517,6 +3524,8 @@ public class MainView extends View {
             }
         }
         canvas.drawBitmap(backPic, backSrc, backPos, null);
+
+        Puzzle.setShowNoti(false);
     }
 
     private void updateGM(){
