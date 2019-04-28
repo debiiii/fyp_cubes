@@ -61,6 +61,17 @@ public class GameManager_PracticeMode {
 
     private static boolean canGetPuzzle = false;
 
+    private static boolean isResultPage = false;
+
+    private static int[] timeUsed = new int[MAXQUESTNUM];
+    private static int[] tipUsed = new int[MAXQUESTNUM];
+    private int[] wrongAns = new int[MAXQUESTNUM];
+
+    private int abilityScore0 = 0;
+    private int abilityScore1 = 0;
+    private int abilityScore2 = 0;
+    private int abilityScore3 = 0;
+
     public GameManager_PracticeMode(){
 
         for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -74,6 +85,12 @@ public class GameManager_PracticeMode {
                 questIsCubePresent[i][j] = false;
                 ardIsCubePresent[i][j] = false;
             }
+        }
+
+        for(int i = 0; i < MAXQUESTNUM; i++){
+            timeUsed[i] = 0;
+            tipUsed[i] = 0;
+            wrongAns[i] = 0;
         }
 
         for(int i = 0; i < questionBank2D3D.getQuestion2D3DsLength(); i++){
@@ -279,7 +296,8 @@ public class GameManager_PracticeMode {
             case SPTYPE4:
                 if(spType4Ans == spType4PlayerAns){
                     canGetPuzzle = true;
-                    restart();
+                    isResultPage = true;
+                    //restart();
                 }
                 break;
         }
@@ -328,6 +346,17 @@ public class GameManager_PracticeMode {
             playerSideView[i] = 0;
             playerTopView[i] = 0;
         }
+
+        for(int i = 0; i < MAXQUESTNUM; i++){
+            timeUsed[i] = 0;
+            tipUsed[i] = 0;
+            wrongAns[i] = 0;
+        }
+
+        abilityScore0 = 0;
+        abilityScore1 = 0;
+        abilityScore2 = 0;
+        abilityScore3 = 0;
 
         restart = true;
 
@@ -416,4 +445,49 @@ public class GameManager_PracticeMode {
     public static void setCanGetPuzzleFalse(){
         canGetPuzzle = false;
     }
+
+    public static void setIsResultPage(boolean val){
+        isResultPage = val;
+    }
+
+    public boolean getIsResultPage(){
+        return isResultPage;
+    }
+
+    public static void setTimeUsed(int quest, int val){
+        timeUsed[quest] = val;
+    }
+
+    public int getTimeUsed(int quest){
+        return timeUsed[quest];
+    }
+
+    public static void setTipUsed(int quest, int val){
+        tipUsed[quest] = val;
+    }
+
+    public int getTipUsed(int quest){
+        return tipUsed[quest];
+    }
+
+    public int getWrongAns(int quest){
+        return wrongAns[quest];
+    }
+
+    public int getAbilityScore0(){
+        return abilityScore0;
+    }
+
+    public int getAbilityScore1(){
+        return abilityScore1;
+    }
+
+    public int getAbilityScore2(){
+        return abilityScore2;
+    }
+
+    public int getAbilityScore3(){
+        return abilityScore3;
+    }
+
 }

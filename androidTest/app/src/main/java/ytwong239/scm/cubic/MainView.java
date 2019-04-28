@@ -1875,6 +1875,13 @@ public class MainView extends View {
 
         puzzle.update();
 
+        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(0)), 100, 800, tipFont);
+        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(1)), 200, 800, tipFont);
+        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(2)), 300, 800, tipFont);
+        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(3)), 400, 800, tipFont);
+        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(4)), 500, 800, tipFont);
+        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(5)), 600, 800, tipFont);
+
     }
 
     private void drawSettingPage(Canvas canvas){
@@ -2193,135 +2200,181 @@ public class MainView extends View {
 
     private void drawPracticeGamePage(Canvas canvas){
 
-        //question title
-        canvas.drawBitmap(qTitlePic[gameManagerPracticeMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
+        if(!gameManagerPracticeMode.getIsResultPage()){
+            //question title
+            canvas.drawBitmap(qTitlePic[gameManagerPracticeMode.getCurrQuestNum()], qTitleSrc, qTitlePos, null);
 
-        //timer
-        drawTimerPracticeMode(canvas);
+            //timer
+            drawTimerPracticeMode(canvas);
 
-        switch (gameManagerPracticeMode.getCurrQuestMode()){
-            case DRAWFRONTVIEW:
-                if(!settingIsShown){
-                    OpenGLRenderer_3DModel.setCanDraw(true);
-                }
-                else if(settingIsShown){
-                    OpenGLRenderer_3DModel.setCanDraw(false);
-                }
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                OpenGLRenderer_SPType4_Base.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
-                canvas.drawBitmap(formFrontViewPic, qTitleSrc, qTitlePos, null);
-                drawModelPracticeMode(canvas);
-                break;
-            case DRAWSIDEVIEW:
-                if(!settingIsShown){
-                    OpenGLRenderer_3DModel.setCanDraw(true);
-                }
-                else if(settingIsShown){
-                    OpenGLRenderer_3DModel.setCanDraw(false);
-                }
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                OpenGLRenderer_SPType4_Base.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
-                canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
-                drawModelPracticeMode(canvas);
-                break;
-            case DRAWTOPVIEW:
-                if(!settingIsShown){
-                    OpenGLRenderer_3DModel.setCanDraw(true);
-                }
-                else if(settingIsShown){
-                    OpenGLRenderer_3DModel.setCanDraw(false);
-                }
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                OpenGLRenderer_SPType4_Base.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
-                canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
-                drawModelPracticeMode(canvas);
-                break;
-            case BUILD3DMODEL:
-                OpenGLRenderer_3DModel.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                OpenGLRenderer_SPType4_Base.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
-                canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
-                drawViewsPracticeMode(canvas);
-                drawDetection(canvas);
-                break;
-            case SPTYPE3:
-                OpenGLRenderer_3DModel.setCanDraw(false);
-                if(!settingIsShown){
-                    OpenGLRenderer_SPType3_Base0.setCanDraw(true);
-                    OpenGLRenderer_SPType3_Base1.setCanDraw(true);
-                    OpenGLRenderer_SPType3_Quest.setCanDraw(true);
-                }
-                else if(settingIsShown){
+            switch (gameManagerPracticeMode.getCurrQuestMode()){
+                case DRAWFRONTVIEW:
+                    if(!settingIsShown){
+                        OpenGLRenderer_3DModel.setCanDraw(true);
+                    }
+                    else if(settingIsShown){
+                        OpenGLRenderer_3DModel.setCanDraw(false);
+                    }
                     OpenGLRenderer_SPType3_Base0.setCanDraw(false);
                     OpenGLRenderer_SPType3_Base1.setCanDraw(false);
                     OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                }
-                OpenGLRenderer_SPType4_Base.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
-                OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
-                canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
-                drawSpType3(canvas);
-                drawDetection(canvas);
-                break;
-            case SPTYPE4:
-                OpenGLRenderer_3DModel.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base0.setCanDraw(false);
-                OpenGLRenderer_SPType3_Base1.setCanDraw(false);
-                OpenGLRenderer_SPType3_Quest.setCanDraw(false);
-                if(!settingIsShown){
-                    OpenGLRenderer_SPType4_Base.setCanDraw(true);
-                    OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
-                    OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
-                    OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
-                    OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
-                }
-                else if(settingIsShown){
                     OpenGLRenderer_SPType4_Base.setCanDraw(false);
                     OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
                     OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
                     OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
                     OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
-                }
-                canvas.drawBitmap(selectAnsPic, qTitleSrc, qTitlePos, null);
-                drawSpType4PracticeMode(canvas);
-                break;
+                    canvas.drawBitmap(formFrontViewPic, qTitleSrc, qTitlePos, null);
+                    drawModelPracticeMode(canvas);
+                    break;
+                case DRAWSIDEVIEW:
+                    if(!settingIsShown){
+                        OpenGLRenderer_3DModel.setCanDraw(true);
+                    }
+                    else if(settingIsShown){
+                        OpenGLRenderer_3DModel.setCanDraw(false);
+                    }
+                    OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                    canvas.drawBitmap(formSideViewPic, qTitleSrc, qTitlePos, null);
+                    drawModelPracticeMode(canvas);
+                    break;
+                case DRAWTOPVIEW:
+                    if(!settingIsShown){
+                        OpenGLRenderer_3DModel.setCanDraw(true);
+                    }
+                    else if(settingIsShown){
+                        OpenGLRenderer_3DModel.setCanDraw(false);
+                    }
+                    OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                    canvas.drawBitmap(formTopViewPic, qTitleSrc, qTitlePos, null);
+                    drawModelPracticeMode(canvas);
+                    break;
+                case BUILD3DMODEL:
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                    canvas.drawBitmap(form3dmodelPic, qTitleSrc, qTitlePos, null);
+                    drawViewsPracticeMode(canvas);
+                    drawDetection(canvas);
+                    break;
+                case SPTYPE3:
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                    if(!settingIsShown){
+                        OpenGLRenderer_SPType3_Base0.setCanDraw(true);
+                        OpenGLRenderer_SPType3_Base1.setCanDraw(true);
+                        OpenGLRenderer_SPType3_Quest.setCanDraw(true);
+                    }
+                    else if(settingIsShown){
+                        OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                        OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                        OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                    }
+                    OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                    OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                    canvas.drawBitmap(formAnsPic, qTitleSrc, qTitlePos, null);
+                    drawSpType3(canvas);
+                    drawDetection(canvas);
+                    break;
+                case SPTYPE4:
+                    OpenGLRenderer_3DModel.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+                    OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+                    if(!settingIsShown){
+                        OpenGLRenderer_SPType4_Base.setCanDraw(true);
+                        OpenGLRenderer_SPType4_Choice0.setCanDraw(true);
+                        OpenGLRenderer_SPType4_Choice1.setCanDraw(true);
+                        OpenGLRenderer_SPType4_Choice2.setCanDraw(true);
+                        OpenGLRenderer_SPType4_Choice3.setCanDraw(true);
+                    }
+                    else if(settingIsShown){
+                        OpenGLRenderer_SPType4_Base.setCanDraw(false);
+                        OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+                        OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+                        OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+                        OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+                    }
+                    canvas.drawBitmap(selectAnsPic, qTitleSrc, qTitlePos, null);
+                    drawSpType4PracticeMode(canvas);
+                    break;
 
+            }
+
+            //answer btn
+            canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
+
+            //tip icon
+            drawTip(canvas);
+
+            calTimeUsed();
         }
-
-        //answer btn
-        canvas.drawBitmap(answerPic, answerSrc, answerPos, null);
-
-        //tip icon
-        drawTip(canvas);
+        else if(gameManagerPracticeMode.getIsResultPage()){
+            drawPMResultPage(canvas);
+        }
 
         //restart the game
         PMrestart();
+    }
+
+    private void calTimeUsed(){
+        switch (gameManagerPracticeMode.getCurrQuestNum()){
+            case 0:
+                GameManager_PracticeMode.setTimeUsed(0, gameManagerPracticeMode.getTimeUsed(0) + 1);
+                break;
+            case 1:
+                GameManager_PracticeMode.setTimeUsed(1, gameManagerPracticeMode.getTimeUsed(1) + 1);
+                break;
+            case 2:
+                GameManager_PracticeMode.setTimeUsed(2, gameManagerPracticeMode.getTimeUsed(2) + 1);
+                break;
+            case 3:
+                GameManager_PracticeMode.setTimeUsed(3, gameManagerPracticeMode.getTimeUsed(3) + 1);
+                break;
+            case 4:
+                GameManager_PracticeMode.setTimeUsed(4, gameManagerPracticeMode.getTimeUsed(4) + 1);
+                break;
+            case 5:
+                GameManager_PracticeMode.setTimeUsed(5, gameManagerPracticeMode.getTimeUsed(5) + 1);
+                break;
+        }
+    }
+
+    private void drawPMResultPage(Canvas canvas){
+        OpenGLRenderer_3DModel.setCanDraw(false);
+        OpenGLRenderer_SPType3_Base0.setCanDraw(false);
+        OpenGLRenderer_SPType3_Base1.setCanDraw(false);
+        OpenGLRenderer_SPType3_Quest.setCanDraw(false);
+        OpenGLRenderer_SPType4_Base.setCanDraw(false);
+        OpenGLRenderer_SPType4_Choice0.setCanDraw(false);
+        OpenGLRenderer_SPType4_Choice1.setCanDraw(false);
+        OpenGLRenderer_SPType4_Choice2.setCanDraw(false);
+        OpenGLRenderer_SPType4_Choice3.setCanDraw(false);
+        OpenGLRenderer_Tips.setCanDraw(false);
+        OpenGLRenderer_DetectionCheck.setCanDraw(false);
+
+        canvas.drawBitmap(backPic, backSrc, backPos, null);
     }
 
     private void PMrestart(){
@@ -2344,6 +2397,7 @@ public class MainView extends View {
             OpenGLRenderer_DetectionCheck.setCanDraw(false);
 
             isInGame = false;
+            GameManager_PracticeMode.setIsResultPage(false);
 
             currPage = MENUPAGE;
             gameManagerPracticeMode.setRestartFalse();
@@ -3687,18 +3741,26 @@ public class MainView extends View {
                                 }
                             }
 
-                            //------debug use-------
-                            if(x < canvasW && x > canvasW - 200 && y > canvasH / 2 - 200 && y < canvasH / 2 + 200){
-                                if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM - 1){
-                                    gameManagerPracticeMode.nextQ();
-                                    resetDrawView();
-                                    //resetTimer();
-                                }
-                                else{
-                                    resetDrawView();
-                                    resetTimer();
+                            if(gameManagerPracticeMode.getIsResultPage()){
+                                if(backPos.contains(x, y)){
                                     gameManagerPracticeMode.restart();
-                                    currPage = MENUPAGE;
+                                }
+                            }
+
+                            //------debug use-------
+                            if(!gameManagerPracticeMode.getIsResultPage()){
+                                if(x < canvasW && x > canvasW - 200 && y > canvasH / 2 - 200 && y < canvasH / 2 + 200){
+                                    if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM - 1){
+                                        gameManagerPracticeMode.nextQ();
+                                        resetDrawView();
+                                        //resetTimer();
+                                    }
+//                                    else{
+//                                        resetDrawView();
+//                                        resetTimer();
+//                                        gameManagerPracticeMode.restart();
+//                                        currPage = MENUPAGE;
+//                                    }
                                 }
                             }
                             //-----------------------
