@@ -408,6 +408,26 @@ public class MainView extends View {
     private Rect playerIconPos6;
     private int playerIconH = 0;
 
+    private Bitmap profilePic;
+    private Rect profileSrc;
+    private Rect profilePos;
+
+    private Bitmap abilityPic0;
+    private Rect abilitySrc0;
+    private Rect abilityPos0;
+
+    private Bitmap abilityPic1;
+    private Rect abilitySrc1;
+    private Rect abilityPos1;
+
+    private Bitmap abilityPic2;
+    private Rect abilitySrc2;
+    private Rect abilityPos2;
+
+    private Bitmap abilityPic3;
+    private Rect abilitySrc3;
+    private Rect abilityPos3;
+
     private Bitmap Pic;
     private Rect Src;
     private Rect Pos;
@@ -441,6 +461,8 @@ public class MainView extends View {
     private Paint blueStroke = new Paint();
     private Paint greenStroke = new Paint();
     private Paint purpleStroke = new Paint();
+    private Paint whiteStrokeThin = new Paint();
+    private Paint darkOrangeStroke = new Paint();
 
     private Typeface aldrich;
     private Typeface myriad;
@@ -473,6 +495,10 @@ public class MainView extends View {
     private int h6 = 0;
 
     private boolean musicIsPlay = true;
+
+    private int lineLong = 0;
+    private int lineMidX = 0;
+    private int lineMidY = 0;
 
     public MainView(Context context) {
         super(context);
@@ -533,6 +559,14 @@ public class MainView extends View {
         whiteStroke.setStyle(Paint.Style.STROKE);
         whiteStroke.setColor(Color.WHITE);
         whiteStroke.setStrokeWidth(10);
+
+        whiteStrokeThin.setStyle(Paint.Style.STROKE);
+        whiteStrokeThin.setColor(Color.WHITE);
+        whiteStrokeThin.setStrokeWidth(5);
+
+        darkOrangeStroke.setStyle(Paint.Style.STROKE);
+        darkOrangeStroke.setColor(darkOrange.getColor());
+        darkOrangeStroke.setStrokeWidth(10);
 
         blackStroke.setStyle(Paint.Style.STROKE);
         blackStroke.setColor(Color.BLACK);
@@ -812,6 +846,21 @@ public class MainView extends View {
 
         playerIconPic = BitmapFactory.decodeResource(getResources(), R.drawable.playericon, opts);
         playerIconSrc = new Rect(0,0, playerIconPic.getWidth(), playerIconPic.getHeight());
+
+        profilePic = BitmapFactory.decodeResource(getResources(), R.drawable.profile, opts);
+        profileSrc = new Rect(0,0, profilePic.getWidth(), profilePic.getHeight());
+
+        abilityPic0 = BitmapFactory.decodeResource(getResources(), R.drawable.dtoortho, opts);
+        abilitySrc0 = new Rect(0,0, abilityPic0.getWidth(), abilityPic0.getHeight());
+
+        abilityPic1 = BitmapFactory.decodeResource(getResources(), R.drawable.orthoto3d, opts);
+        abilitySrc1 = new Rect(0,0, abilityPic1.getWidth(), abilityPic1.getHeight());
+
+        abilityPic2 = BitmapFactory.decodeResource(getResources(), R.drawable.pvor, opts);
+        abilitySrc2 = new Rect(0,0, abilityPic2.getWidth(), abilityPic2.getHeight());
+
+        abilityPic3 = BitmapFactory.decodeResource(getResources(), R.drawable.mentalrotation, opts);
+        abilitySrc3 = new Rect(0,0, abilityPic3.getWidth(), abilityPic3.getHeight());
 
         Pic = BitmapFactory.decodeResource(getResources(), R.drawable.back, opts);
         Src = new Rect(0,0, Pic.getWidth(), Pic.getHeight());
@@ -1650,6 +1699,51 @@ public class MainView extends View {
         bottom = top + height;
         contactUsPos = new Rect(left, top, right, bottom);
 
+        height = howToTitlePos.height();
+        width = (profilePic.getWidth() * height) / profilePic.getHeight();
+        left = w / 2 - width / 2;
+        top = (settingPos0.top + settingPos0.height() / 2) - height / 2;
+        right = left + width;
+        bottom = top + height;
+        profilePos = new Rect(left, top, right, bottom);
+
+        gap = canvasW / 40;
+        lineLong = canvasH / 4;
+        lineMidX = canvasW / 2;
+        lineMidY = canvasH / 2 + canvasH / 20;
+
+        width = w / 7;
+        height = (abilityPic0.getHeight() * width) / abilityPic0.getWidth();
+        left = lineMidX - lineLong - gap - width;
+        top = lineMidY - height / 2;
+        right = left + width;
+        bottom = top + height;
+        abilityPos0 = new Rect(left, top, right, bottom);
+
+        width = w / 7;
+        height = (abilityPic1.getHeight() * width) / abilityPic1.getWidth();
+        left = lineMidX + lineLong + gap;
+        top = lineMidY - height / 2;
+        right = left + width;
+        bottom = top + height;
+        abilityPos1 = new Rect(left, top, right, bottom);
+
+        width = w / 7;
+        height = (abilityPic2.getHeight() * width) / abilityPic2.getWidth();
+        left = lineMidX - width / 2;
+        top = lineMidY + lineLong + gap;
+        right = left + width;
+        bottom = top + height;
+        abilityPos2 = new Rect(left, top, right, bottom);
+
+        width = w / 7;
+        height = (abilityPic3.getHeight() * width) / abilityPic3.getWidth();
+        left = lineMidX - width / 2;
+        top = lineMidY - lineLong - gap - height;
+        right = left + width;
+        bottom = top + height;
+        abilityPos3 = new Rect(left, top, right, bottom);
+
     }
 
     @Override
@@ -1874,14 +1968,6 @@ public class MainView extends View {
         drawSettingPage(canvas);
 
         puzzle.update();
-
-        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(0)), 100, 800, tipFont);
-        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(1)), 200, 800, tipFont);
-        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(2)), 300, 800, tipFont);
-        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(3)), 400, 800, tipFont);
-        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(4)), 500, 800, tipFont);
-        canvas.drawText(String.valueOf(gameManagerPracticeMode.getTimeUsed(5)), 600, 800, tipFont);
-
     }
 
     private void drawSettingPage(Canvas canvas){
@@ -2375,6 +2461,39 @@ public class MainView extends View {
         OpenGLRenderer_DetectionCheck.setCanDraw(false);
 
         canvas.drawBitmap(backPic, backSrc, backPos, null);
+        canvas.drawBitmap(profilePic, profileSrc, profilePos, null);
+
+        canvas.drawLine(lineMidX, lineMidY - lineLong, lineMidX, lineMidY + lineLong, whiteStrokeThin);
+        canvas.drawLine(lineMidX - lineLong, lineMidY, lineMidX + lineLong, lineMidY, whiteStrokeThin);
+
+        canvas.drawBitmap(abilityPic0, abilitySrc0, abilityPos0, null);
+        canvas.drawBitmap(abilityPic1, abilitySrc1, abilityPos1, null);
+        canvas.drawBitmap(abilityPic2, abilitySrc2, abilityPos2, null);
+        canvas.drawBitmap(abilityPic3, abilitySrc3, abilityPos3, null);
+
+        int abilityPt0 = (int)remap(gameManagerPracticeMode.getAbilityScore0(), 0, 100, 0, lineLong);
+        int abilityPt1 = (int)remap(gameManagerPracticeMode.getAbilityScore1(), 0, 100, 0, lineLong);
+        int abilityPt2 = (int)remap(gameManagerPracticeMode.getAbilityScore2(), 0, 100, 0, lineLong);
+        int abilityPt3 = (int)remap(gameManagerPracticeMode.getAbilityScore3(), 0, 100, 0, lineLong);
+
+        if(abilityPt0 == 0 && abilityPt1 == 0 && abilityPt2 == 0 && abilityPt3 == 0){
+            canvas.drawCircle(lineMidX, lineMidY, 10, darkOrange);
+        }
+        else{
+            Point a = new Point(lineMidX, lineMidY - abilityPt0);
+            Point b = new Point(lineMidX - abilityPt1, lineMidY);
+            Point c = new Point(lineMidX, lineMidY + abilityPt2);
+            Point d = new Point(lineMidX + abilityPt3, lineMidY);
+            Path path = new Path();
+            path.setFillType(Path.FillType.EVEN_ODD);
+            path.moveTo(a.x, a.y);
+            path.lineTo(b.x, b.y);
+            path.lineTo(c.x, c.y);
+            path.lineTo(d.x, d.y);
+            path.close();
+            canvas.drawPath(path, darkOrangeStroke);
+        }
+
     }
 
     private void PMrestart(){
@@ -2450,7 +2569,6 @@ public class MainView extends View {
         canvas.drawCircle(timeCirX2, timeCirY2, timeCirR, white);
         canvas.drawRect(timeRectPos, white);
     }
-
 
     private float remap(float value, float from1, float to1, float from2, float to2){
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
@@ -3716,7 +3834,30 @@ public class MainView extends View {
                             }
 
                             if(timeRemapWidth == -1 && tipIconPos.contains(x, y)){
-                                tipIsShown = true;
+                                if(!tipIsShown){
+                                    switch (gameManagerPracticeMode.getCurrQuestNum()){
+                                        case 0:
+                                            GameManager_PracticeMode.setTipUsed(0, gameManagerPracticeMode.getTipUsed(0) + 1);
+                                            break;
+                                        case 1:
+                                            GameManager_PracticeMode.setTipUsed(1, gameManagerPracticeMode.getTipUsed(1) + 1);
+                                            break;
+                                        case 2:
+                                            GameManager_PracticeMode.setTipUsed(2, gameManagerPracticeMode.getTipUsed(2) + 1);
+                                            break;
+                                        case 3:
+                                            GameManager_PracticeMode.setTipUsed(3, gameManagerPracticeMode.getTipUsed(3) + 1);
+                                            break;
+                                        case 4:
+                                            GameManager_PracticeMode.setTipUsed(4, gameManagerPracticeMode.getTipUsed(4) + 1);
+                                            break;
+                                        case 5:
+                                            GameManager_PracticeMode.setTipUsed(5, gameManagerPracticeMode.getTipUsed(5) + 1);
+                                            break;
+                                    }
+                                    tipIsShown = true;
+                                }
+
                             }
 
                             if(timeRemapWidth == -1 && tipIsShown){
@@ -4599,6 +4740,26 @@ public class MainView extends View {
         if(playerIconPic != null && !playerIconPic.isRecycled()){
             playerIconPic.recycle();
             playerIconPic = null;
+        }
+        if(profilePic != null && !profilePic.isRecycled()){
+            profilePic.recycle();
+            profilePic = null;
+        }
+        if(abilityPic0 != null && !abilityPic0.isRecycled()){
+            abilityPic0.recycle();
+            abilityPic0 = null;
+        }
+        if(abilityPic1 != null && !abilityPic1.isRecycled()){
+            abilityPic1.recycle();
+            abilityPic1 = null;
+        }
+        if(abilityPic2 != null && !abilityPic2.isRecycled()){
+            abilityPic2.recycle();
+            abilityPic2 = null;
+        }
+        if(abilityPic3 != null && !abilityPic3.isRecycled()){
+            abilityPic3.recycle();
+            abilityPic3 = null;
         }
 
     }

@@ -232,6 +232,9 @@ public class GameManager_PracticeMode {
                 if(match == MAXGRIDSNUM){
                     nextQ();
                 }
+                else{
+                    wrongAns[currQuestNum]++;
+                }
                 break;
             case DRAWSIDEVIEW:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -245,6 +248,9 @@ public class GameManager_PracticeMode {
                 if(match == MAXGRIDSNUM){
                     nextQ();
                 }
+                else{
+                    wrongAns[currQuestNum]++;
+                }
                 break;
             case DRAWTOPVIEW:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -257,6 +263,9 @@ public class GameManager_PracticeMode {
                 }
                 if(match == MAXGRIDSNUM){
                     nextQ();
+                }
+                else{
+                    wrongAns[currQuestNum]++;
                 }
                 break;
             case BUILD3DMODEL:
@@ -277,6 +286,9 @@ public class GameManager_PracticeMode {
                 if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
                     nextQ();
                 }
+                else{
+                    wrongAns[currQuestNum]++;
+                }
                 break;
             case SPTYPE3:
                 for(int i = 0; i < MAXGRIDSNUM; i++){
@@ -292,12 +304,18 @@ public class GameManager_PracticeMode {
                 if(match == MAXGRIDSNUM * MAXHEIGHTNUM){
                     nextQ();
                 }
+                else{
+                    wrongAns[currQuestNum]++;
+                }
                 break;
             case SPTYPE4:
                 if(spType4Ans == spType4PlayerAns){
                     canGetPuzzle = true;
                     isResultPage = true;
-                    //restart();
+                    calAbility();
+                }
+                else{
+                    wrongAns[currQuestNum]++;
                 }
                 break;
         }
@@ -323,6 +341,72 @@ public class GameManager_PracticeMode {
         timeLeft30s = TOTALTIME30S;
         timer30sStart();
 
+    }
+
+    private static final int PERSECOND = 30;
+    private static final int NOCUBEMINTIME = 5;
+    private static final int NOCUBEMAXTIME = 60;
+    private static final int HVCUBEMINTIME = 20;
+    private static final int HVCUBEMAXTIME = 120;
+    private static final int SCOREMIN = 0;
+    private static final int SCOREMAX = 100;
+    private static final int TIPMINUS = -10;
+    private static final int WRONGANSMINUS = -10;
+
+    private void calAbility(){
+        float[] time = new float[MAXQUESTNUM];
+        float[] timeScore = new float[MAXQUESTNUM];
+        for(int i = 0; i < MAXQUESTNUM; i++){
+            time[i] = timeUsed[i] / PERSECOND;
+            if(i == 0 || i == 3 || i == 5){
+                if(time[i] < NOCUBEMINTIME){
+                    time[i] = NOCUBEMINTIME;
+                }
+                else if(time[i] > NOCUBEMAXTIME){
+                    time[i] = NOCUBEMAXTIME;
+                }
+                timeScore[i] = remap(time[i], NOCUBEMINTIME, NOCUBEMAXTIME, SCOREMAX, SCOREMIN);
+            }
+            else if(i == 1 || i == 2 || i == 4){
+                if(time[i] < HVCUBEMINTIME){
+                    time[i] = HVCUBEMINTIME;
+                }
+                else if(time[i] > HVCUBEMAXTIME){
+                    time[i] = HVCUBEMAXTIME;
+                }
+                timeScore[i] = remap(time[i], HVCUBEMINTIME, HVCUBEMAXTIME, SCOREMAX, SCOREMIN);
+            }
+        }
+
+        int[] tipScore = new int[MAXQUESTNUM];
+        int[] wrongAnsScore = new int[MAXQUESTNUM];
+        for(int i = 0; i < MAXQUESTNUM; i++){
+            tipScore[i] = tipUsed[i] * TIPMINUS;
+            wrongAnsScore[i] = wrongAns[i] * WRONGANSMINUS;
+        }
+
+        abilityScore0 = (int)(timeScore[0] + timeScore[3]) / 2 + (tipScore[0] + tipScore[3]) / 2 + (wrongAnsScore[0] + wrongAnsScore[3]) / 2;
+        abilityScore1 = (int)(timeScore[1] + timeScore[4]) / 2 + (tipScore[1] + tipScore[4]) / 2 + (wrongAnsScore[1] + wrongAnsScore[4]) / 2;
+        abilityScore2 = (int)timeScore[2] + tipScore[2] + wrongAnsScore[2];
+        abilityScore3 = (int)timeScore[5] + tipScore[5] + wrongAnsScore[5];
+
+        if(abilityScore0 < 0){
+            abilityScore0 = 0;
+        }
+        if(abilityScore1 < 0){
+            abilityScore1 = 0;
+        }
+        if(abilityScore2 < 0){
+            abilityScore2 = 0;
+        }
+        if(abilityScore3 < 0){
+            abilityScore3 = 0;
+        }
+
+    }
+
+    private float remap(float value, float from1, float to1, float from2, float to2){
+        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
 
     public void restart(){
