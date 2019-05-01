@@ -500,6 +500,8 @@ public class MainView extends View {
     private int lineMidX = 0;
     private int lineMidY = 0;
 
+    private final Rect textBounds = new Rect();
+
     public MainView(Context context) {
         super(context);
 
@@ -590,7 +592,6 @@ public class MainView extends View {
         scoreFont.setTypeface(aldrich);
         scoreFont.setColor(Color.WHITE);
         scoreFont.setTextSize(50);
-        scoreFont.setTextAlign(Paint.Align.CENTER);
 
         scoreGameFont.setTypeface(aldrich);
         scoreGameFont.setColor(Color.WHITE);
@@ -1613,7 +1614,7 @@ public class MainView extends View {
         width = w / 20;
         height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
         left = w / 2 - gap / 2 - width;
-        top = 500;
+        top = h / 2;
         right = left + width;
         bottom = top + height;
         playerIconPos1 = new Rect(left, top, right, bottom);
@@ -1621,7 +1622,7 @@ public class MainView extends View {
         width = w / 20;
         height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
         left = playerIconPos1.left - gap - width;
-        top = 500;
+        top = h / 2;
         right = left + width;
         bottom = top + height;
         playerIconPos0 = new Rect(left, top, right, bottom);
@@ -1630,7 +1631,7 @@ public class MainView extends View {
         width = w / 20;
         height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
         left = w / 2 + gap / 2;
-        top = 500;
+        top = h / 2;
         right = left + width;
         bottom = top + height;
         playerIconPos2 = new Rect(left, top, right, bottom);
@@ -1638,7 +1639,7 @@ public class MainView extends View {
         width = w / 20;
         height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
         left = playerIconPos2.right + gap;
-        top = 500;
+        top = h / 2;
         right = left + width;
         bottom = top + height;
         playerIconPos3 = new Rect(left, top, right, bottom);
@@ -1646,7 +1647,7 @@ public class MainView extends View {
         width = w / 20;
         height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
         left = w / 2 - width / 2;
-        top = 500;
+        top = h / 2;
         right = left + width;
         bottom = top + height;
         playerIconPos5 = new Rect(left, top, right, bottom);
@@ -1654,7 +1655,7 @@ public class MainView extends View {
         width = w / 20;
         height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
         left = playerIconPos5.left - gap - width;
-        top = 500;
+        top = h / 2;
         right = left + width;
         bottom = top + height;
         playerIconPos4 = new Rect(left, top, right, bottom);
@@ -1662,7 +1663,7 @@ public class MainView extends View {
         width = w / 20;
         height = (playerIconPic.getHeight() * width) / playerIconPic.getWidth();
         left = playerIconPos5.right + gap;
-        top = 500;
+        top = h / 2;
         right = left + width;
         bottom = top + height;
         playerIconPos6 = new Rect(left, top, right, bottom);
@@ -1744,6 +1745,12 @@ public class MainView extends View {
         bottom = top + height;
         abilityPos3 = new Rect(left, top, right, bottom);
 
+    }
+
+    //https://stackoverflow.com/questions/4909367/how-to-align-text-vertically
+    private void drawTextCentred(Canvas canvas, String text, float cx, float cy, Paint paint){
+        paint.getTextBounds(text, 0, text.length(), textBounds);
+        canvas.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), paint);
     }
 
     @Override
@@ -3076,6 +3083,14 @@ public class MainView extends View {
 
         //drawScoreAni(canvas);
 
+        drawBTEndGame(canvas);
+
+        //restart the game
+        BMrestart();
+
+    }
+
+    private void drawBTEndGame(Canvas canvas){
         switch (gameManagerBattleMode.getCurrStage()){
             case TIMESUPSTAGE:
                 Paint bkg = new Paint();
@@ -3091,6 +3106,15 @@ public class MainView extends View {
                 break;
             case RESULTSTAGE:
                 canvas.drawBitmap(backPic, backSrc, backPos, null);
+                int rectScoreGap = canvasH / 30;
+                int extraGap = 5;
+                int perRect = (canvasH - winsPos.bottom) / (24 + extraGap * 2);
+                int lineGap = canvasW / 20;
+                int lineX1 = playerIconPos1.left - lineGap;
+                int lineY1 = canvasH - perRect * (6 + extraGap);
+                int lineX2 = playerIconPos2.right + lineGap;
+                int lineY2 = canvasH - perRect * (6 + extraGap);
+                Rect tempRect = new Rect();
                 switch (playerNum){
                     case 2:
                         if(gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getBlueScore()){
@@ -3102,20 +3126,61 @@ public class MainView extends View {
                         else{
                             canvas.drawBitmap(itsADrawPic, winsSrc, winsPos, null);
                         }
-                        h1 = (int)remap(gameManagerBattleMode.getRedScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos1.left, (canvasH - 200) - h1, playerIconPos1.right, canvasH - 200, red);
-                        playerIconPos1.top = (canvasH - 200) - h1 - 40 - playerIconH;
-                        playerIconPos1.bottom = playerIconPos1.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos1, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos1.centerX(), (canvasH - 200) + 60, scoreFont);
 
+                        if(gameManagerBattleMode.getRedScore() > 0){
+                            h1 = Math.abs(gameManagerBattleMode.getRedScore()) * perRect;
+                            tempRect.left = playerIconPos1.left;
+                            tempRect.top = lineY1 - h1;
+                            tempRect.right = playerIconPos1.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, red);
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos1.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getRedScore() < 0){
+                            h1 = Math.abs(gameManagerBattleMode.getRedScore()) * perRect;
+                            tempRect.left = playerIconPos1.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos1.right;
+                            tempRect.bottom = tempRect.top + h1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, red);
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos1.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getRedScore() == 0){
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos1.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
 
-                        h2 = (int)remap(gameManagerBattleMode.getBlueScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos2.left, (canvasH - 200) - h2, playerIconPos2.right, canvasH - 200, blue);
-                        playerIconPos2.top = (canvasH - 200) - h2 - 40 - playerIconH;
-                        playerIconPos2.bottom = playerIconPos2.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos2, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos2.centerX(), (canvasH - 200) + 60, scoreFont);
+                        if(gameManagerBattleMode.getBlueScore() > 0){
+                            h2 = Math.abs(gameManagerBattleMode.getBlueScore()) * perRect;
+                            tempRect.left = playerIconPos2.left;
+                            tempRect.top = lineY1 - h2;
+                            tempRect.right = playerIconPos2.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, blue);
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos2.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() < 0){
+                            h2 = Math.abs(gameManagerBattleMode.getBlueScore()) * perRect;
+                            tempRect.left = playerIconPos2.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos2.right;
+                            tempRect.bottom = tempRect.top + h2;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, blue);
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos2.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() == 0){
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos2.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
+
+                        canvas.drawLine(lineX1, lineY1, lineX2, lineY2, whiteStrokeThin);
+                        scoreFont.setColor(white.getColor());
+                        drawTextCentred(canvas, "0", lineX2 + rectScoreGap , lineY1, scoreFont);
+
                         break;
                     case 3:
                         if(gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getBlueScore() &&
@@ -3133,26 +3198,89 @@ public class MainView extends View {
                         else{
                             canvas.drawBitmap(itsADrawPic, winsSrc, winsPos, null);
                         }
-                        h4 = (int)remap(gameManagerBattleMode.getRedScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos4.left, (canvasH - 200) - h4, playerIconPos4.right, canvasH - 200, red);
-                        playerIconPos4.top = (canvasH - 200) - h4 - 40 - playerIconH;
-                        playerIconPos4.bottom = playerIconPos4.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos4, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos4.centerX(), (canvasH - 200) + 60, scoreFont);
 
-                        h5 = (int)remap(gameManagerBattleMode.getBlueScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos5.left, (canvasH - 200) - h5, playerIconPos5.right, canvasH - 200, blue);
-                        playerIconPos5.top = (canvasH - 200) - h5 - 40 - playerIconH;
-                        playerIconPos5.bottom = playerIconPos5.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos5, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos5.centerX(), (canvasH - 200) + 60, scoreFont);
+                        lineX1 = playerIconPos4.left - lineGap;
+                        lineX2 = playerIconPos6.right + lineGap;
 
-                        h6 = (int)remap(gameManagerBattleMode.getGreenScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos6.left, (canvasH - 200) - h6, playerIconPos6.right, canvasH - 200, green);
-                        playerIconPos6.top = (canvasH - 200) - h6 - 40 - playerIconH;
-                        playerIconPos6.bottom = playerIconPos6.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos6, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos6.centerX(), (canvasH - 200) + 60, scoreFont);
+                        if(gameManagerBattleMode.getRedScore() > 0){
+                            h4 = Math.abs(gameManagerBattleMode.getRedScore()) * perRect;
+                            tempRect.left = playerIconPos4.left;
+                            tempRect.top = lineY1 - h4;
+                            tempRect.right = playerIconPos4.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, red);
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos4.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getRedScore() < 0){
+                            h4 = Math.abs(gameManagerBattleMode.getRedScore()) * perRect;
+                            tempRect.left = playerIconPos4.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos4.right;
+                            tempRect.bottom = tempRect.top + h4;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, red);
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos4.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getRedScore() == 0){
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos4.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
+
+                        if(gameManagerBattleMode.getBlueScore() > 0){
+                            h5 = Math.abs(gameManagerBattleMode.getBlueScore()) * perRect;
+                            tempRect.left = playerIconPos5.left;
+                            tempRect.top = lineY1 - h5;
+                            tempRect.right = playerIconPos5.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, blue);
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos5.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() < 0){
+                            h5 = Math.abs(gameManagerBattleMode.getBlueScore()) * perRect;
+                            tempRect.left = playerIconPos5.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos5.right;
+                            tempRect.bottom = tempRect.top + h5;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, blue);
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos5.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() == 0){
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos5.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
+
+                        if(gameManagerBattleMode.getGreenScore() > 0){
+                            h6 = Math.abs(gameManagerBattleMode.getGreenScore()) * perRect;
+                            tempRect.left = playerIconPos6.left;
+                            tempRect.top = lineY1 - h6;
+                            tempRect.right = playerIconPos6.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, green);
+                            scoreFont.setColor(green.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos6.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getGreenScore() < 0){
+                            h6 = Math.abs(gameManagerBattleMode.getGreenScore()) * perRect;
+                            tempRect.left = playerIconPos6.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos6.right;
+                            tempRect.bottom = tempRect.top + h6;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, green);
+                            scoreFont.setColor(green.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos6.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getGreenScore() == 0){
+                            scoreFont.setColor(green.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos6.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
+
+                        canvas.drawLine(lineX1, lineY1, lineX2, lineY2, whiteStrokeThin);
+                        scoreFont.setColor(white.getColor());
+                        drawTextCentred(canvas, "0", lineX2 + rectScoreGap , lineY1, scoreFont);
+
                         break;
                     case 4:
                         if(gameManagerBattleMode.getRedScore() > gameManagerBattleMode.getBlueScore() &&
@@ -3178,43 +3306,118 @@ public class MainView extends View {
                         else{
                             canvas.drawBitmap(itsADrawPic, winsSrc, winsPos, null);
                         }
-                        h0 = (int)remap(gameManagerBattleMode.getRedScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos0.left, (canvasH - 200) - h0, playerIconPos0.right, canvasH - 200, red);
-                        playerIconPos0.top = (canvasH - 200) - h0 - 40 - playerIconH;
-                        playerIconPos0.bottom = playerIconPos0.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos0, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos0.centerX(), (canvasH - 200) + 60, scoreFont);
 
-                        h1 = (int)remap(gameManagerBattleMode.getBlueScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos1.left, (canvasH - 200) - h1, playerIconPos1.right, canvasH - 200, blue);
-                        playerIconPos1.top = (canvasH - 200) - h1 - 40 - playerIconH;
-                        playerIconPos1.bottom = playerIconPos1.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos1, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos1.centerX(), (canvasH - 200) + 60, scoreFont);
+                        lineX1 = playerIconPos0.left - lineGap;
+                        lineX2 = playerIconPos3.right + lineGap;
 
+                        if(gameManagerBattleMode.getRedScore() > 0){
+                            h0 = Math.abs(gameManagerBattleMode.getRedScore()) * perRect;
+                            tempRect.left = playerIconPos0.left;
+                            tempRect.top = lineY1 - h0;
+                            tempRect.right = playerIconPos0.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, red);
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos0.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getRedScore() < 0){
+                            h0 = Math.abs(gameManagerBattleMode.getRedScore()) * perRect;
+                            tempRect.left = playerIconPos0.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos0.right;
+                            tempRect.bottom = tempRect.top + h0;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, red);
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos0.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getRedScore() == 0){
+                            scoreFont.setColor(red.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getRedScore()), playerIconPos0.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
 
-                        h2 = (int)remap(gameManagerBattleMode.getGreenScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos2.left, (canvasH - 200) - h2, playerIconPos2.right, canvasH - 200, green);
-                        playerIconPos2.top = (canvasH - 200) - h2 - 40 - playerIconH;
-                        playerIconPos2.bottom = playerIconPos2.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos2, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos2.centerX(), (canvasH - 200) + 60, scoreFont);
+                        if(gameManagerBattleMode.getBlueScore() > 0){
+                            h1 = Math.abs(gameManagerBattleMode.getBlueScore()) * perRect;
+                            tempRect.left = playerIconPos1.left;
+                            tempRect.top = lineY1 - h1;
+                            tempRect.right = playerIconPos1.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, blue);
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos1.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() < 0){
+                            h1 = Math.abs(gameManagerBattleMode.getBlueScore()) * perRect;
+                            tempRect.left = playerIconPos1.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos1.right;
+                            tempRect.bottom = tempRect.top + h1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, blue);
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos1.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getBlueScore() == 0){
+                            scoreFont.setColor(blue.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getBlueScore()), playerIconPos1.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
 
+                        if(gameManagerBattleMode.getGreenScore() > 0){
+                            h2 = Math.abs(gameManagerBattleMode.getGreenScore()) * perRect;
+                            tempRect.left = playerIconPos2.left;
+                            tempRect.top = lineY1 - h2;
+                            tempRect.right = playerIconPos2.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, green);
+                            scoreFont.setColor(green.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos2.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getGreenScore() < 0){
+                            h2 = Math.abs(gameManagerBattleMode.getGreenScore()) * perRect;
+                            tempRect.left = playerIconPos2.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos2.right;
+                            tempRect.bottom = tempRect.top + h2;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, green);
+                            scoreFont.setColor(green.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos2.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getGreenScore() == 0){
+                            scoreFont.setColor(green.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getGreenScore()), playerIconPos2.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
 
-                        h3 = (int)remap(gameManagerBattleMode.getPurpleScore(), -6, 18, 0, (canvasH / 3) * 2);
-                        canvas.drawRect(playerIconPos3.left, (canvasH - 200) - h3, playerIconPos3.right, canvasH - 200, purple);
-                        playerIconPos3.top = (canvasH - 200) - h3 - 40 - playerIconH;
-                        playerIconPos3.bottom = playerIconPos3.top + playerIconH;
-                        canvas.drawBitmap(playerIconPic, playerIconSrc, playerIconPos3, null);
-                        canvas.drawText(String.valueOf(gameManagerBattleMode.getPurpleScore()), playerIconPos3.centerX(), (canvasH - 200) + 60, scoreFont);
+                        if(gameManagerBattleMode.getPurpleScore() > 0){
+                            h3 = Math.abs(gameManagerBattleMode.getPurpleScore()) * perRect;
+                            tempRect.left = playerIconPos3.left;
+                            tempRect.top = lineY1 - h3;
+                            tempRect.right = playerIconPos3.right;
+                            tempRect.bottom = lineY1;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, purple);
+                            scoreFont.setColor(purple.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getPurpleScore()), playerIconPos3.centerX(), tempRect.top - rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getPurpleScore() < 0){
+                            h3 = Math.abs(gameManagerBattleMode.getPurpleScore()) * perRect;
+                            tempRect.left = playerIconPos3.left;
+                            tempRect.top = lineY1;
+                            tempRect.right = playerIconPos3.right;
+                            tempRect.bottom = tempRect.top + h3;
+                            canvas.drawRect(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom, purple);
+                            scoreFont.setColor(purple.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getPurpleScore()), playerIconPos3.centerX(), tempRect.bottom + rectScoreGap, scoreFont);
+                        }
+                        else if(gameManagerBattleMode.getPurpleScore() == 0){
+                            scoreFont.setColor(purple.getColor());
+                            drawTextCentred(canvas, String.valueOf(gameManagerBattleMode.getPurpleScore()), playerIconPos3.centerX(), lineY1 + rectScoreGap, scoreFont);
+                        }
+
+                        canvas.drawLine(lineX1, lineY1, lineX2, lineY2, whiteStrokeThin);
+                        scoreFont.setColor(white.getColor());
+                        drawTextCentred(canvas, "0", lineX2 + rectScoreGap , lineY1, scoreFont);
+
                         break;
                 }
                 break;
         }
-
-        //restart the game
-        BMrestart();
-
     }
 
     private void BMrestart(){
