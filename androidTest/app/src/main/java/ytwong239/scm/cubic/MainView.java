@@ -2017,10 +2017,10 @@ public class MainView extends View {
         canvas.drawBitmap(disablePic, disableSrc, practiceModePos, null);
         canvas.drawBitmap(battleModeNumPic, battleModeNumSrc, battleModeNumPos, null);
         canvas.drawBitmap(puzzleModePic, puzzleModeSrc, puzzleModePos, null);
-        if(puzzle.isShowNoti()){
-            canvas.drawCircle(puzzleModePos.right, puzzleModePos.top, 50, red);
-        }
         canvas.drawBitmap(disablePic, disableSrc, puzzleModePos, null);
+        if(puzzle.isShowNoti()){
+            canvas.drawCircle(puzzleModePos.right - puzzleModePos.width() / 10, puzzleModePos.top + puzzleModePos.width() / 10, 25, red);
+        }
 
 //        Paint p = new Paint();
 //        p.setColor(Color.BLUE);
