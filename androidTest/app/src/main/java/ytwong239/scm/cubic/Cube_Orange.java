@@ -11,6 +11,8 @@ import java.nio.ShortBuffer;
  * Created by DebbieWong on 19/3/2019.
  */
 
+//https://github.com/googleglass/gdk-apidemo-sample
+
 public class Cube_Orange {
 
     private static final int COORDS_PER_VERTEX = 3;

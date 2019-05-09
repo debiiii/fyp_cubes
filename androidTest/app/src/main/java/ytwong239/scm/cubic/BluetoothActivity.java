@@ -97,7 +97,6 @@ public class BluetoothActivity extends AppCompatActivity {
     OpenGLSurfaceView_DetectionCheck openGLSurfaceView_detectionCheck;
     OpenGLRenderer_DetectionCheck openGLRenderer_detectionCheck;
 
-    MediaPlayer mediaPlayer;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -286,10 +285,6 @@ public class BluetoothActivity extends AppCompatActivity {
             }
         }
 
-        //music
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bkgmusic);
-        //mainView.music(mediaPlayer);
-        //mediaPlayer.start();
     }
 
 
@@ -309,8 +304,10 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_tips.onResume();
         openGLSurfaceView_detectionCheck.onResume();
 
-        if(mediaPlayer != null){
-            //mediaPlayer.start();
+        if(mainView.mediaPlayer != null){
+            if(mainView.musicIsPlay && !mainView.mediaPlayer.isPlaying()){
+                mainView.mediaPlayer.start();
+            }
         }
 
         bluetoothDevice = bluetoothAdapter.getRemoteDevice("98:D3:61:F9:48:D1");
@@ -402,9 +399,8 @@ public class BluetoothActivity extends AppCompatActivity {
         openGLSurfaceView_tips.onPause();
         openGLSurfaceView_detectionCheck.onPause();
 
-        if(mediaPlayer != null){
-            mediaPlayer.stop();
-            //mediaPlayer.release();
+        if(mainView.mediaPlayer.isPlaying()){
+            mainView.mediaPlayer.pause();
         }
 
         try
@@ -418,19 +414,15 @@ public class BluetoothActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        if (mediaPlayer != null){
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mediaPlayer != null){
-            mediaPlayer.release();
-            mediaPlayer = null;
+        if (mainView.mediaPlayer != null){
+            mainView.mediaPlayer.release();
+            mainView.mediaPlayer = null;
         }
     }
 

@@ -494,7 +494,8 @@ public class MainView extends View {
     private int h5 = 0;
     private int h6 = 0;
 
-    private boolean musicIsPlay = true;
+    protected MediaPlayer mediaPlayer;
+    protected boolean musicIsPlay = true;
 
     private int lineLong = 0;
     private int lineMidX = 0;
@@ -625,6 +626,10 @@ public class MainView extends View {
         purpleStroke.setStyle(Paint.Style.STROKE);
         purpleStroke.setColor(purple.getColor());
         purpleStroke.setStrokeWidth(40);
+
+        mediaPlayer = MediaPlayer.create(getContext(), R.raw.bkgmusic);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
     }
 
@@ -4388,11 +4393,17 @@ public class MainView extends View {
                     }
 
                     if(settingPos1.contains(x, y) && musicIsPlay){
-                        musicIsPlay = false;
+                        if(mediaPlayer.isPlaying()){
+                            mediaPlayer.pause();
+                            musicIsPlay = false;
+                        }
                     }
-//                    else if(settingPos1.contains(x, y) && !musicIsPlay){
-//                        musicIsPlay = true;
-//                    }
+                    else if(settingPos1.contains(x, y) && !musicIsPlay){
+                        if(!mediaPlayer.isPlaying()){
+                            mediaPlayer.start();
+                            musicIsPlay = true;
+                        }
+                    }
 
                     if(settingPos2.contains(x, y)){
                         if(!isInGame){
@@ -4965,5 +4976,11 @@ public class MainView extends View {
             abilityPic3 = null;
         }
 
+        if(mediaPlayer != null){
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+
     }
+
 }
