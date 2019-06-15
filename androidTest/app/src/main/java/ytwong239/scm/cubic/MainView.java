@@ -25,7 +25,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -464,7 +463,6 @@ public class MainView extends View {
     private Paint purpleStroke = new Paint();
     private Paint whiteStrokeThin = new Paint();
     private Paint darkOrangeStroke = new Paint();
-    private Paint black = new Paint();
 
     private Typeface aldrich;
     private Typeface myriad;
@@ -504,10 +502,6 @@ public class MainView extends View {
     private int lineMidY = 0;
 
     private final Rect textBounds = new Rect();
-
-    private long preTime = 0;
-    private long currTime = 0;
-    private int restartMsgAlpha = 255;
 
     public MainView(Context context) {
         super(context);
@@ -580,8 +574,6 @@ public class MainView extends View {
         blackStroke.setStyle(Paint.Style.STROKE);
         blackStroke.setColor(Color.BLACK);
         blackStroke.setStrokeWidth(7);
-
-        black.setColor(Color.BLACK);
 
         white.setColor(Color.WHITE);
         white.setTextSize(40);
@@ -1988,9 +1980,6 @@ public class MainView extends View {
         drawSettingPage(canvas);
 
         puzzle.update();
-
-        drawRestartMsg(canvas);
-
     }
 
     private void drawSettingPage(Canvas canvas){
@@ -3992,34 +3981,6 @@ public class MainView extends View {
         canvas.drawBitmap(backPic, backSrc, backPos, null);
         canvas.drawBitmap(contactUsTitlePic, contactUsTitleSrc, contactUsTitlePos, null);
         canvas.drawBitmap(contactUsPic, contactUsSrc, contactUsPos, null);
-    }
-
-    private void drawRestartMsg(Canvas canvas){
-        if(arduino.getArdBase0String(0) == null){
-            int l = 0;
-            int t = canvasH - 150 - 35;
-            int r = canvasW;
-            int b = canvasH - 150 + 30;
-
-            black.setAlpha(restartMsgAlpha);
-            canvas.drawRect(l, t, r, b, black);
-
-            scoreFont.setAlpha(restartMsgAlpha);
-            drawTextCentred(canvas, "!! CONNECTION ERROR, PLEASE RESTART THE APPLICATION !!", canvasW / 2, canvasH - 150, scoreFont);
-
-            currTime = System.currentTimeMillis();
-
-            if(currTime - preTime > 2000){
-                if(restartMsgAlpha == 255){
-                    restartMsgAlpha = 0;
-                }
-                else if(restartMsgAlpha == 0){
-                    restartMsgAlpha = 255;
-                }
-                preTime = currTime;
-            }
-
-        }
     }
 
     @Override

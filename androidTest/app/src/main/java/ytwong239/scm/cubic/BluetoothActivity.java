@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -98,8 +97,6 @@ public class BluetoothActivity extends AppCompatActivity {
     OpenGLSurfaceView_DetectionCheck openGLSurfaceView_detectionCheck;
     OpenGLRenderer_DetectionCheck openGLRenderer_detectionCheck;
 
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -313,10 +310,7 @@ public class BluetoothActivity extends AppCompatActivity {
             }
         }
 
-        //98:D3:61:F9:48:D1
-        //14:41:05:05:89:DD
-        sharedPreferences = getApplicationContext().getSharedPreferences(String.valueOf(R.string.bluetooth), Context.MODE_PRIVATE);
-        bluetoothDevice = bluetoothAdapter.getRemoteDevice(sharedPreferences.getString(String.valueOf(R.string.addressNum), "98:D3:61:F9:48:D1"));
+        bluetoothDevice = bluetoothAdapter.getRemoteDevice("98:D3:61:F9:48:D1");
 
         try {
             bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(MY_UUID);
