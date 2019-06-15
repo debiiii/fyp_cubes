@@ -4136,21 +4136,21 @@ public class MainView extends View {
                             }
 
                             //------debug use-------
-                            if(!gameManagerPracticeMode.getIsResultPage()){
-                                if(x < canvasW && x > canvasW - 200 && y > canvasH / 2 - 200 && y < canvasH / 2 + 200){
-                                    if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM - 1){
-                                        gameManagerPracticeMode.nextQ();
-                                        resetDrawView();
-                                        //resetTimer();
-                                    }
-//                                    else{
+//                            if(!gameManagerPracticeMode.getIsResultPage()){
+//                                if(x < canvasW && x > canvasW - 200 && y > canvasH / 2 - 200 && y < canvasH / 2 + 200){
+//                                    if(gameManagerPracticeMode.getCurrQuestNum() < MAXQUESTNUM - 1){
+//                                        gameManagerPracticeMode.nextQ();
 //                                        resetDrawView();
-//                                        resetTimer();
-//                                        gameManagerPracticeMode.restart();
-//                                        currPage = MENUPAGE;
+//                                        //resetTimer();
 //                                    }
-                                }
-                            }
+////                                    else{
+////                                        resetDrawView();
+////                                        resetTimer();
+////                                        gameManagerPracticeMode.restart();
+////                                        currPage = MENUPAGE;
+////                                    }
+//                                }
+//                            }
                             //-----------------------
 
 
@@ -4514,9 +4514,9 @@ public class MainView extends View {
                 lastX = x;
 
                 //------debug use-------
-                if(x > canvasW / 2 - 200 && x < canvasW / 2 + 200 && y > 0 && y < 200){
-                    debugVisible = !debugVisible;
-                }
+//                if(x > canvasW / 2 - 200 && x < canvasW / 2 + 200 && y > 0 && y < 200){
+//                    debugVisible = !debugVisible;
+//                }
                 //----------------------
 
                 break;
