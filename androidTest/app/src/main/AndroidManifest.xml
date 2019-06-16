@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ytwong239.scm.cubicdebug">
+    package="ytwong239.scm.cubic">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name="ytwong239.scm.cubicdebug.SplashScreenActivity"
+            android:name=".SplashScreenActivity"
             android:noHistory="true"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -25,18 +25,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ytwong239.scm.cubicdebug.TurnOnBluetoothActivity"
+            android:name=".TurnOnBluetoothActivity"
             android:screenOrientation="landscape"></activity>
         <activity
-            android:name="ytwong239.scm.cubicdebug.ConnectToyBluetoothActivity"
+            android:name=".ConnectToyBluetoothActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="ytwong239.scm.cubicdebug.BluetoothActivity"
+            android:name=".BluetoothActivity"
             android:screenOrientation="landscape"></activity>
         <activity
-            android:name="ytwong239.scm.cubicdebug.TempActivity"
+            android:name=".TempActivity"
             android:screenOrientation="landscape"></activity>
-        <activity android:name="ytwong239.scm.cubicdebug.DebugActivity"
+        <activity android:name=".DebugActivity"
             android:screenOrientation="landscape"></activity>
     </application>
 
